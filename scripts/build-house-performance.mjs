@@ -1,3 +1,6 @@
+// Raw-source refresh for Capitol Ledger: official House indexes/PTRs -> normalized
+// transactions -> approximate holding episodes -> reusable site and data outputs.
+// Cached filing text and market prices live under work/ and are intentionally ignored.
 import { execFile } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";

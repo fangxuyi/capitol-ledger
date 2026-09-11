@@ -1,100 +1,60 @@
 # Capitol Ledger
 
-A raw-source-first U.S. House financial-disclosure tracker. The dashboard opens
-with Nancy Pelosi's household disclosures and supports adding other House
-members from the Clerk's official yearly filing index.
+Capitol Ledger is a raw-source-first look at stock selections disclosed by members of the U.S. House. It starts with the House Clerk’s own indexes and PTR documents, reconstructs approximate holding episodes, and turns the result into a small research dashboard.
 
-## Prerequisites
+Some of the data collection, analysis, and website work was done with Codex. The judgment calls, caveats, and occasional raised eyebrow remain very human.
 
-- Node.js `>=22.13.0`
+**Explore the details:** [capitol-ledger.yeefangxu.chatgpt.site](https://capitol-ledger.yeefangxu.chatgpt.site/)
 
-## Quick Start
+## Two halves of the project
+
+### 1. Data collection and analysis
+
+The pipeline lives in [`scripts/`](scripts/) and produces the structured files in [`public/data/`](public/data/). It:
+
+- downloads the official annual House Clerk filing indexes;
+- reads the original Periodic Transaction Report PDFs;
+- normalizes single-name stock and option transactions;
+- reconstructs purchase-to-exit holding episodes;
+- marks unresolved or partially sold positions to the latest available price;
+- calculates directional return, SPY return, excess return, positive rate, and holding period; and
+- saves reusable JSON and CSV outputs.
+
+The full walk-through is in [docs/DATA_PIPELINE.md](docs/DATA_PIPELINE.md).
+
+### 2. The Capitol Ledger tracker
+
+The application lives mainly in [`app/`](app/), with persistent watchlists and alert rules defined in [`db/`](db/) and [`drizzle/`](drizzle/). It includes the House leaderboard and detailed member views for positions, performance episodes, transactions, alerts, and methodology.
+
+The application map is in [docs/TRACKER.md](docs/TRACKER.md).
+
+## Run it
+
+You will need Node.js 22.13 or newer and `pdftotext` for a fresh data rebuild.
 
 ```bash
 npm install
+npm run data:refresh
+npm run data:verify
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+For a production check:
 
-## Data posture
-
-- Official index: `https://disclosures-clerk.house.gov/public_disc/financial-pdfs/{YEAR}FD.zip`
-- Official PTR documents: `https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{YEAR}/{DOC_ID}.pdf`
-- Official annual filings: `https://disclosures-clerk.house.gov/public_disc/financial-pdfs/{YEAR}/{DOC_ID}.pdf`
-- Disclosed dollar ranges remain ranges. Midpoints are scenarios, not exact values.
-- The UI describes Pelosi data as household disclosure data because many rows are spouse-owned.
-- Exact cumulative profit is not asserted without cost basis, exact sizes, and a separate market-price ledger.
-
-## Workspace Auth Headers
-
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
-
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run check
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+The first data refresh downloads thousands of official filings. Later runs reuse the ignored `work/` cache, because repeatedly downloading the same government PDFs is not a personality trait.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Sources and important caveats
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+The primary sources are the [House Clerk financial-disclosure search](https://disclosures-clerk.house.gov/FinancialDisclosure/ViewSearch), annual ZIP indexes, and original PTR PDFs. Market returns use adjusted daily prices as a separate analytical input.
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+This is not an exact brokerage ledger and definitely not investment advice. Congressional disclosures usually provide value bands rather than exact amounts, omit cost basis, and can arrive weeks after the transaction. Options are measured using the underlying stock direction when reliable historical option prices are unavailable. Open positions mean “no machine-readable full exit was matched,” not “we have peeked inside the brokerage account.”
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+## Reuse, updates, and collaboration
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+Please feel free to use this project at your own convenience under the MIT License. I would gently advise against reinventing the filing-parser wheel unless wrestling with PDF tables is how you relax—but forks, experiments, corrections, and better ideas are very welcome.
 
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+The website will be updated irregularly, at the author’s convenience. No solemn refresh-calendar oaths here. If you spot a questionable record or want to collaborate on an improvement, please open an issue or pull request. Happy to work together on sensible changes, delightfully odd changes, and especially changes that make the methodology more honest.
