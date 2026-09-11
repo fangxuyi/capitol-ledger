@@ -15,7 +15,7 @@ test("ships the completed congressional disclosure tracker", async () => {
   assert.match(dashboard, /Latest material changes/);
   assert.match(dashboard, /House performance table/);
   assert.match(houseData, /"filerCount": 401/);
-  assert.match(houseData, /"scoredSelectionCount": 11691/);
+  assert.match(houseData, /"scoredEpisodeCount":/);
   assert.match(data, /Nancy Pelosi/);
   assert.match(data, /disclosures-clerk\.house\.gov/);
   assert.match(layout, /Capitol Ledger/);

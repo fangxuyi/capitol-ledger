@@ -88,16 +88,16 @@ function HouseSummary() {
       <section className="house-summary-hero">
         <div>
           <span className="kicker">All House Clerk PTR filers · 2013–2026</span>
-          <h2>Who selected stocks well?</h2>
-          <p>A comparable 90-calendar-day signal score for every member found in the raw House indexes. Stock and call purchases are long; purchased puts are short. Options use the underlying stock return as a directional proxy. Sales are exits or trims—not assumed short positions.</p>
+          <h2>Who selected stocks well over the holding period?</h2>
+          <p>Each episode runs from the first disclosed purchase to a reported close. Partial-sale residuals and positions without a reliable close use the latest available price and are labeled approximate. Stock and call purchases are long; purchased puts are short. Options use the underlying stock return as a directional proxy.</p>
         </div>
         <a href={officialSources.search} target="_blank" rel="noreferrer">Open raw Clerk database ↗</a>
       </section>
 
       <section className="performance-metrics house-metrics">
         <MetricCard eyebrow="Indexed House filers" value={housePerformanceMeta.filerCount.toLocaleString()} note={`${housePerformanceMeta.ptrCount.toLocaleString()} official periodic transaction reports reviewed.`} />
-        <MetricCard eyebrow="Scored selections" value={housePerformanceMeta.scoredSelectionCount.toLocaleString()} note="Single-name purchases with a full 90-day window and matching daily prices." tone="green" />
-        <MetricCard eyebrow="Ranking eligible" value={eligibleCount.toLocaleString()} note="Members with at least 12 scored selections; all other filers remain visible." />
+        <MetricCard eyebrow="Scored holding episodes" value={housePerformanceMeta.scoredEpisodeCount.toLocaleString()} note="Closed episodes plus open or partial-sale residuals marked to the latest price." tone="green" />
+        <MetricCard eyebrow="Ranking eligible" value={eligibleCount.toLocaleString()} note="Members with at least 12 scored holding episodes; all other filers remain visible." />
         <MetricCard eyebrow="Purchased puts" value={shortCount.toLocaleString()} note="The only selections classified as short. Reported stock sales are not short sales." tone="amber" />
       </section>
 
@@ -109,13 +109,13 @@ function HouseSummary() {
 
       {topEligible && <section className="leader-strip">
         <span className="leader-rank">01</span>
-        <div><span className="kicker">Highest average excess · minimum 12 picks</span><h3>{topEligible.name}</h3><p>{topEligible.stateDistrict} · {topEligible.scoredCount} scored selections · {topEligible.hitRate?.toFixed(1)}% positive</p></div>
+        <div><span className="kicker">Highest average holding-period excess · minimum 12 episodes</span><h3>{topEligible.name}</h3><p>{topEligible.stateDistrict} · {topEligible.scoredCount} scored episodes · {topEligible.hitRate?.toFixed(1)}% positive</p></div>
         <strong>{signed(topEligible.averageExcess)}</strong>
-        <small>average 90d excess vs SPY</small>
+        <small>average holding-period excess vs SPY</small>
       </section>}
 
       <section className="section-intro house-controls">
-        <div><span className="kicker">Equal-weighted signal results</span><h2>House performance table</h2><p>Returns begin on the reported transaction date, not the later public filing date. Featured selections show the member’s best, worst, and latest available examples.</p></div>
+        <div><span className="kicker">Equal-weighted estimated episodes</span><h2>House performance table</h2><p>Returns begin on the reported transaction date. A reported close ends the episode; otherwise the latest price marks the residual. Featured selections show the member’s best, worst, and latest available examples.</p></div>
         <div className="filters">
           <label><span>Find a member</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name or district" /></label>
           <label><span>Coverage</span><select value={scope} onChange={(event) => setScope(event.target.value as "ranked" | "all")}><option value="ranked">Ranked · 12+ picks</option><option value="all">All indexed filers</option></select></label>
@@ -125,19 +125,19 @@ function HouseSummary() {
 
       <section className="panel house-table-panel">
         <div className="house-table">
-          <div className="house-head"><span>Rank / member</span><span>Coverage</span><span>Direction</span><span>Avg 90d return</span><span>Avg excess</span><span>Positive rate</span><span>Selected stocks · featured outcomes</span></div>
+          <div className="house-head"><span>Rank / member</span><span>Episodes</span><span>Direction</span><span>Avg holding return</span><span>Avg excess</span><span>Positive rate</span><span>Selected stocks · featured outcomes</span></div>
           {rows.map((row, index) => (
             <div className="house-row" key={row.id}>
               <div className="house-member"><span>{String(index + 1).padStart(2, "0")}</span><p><strong>{row.name}</strong><small>{row.stateDistrict || "District unavailable"} · {row.filingCount} PTRs</small></p></div>
-              <div className="coverage-cell"><strong>{row.scoredCount}</strong><span>of {row.selectionCount} picks scored</span></div>
+              <div className="coverage-cell"><strong>{row.scoredCount}</strong><span>{row.closedCount} closed · {row.openCount} latest-mark</span></div>
               <div className="direction-cell"><span className="direction-long">L {row.longCount}</span><span className="direction-short">S {row.shortCount}</span></div>
               <strong className={row.averageReturn !== null && row.averageReturn >= 0 ? "return-positive" : "return-negative"}>{signed(row.averageReturn)}</strong>
               <strong className={row.averageExcess !== null && row.averageExcess >= 0 ? "return-positive" : "return-negative"}>{signed(row.averageExcess)}</strong>
               <span>{row.hitRate === null ? "—" : `${row.hitRate.toFixed(1)}%`}</span>
               <div className="featured-picks">
                 {row.featuredPicks.length ? row.featuredPicks.map((pick) => (
-                  <a href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id} title={`${pick.direction} ${pick.instrument} · ${pick.transactionDate} · ${pick.status}`}>
-                    <b>{pick.ticker}</b><span className={pick.returnValue !== null && pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</span><small>{signed(pick.excessReturn)} excess</small>
+                  <a href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id} title={`${pick.direction} ${pick.instrument} · ${pick.transactionDate} to ${pick.closeDate} · ${pick.status}`}>
+                    <b>{pick.ticker}</b><span className={pick.returnValue !== null && pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</span><small>{pick.periodDays ?? "—"}d · {signed(pick.excessReturn)} excess</small>
                   </a>
                 )) : <span className="no-picks">No machine-readable single-name purchase</span>}
               </div>
@@ -147,7 +147,7 @@ function HouseSummary() {
         {!rows.length && <div className="empty-state">No House filer matches that search.</div>}
       </section>
 
-      <div className="inline-note"><strong>Interpretation:</strong> this measures disclosed selection timing, not portfolio wealth, position size, realized P&amp;L, or returns available after public disclosure. Repeated purchases are separate equal-weighted signals. Rankings are provisional until image-only PTRs are OCR-verified.</div>
+      <div className="inline-note"><strong>Approximation:</strong> this is not exact portfolio performance. Missing quantities and lot matching mean each reconstructed episode is equal-weighted. Partial sales keep a residual open at the latest price; options use underlying-stock direction; inferred expiries and image-only PTR gaps are flagged. A standardized 90-day excess measure is retained in the dataset as a secondary comparison.</div>
     </div>
   );
 }
