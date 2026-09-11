@@ -57,6 +57,8 @@ The primary sources are the [House Clerk financial-disclosure search](https://di
 
 This is informational research—not investment, legal, tax, or personalized financial advice. It is not an exact brokerage ledger. Congressional disclosures usually provide value bands rather than exact amounts, omit cost basis, and can arrive weeks after the transaction. Modeled returns are estimates, options are measured using the underlying stock direction when reliable historical option prices are unavailable, and open positions mean “no machine-readable full exit was matched,” not “we have peeked inside the brokerage account.” Verify the original filings before relying on any result.
 
+The MIT License covers this project’s code and original documentation, not third-party source documents or market data. Financial-disclosure reports remain subject to the prohibited-use rules in [5 U.S.C. § 13107(c)](https://uscode.house.gov/view.xhtml?edition=prelim&num=0&req=granuleid%3AUSC-prelim-title5-section13107), including restrictions on unlawful use, most commercial use, credit-rating decisions, and solicitations. Market prices are a separate analytical input; anyone refreshing or extending the data should use a provider and license appropriate for their intended public or commercial use.
+
 ## Reuse, updates, and collaboration
 
 Please feel free to use this project at your own convenience under the MIT License. I would gently advise against reinventing the filing-parser wheel unless wrestling with PDF tables is how you relax—but forks, experiments, corrections, and better ideas are very welcome.
