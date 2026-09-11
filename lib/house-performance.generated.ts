@@ -1,6 +1,6 @@
 // Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.
 export const housePerformanceMeta = {
-  "generatedAt": "2026-09-11T21:40:43.171Z",
+  "generatedAt": "2026-09-11T22:44:36.669Z",
   "sourceStartYear": 2013,
   "sourceEndYear": 2026,
   "filerCount": 401,

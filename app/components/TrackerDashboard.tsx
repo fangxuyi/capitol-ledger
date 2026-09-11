@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { houseMembersPerformance, housePerformanceMeta } from "../../lib/house-performance.generated";
 import {
   closedPickPerformance,
@@ -18,8 +18,13 @@ import {
 } from "../../lib/tracker-data";
 
 type Tab = "House Summary" | "Overview" | "Positions" | "Performance" | "Trades" | "Alerts" | "Methodology";
+type MemberTab = Exclude<Tab, "House Summary">;
 
-const tabs: Tab[] = ["House Summary", "Overview", "Positions", "Performance", "Trades", "Alerts", "Methodology"];
+const memberTabs: MemberTab[] = ["Overview", "Positions", "Performance", "Trades", "Alerts", "Methodology"];
+
+type MemberTransaction = { id: string; memberId: string; ticker: string; assetName: string; instrument: string; direction: string; owner: string; action: string; closeKind: string | null; expirationDate: string | null; strike: string | null; amount: string; transactionDate: string; filingDate: string; filingId: string; sourceUrl: string };
+type MemberEpisode = MemberTransaction & { closeDate: string; status: string; periodDays: number | null; returnValue: number | null; benchmarkReturn: number | null; excessReturn: number | null };
+type MemberDetails = { transactions: MemberTransaction[]; episodes: MemberEpisode[] };
 
 function severityLabel(severity: Trade["severity"]) {
   return severity === "urgent" ? "Major" : severity === "high" ? "Material" : "Update";
@@ -62,52 +67,68 @@ function MetricCard({ eyebrow, value, note, tone = "default" }: { eyebrow: strin
   );
 }
 
-function TrackedMemberSnapshot({ profile }: { profile: TrackedMember }) {
+function TrackedMemberDetail({ profile, section }: { profile: TrackedMember; section: Exclude<MemberTab, "Alerts" | "Methodology"> }) {
   const summary = houseMembersPerformance.find((row) => row.id === profile.id);
+  const [loadedDetails, setLoadedDetails] = useState<{ memberId: string; data: MemberDetails } | null>(null);
+  const details = loadedDetails?.memberId === profile.id ? loadedDetails.data : null;
   const signed = (value: number | null) => value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+
+  useEffect(() => {
+    let current = true;
+    fetch(`/data/members/${profile.id}.json`).then((response) => response.ok ? response.json() : { transactions: [], episodes: [] }).then((payload) => { if (current) setLoadedDetails({ memberId: profile.id, data: payload }); }).catch(() => { if (current) setLoadedDetails({ memberId: profile.id, data: { transactions: [], episodes: [] } }); });
+    return () => { current = false; };
+  }, [profile.id]);
 
   if (!summary) {
     return (
       <div className="tab-content">
         <section className="panel source-gap-panel">
-          <span className="kicker">Tracked target · separate raw source</span>
+          <span className="kicker">Tracked target · raw-source match pending</span>
           <h2>{profile.name} is saved to your watchlist</h2>
           <p>{profile.name} does not have a matching record in the House Clerk dataset used for the current performance engine. The tracker keeps the name visible, but does not substitute or invent performance while the correct raw-source record is unavailable.</p>
-          <a href="https://efdsearch.senate.gov/search/home/" target="_blank" rel="noreferrer">Open raw Senate eFD search ↗</a>
+          <a href={officialSources.search} target="_blank" rel="noreferrer">Open raw Clerk search ↗</a>
         </section>
       </div>
     );
   }
 
+  if (!details) return <div className="tab-content"><section className="panel member-detail-loading"><span className="kicker">Loading raw-source detail</span><h2>Preparing {profile.name}’s record…</h2><p>Transactions, reconstructed positions, and holding episodes are loading from the saved member dataset.</p></section></div>;
+
+  const episodes = details.episodes;
+  const transactions = details.transactions;
+  const openEpisodes = episodes.filter((episode) => episode.status.includes("latest mark"));
+  const actionLabel = (action: string, closeKind: string | null) => action === "P" ? "Purchase" : action === "S" ? closeKind === "partial" ? "Partial sale" : "Sale" : "Exchange";
+
+  if (section === "Positions") return (
+    <div className="tab-content">
+      <section className="section-intro"><div><span className="kicker">Latest-price residuals</span><h2>Reconstructed open positions</h2><p>These are unresolved purchase episodes, not exact brokerage balances. Partial sales retain the remaining episode and every row links to its official PTR.</p></div><span className="readiness-pill">{openEpisodes.length} latest marks</span></section>
+      <section className="panel member-detail-panel"><div className="member-detail-head position-detail-grid"><span>Security</span><span>Direction</span><span>Opened</span><span>Holding period</span><span>Return</span><span>Excess</span><span>Status / source</span></div>{openEpisodes.map((episode) => <div className="member-detail-row position-detail-grid" key={episode.id}><div><strong>{episode.ticker}</strong><small>{episode.instrument}{episode.strike ? ` · $${episode.strike} strike` : ""}</small></div><span className={episode.direction === "Long" ? "direction-long" : "direction-short"}>{episode.direction}</span><span>{episode.transactionDate}</span><span>{episode.periodDays ?? "—"}d</span><strong className={episode.returnValue !== null && episode.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(episode.returnValue)}</strong><strong className={episode.excessReturn !== null && episode.excessReturn >= 0 ? "return-positive" : "return-negative"}>{signed(episode.excessReturn)}</strong><a href={episode.sourceUrl} target="_blank" rel="noreferrer">{episode.status} ↗</a></div>)}{!openEpisodes.length && <div className="empty-state">No unresolved machine-readable purchase episode was found.</div>}</section>
+      <div className="inline-note"><strong>Position limit:</strong> official PTRs disclose transaction bands, not complete live share balances. “Open” means no machine-readable full exit was matched; it is explicitly an approximate latest-price mark.</div>
+    </div>
+  );
+
+  if (section === "Performance") return (
+    <div className="tab-content">
+      <section className="performance-metrics"><MetricCard eyebrow="Average holding return" value={signed(summary.averageReturn)} note={`${summary.scoredCount} equally weighted scored episodes.`} tone="green" /><MetricCard eyebrow="Average excess vs SPY" value={signed(summary.averageExcess)} note="Benchmark matched to every holding period." /><MetricCard eyebrow="Positive rate" value={summary.hitRate === null ? "—" : `${summary.hitRate.toFixed(1)}%`} note="Share of scored episodes with positive directional return." tone="amber" /><MetricCard eyebrow="Average holding period" value={summary.averageHoldingDays === null ? "—" : `${summary.averageHoldingDays.toLocaleString()}d`} note={`${summary.closedCount} closed · ${summary.openCount} latest-price marks.`} /></section>
+      <section className="panel member-detail-panel"><div className="panel-head detail-panel-title"><div><span className="kicker">Every reconstructed episode</span><h2>Holding-period performance</h2></div><span>{episodes.length} episodes</span></div><div className="member-detail-head performance-detail-grid"><span>Security</span><span>Opened</span><span>Closed / marked</span><span>Days</span><span>Return</span><span>SPY</span><span>Excess</span><span>Status / source</span></div>{episodes.map((episode) => <div className="member-detail-row performance-detail-grid" key={episode.id}><div><strong>{episode.ticker}</strong><small>{episode.direction} {episode.instrument}</small></div><span>{episode.transactionDate}</span><span>{episode.closeDate}</span><span>{episode.periodDays ?? "—"}</span><strong className={episode.returnValue !== null && episode.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(episode.returnValue)}</strong><span>{signed(episode.benchmarkReturn)}</span><strong className={episode.excessReturn !== null && episode.excessReturn >= 0 ? "return-positive" : "return-negative"}>{signed(episode.excessReturn)}</strong><a href={episode.sourceUrl} target="_blank" rel="noreferrer">{episode.status} ↗</a></div>)}</section>
+      <div className="inline-note"><strong>Same method for every tracked member:</strong> first disclosed purchase opens an episode; a full sale closes it; partial-sale residuals and unmatched exits use the latest price. Options use underlying-stock direction because exact historical option premiums are not consistently public.</div>
+    </div>
+  );
+
+  if (section === "Trades") return (
+    <div className="tab-content">
+      <section className="section-intro"><div><span className="kicker">Official transaction ledger</span><h2>Parsed purchases, sales, and exchanges</h2><p>Every row comes from this member’s machine-readable House PTR and links back to the original document.</p></div><span className="readiness-pill">{transactions.length} parsed rows</span></section>
+      <section className="panel member-detail-panel"><div className="member-detail-head trade-detail-grid"><span>Action</span><span>Security</span><span>Instrument</span><span>Owner</span><span>Trade date</span><span>Reported amount</span><span>Filing / source</span></div>{transactions.map((transaction) => <div className="member-detail-row trade-detail-grid" key={transaction.id}><span className={transaction.action === "P" ? "direction-long" : "direction-short"}>{actionLabel(transaction.action, transaction.closeKind)}</span><div><strong>{transaction.ticker}</strong><small>{transaction.assetName}</small></div><span>{transaction.instrument}{transaction.strike ? ` · $${transaction.strike}` : ""}</span><span>{transaction.owner}</span><span>{transaction.transactionDate}</span><strong>{transaction.amount}</strong><a href={transaction.sourceUrl} target="_blank" rel="noreferrer">PTR {transaction.filingId} ↗</a></div>)}</section>
+      <div className="inline-note"><strong>Coverage:</strong> this ledger contains extractable single-name stock and option rows. Image-only PDFs, non-ticker assets, and rows that cannot be normalized safely remain outside the parsed table but stay counted in filing coverage.</div>
+    </div>
+  );
+
+  const latestTransactions = transactions.slice(0, 6);
   return (
     <div className="tab-content">
-      <section className="performance-metrics">
-        <MetricCard eyebrow="Scored episodes" value={summary.scoredCount.toLocaleString()} note={`${summary.closedCount} closed · ${summary.openCount} latest-price marks.`} />
-        <MetricCard eyebrow="Average holding return" value={signed(summary.averageReturn)} note="Equal-weighted across reconstructed selection episodes." tone="green" />
-        <MetricCard eyebrow="Average excess vs SPY" value={signed(summary.averageExcess)} note="Matched to each episode’s disclosed holding period." />
-        <MetricCard eyebrow="Positive rate" value={summary.hitRate === null ? "—" : `${summary.hitRate.toFixed(1)}%`} note={`${summary.averageHoldingDays?.toLocaleString() ?? "—"} calendar days average holding period.`} tone="amber" />
-      </section>
-
-      <section className="panel tracked-snapshot-panel">
-        <div className="panel-head">
-          <div><span className="kicker">Raw House Clerk history</span><h2>Selected outcomes</h2></div>
-          <span className="readiness-pill">{summary.filingCount} PTRs indexed</span>
-        </div>
-        <div className="tracked-summary-line">
-          <p><strong>{summary.longCount} long</strong><span>{summary.shortCount} short selections</span></p>
-          <p><strong>{summary.selectionCount} episodes found</strong><span>{summary.scoredCount} have matching prices</span></p>
-          <p><strong>{summary.stateDistrict}</strong><span>District code in the Clerk index</span></p>
-        </div>
-        <div className="featured-picks tracked-featured-picks">
-          {summary.featuredPicks.map((pick) => (
-            <a href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id} title={`${pick.direction} ${pick.instrument} · ${pick.transactionDate} to ${pick.closeDate} · ${pick.status}`}>
-              <b>{pick.ticker}</b><span className={pick.returnValue !== null && pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</span><small>{pick.periodDays ?? "—"}d · {signed(pick.excessReturn)} excess</small>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <div className="inline-note"><strong>Tracking status:</strong> {profile.name} is now part of the saved tracker list. Performance uses official PTR episodes already present in the House-wide dataset; future raw-source refreshes will update the same member record.</div>
+      <section className="performance-metrics"><MetricCard eyebrow="Official PTRs indexed" value={summary.filingCount.toLocaleString()} note={`${transactions.length} machine-readable stock and option rows.`} /><MetricCard eyebrow="Scored episodes" value={summary.scoredCount.toLocaleString()} note={`${summary.closedCount} closed · ${summary.openCount} latest-price marks.`} /><MetricCard eyebrow="Average excess vs SPY" value={signed(summary.averageExcess)} note="Equal-weighted holding-period estimate." tone="green" /><MetricCard eyebrow="Positive rate" value={summary.hitRate === null ? "—" : `${summary.hitRate.toFixed(1)}%`} note={`${summary.averageHoldingDays?.toLocaleString() ?? "—"} days average holding period.`} tone="amber" /></section>
+      <section className="tracked-overview-grid"><article className="panel member-detail-panel"><div className="panel-head"><div><span className="kicker">Latest disclosed activity</span><h2>Transaction timeline</h2></div><span>{latestTransactions.length} latest rows</span></div>{latestTransactions.map((transaction) => <a className="tracked-activity-row" href={transaction.sourceUrl} target="_blank" rel="noreferrer" key={transaction.id}><span className={transaction.action === "P" ? "direction-long" : "direction-short"}>{transaction.action}</span><div><strong>{transaction.ticker} · {actionLabel(transaction.action, transaction.closeKind)}</strong><small>{transaction.transactionDate} · {transaction.amount}</small></div><b>↗</b></a>)}</article><article className="panel member-detail-panel"><div className="panel-head"><div><span className="kicker">Current reconstruction</span><h2>Open/latest-mark episodes</h2></div><span>{openEpisodes.length} total</span></div>{openEpisodes.slice(0, 6).map((episode) => <a className="tracked-activity-row" href={episode.sourceUrl} target="_blank" rel="noreferrer" key={episode.id}><span>{episode.ticker}</span><div><strong>{signed(episode.returnValue)} holding return</strong><small>{episode.periodDays ?? "—"}d · {episode.status}</small></div><b>↗</b></a>)}</article></section>
+      <div className="inline-note"><strong>Tracking status:</strong> this profile now uses the same six-section structure as Pelosi. The source depth is identical where the raw filings support it; unavailable quantities, cost basis, and exact option prices remain clearly marked rather than estimated as facts.</div>
     </div>
   );
 }
@@ -553,7 +574,6 @@ export default function TrackerDashboard() {
   const selectedMember = tracked.find((item) => item.id === selectedMemberId) ?? tracked[0];
   const isPelosi = selectedMember.id === member.id;
   const selectedSummary = houseMembersPerformance.find((row) => row.id === selectedMember.id);
-  const visibleTabs = isPelosi ? tabs : tabs.filter((tab) => tab !== "Positions" && tab !== "Trades");
 
   const addMember = async (candidate: (typeof suggestedMembers)[number]) => {
     const slug = `${candidate.firstName}-${candidate.lastName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -594,6 +614,7 @@ export default function TrackerDashboard() {
 
       <div className="workspace" id="top">
         <aside className="sidebar">
+          <button className={`house-leaderboard-link ${activeTab === "House Summary" ? "active" : ""}`} onClick={() => setActiveTab("House Summary")}><span>⌂</span><p><strong>House leaderboard</strong><small>All indexed PTR filers</small></p><b>›</b></button>
           <div className="sidebar-label"><span>Tracked members</span><small>{tracked.length}</small></div>
           <div className="member-list">
             {tracked.map((item) => <button className={`member-button ${item.id === selectedMember.id ? "active" : ""}`} key={item.id} onClick={() => { setSelectedMemberId(item.id); setActiveTab("Overview"); setSyncState("idle"); }}><span>{item.initials}</span><p><strong>{item.name}</strong><small>{item.sourceStatus}</small></p>{item.id === selectedMember.id && <i />}</button>)}
@@ -609,15 +630,15 @@ export default function TrackerDashboard() {
             <div className="member-asof"><span>{isPelosi ? "Latest annual anchor" : "Historical performance"}</span><strong>{isPelosi ? member.annualAsOf : selectedSummary ? `${selectedSummary.scoredCount} scored episodes` : "Awaiting Senate adapter"}</strong><small>{isPelosi ? `Filed ${member.annualFiled}` : selectedSummary ? `${selectedSummary.filingCount} official PTRs` : "Raw source kept separate"}</small></div>
           </header>}
 
-          <nav className="tabs" aria-label="Tracker sections">
-            {visibleTabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}{tab === "Alerts" && isPelosi && <span>4</span>}</button>)}
-          </nav>
+          {activeTab !== "House Summary" && <nav className="tabs" aria-label={`${selectedMember.name} tracker sections`}>
+            {memberTabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}{tab === "Alerts" && isPelosi && <span>4</span>}</button>)}
+          </nav>}
 
           {activeTab === "House Summary" && <HouseSummary />}
-          {activeTab === "Overview" && (isPelosi ? <Overview /> : <TrackedMemberSnapshot profile={selectedMember} />)}
-          {activeTab === "Positions" && <Positions />}
-          {activeTab === "Performance" && (isPelosi ? <Performance /> : <TrackedMemberSnapshot profile={selectedMember} />)}
-          {activeTab === "Trades" && <Trades />}
+          {activeTab === "Overview" && (isPelosi ? <Overview /> : <TrackedMemberDetail profile={selectedMember} section="Overview" />)}
+          {activeTab === "Positions" && (isPelosi ? <Positions /> : <TrackedMemberDetail profile={selectedMember} section="Positions" />)}
+          {activeTab === "Performance" && (isPelosi ? <Performance /> : <TrackedMemberDetail profile={selectedMember} section="Performance" />)}
+          {activeTab === "Trades" && (isPelosi ? <Trades /> : <TrackedMemberDetail profile={selectedMember} section="Trades" />)}
           {activeTab === "Alerts" && <Alerts key={selectedMember.id} profile={selectedMember} />}
           {activeTab === "Methodology" && <Methodology />}
         </section>

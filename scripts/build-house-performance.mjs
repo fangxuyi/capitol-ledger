@@ -11,6 +11,7 @@ const textCache = join(root, "work", "house-ptrs");
 const priceCache = join(root, "work", "house-prices");
 const outputPath = join(root, "lib", "house-performance.generated.ts");
 const publicDataDirectory = join(root, "public", "data");
+const publicMemberDataDirectory = join(publicDataDirectory, "members");
 const jsonOutputPath = join(publicDataDirectory, "house-performance.json");
 const csvOutputPath = join(publicDataDirectory, "house-performance-episodes.csv");
 const currentYear = new Date().getUTCFullYear();
@@ -18,10 +19,12 @@ const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const docLimit = limitArg ? Number(limitArg.split("=")[1]) : Infinity;
 const startYear = 2013;
 const endYear = Math.min(currentYear, 2026);
+const trackedDetailMemberIds = ["nancy-pelosi", "james-langevin", "ed-perlmutter", "marjorie-greene", "dean-phillips", "john-james", "carol-miller", "gary-palmer", "daniel-crenshaw", "josh-gottheimer", "rohit-khanna", "michael-mccaul"];
 
 await mkdir(textCache, { recursive: true });
 await mkdir(priceCache, { recursive: true });
 await mkdir(publicDataDirectory, { recursive: true });
+await mkdir(publicMemberDataDirectory, { recursive: true });
 
 function slug(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -138,6 +141,7 @@ function extractTransactions(text, filing) {
     const transactionDate = parseDate(rawDate);
     const expiryMatch = block.match(/expiration date of\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
     const strikeMatch = block.match(/strike price of\s+\$?([\d,.]+)/i);
+    const amountMatch = block.match(/\$[\d,]+\s*-\s*\$[\d,]+|Over\s+\$[\d,]+/i);
     return [{
       id: `${filing.docId}-${ticker}-${transactionDate}-${direction}-${action}`,
       memberId: filing.memberId,
@@ -152,6 +156,7 @@ function extractTransactions(text, filing) {
       closeKind: closeKind.toLowerCase() || null,
       expirationDate: expiryMatch ? parseDate(expiryMatch[1]) : null,
       strike: strikeMatch ? strikeMatch[1].replace(/,/g, "") : null,
+      amount: amountMatch?.[0] ?? "See official filing",
       transactionDate,
       filingDate: filing.filingDate,
       filingId: filing.docId,
@@ -334,6 +339,11 @@ const meta = {
 
 const source = `// Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.\nexport const housePerformanceMeta = ${JSON.stringify(meta, null, 2)} as const;\n\nexport const houseMembersPerformance = ${JSON.stringify(summaries, null, 2)} as const;\n`;
 await writeFile(outputPath, source);
+const trackedDetails = Object.fromEntries(trackedDetailMemberIds.map((memberId) => [memberId, {
+  transactions: transactions.filter((transaction) => transaction.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
+  episodes: measured.filter((episode) => episode.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
+}]));
+await Promise.all(Object.entries(trackedDetails).map(([memberId, details]) => writeFile(join(publicMemberDataDirectory, `${memberId}.json`), `${JSON.stringify(details, null, 2)}\n`)));
 await writeFile(jsonOutputPath, `${JSON.stringify({ meta, members: summaries, episodes: measured }, null, 2)}\n`);
 
 const csvFields = [

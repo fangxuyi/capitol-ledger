@@ -168,7 +168,7 @@ export const trackedMembers: TrackedMember[] = [
 
 export const suggestedMembers = [
   { firstName: "Josh", lastName: "Gottheimer", displayName: "Josh Gottheimer", district: "NJ-05", party: "Democrat" as const },
-  { firstName: "Ro", lastName: "Khanna", displayName: "Ro Khanna", district: "CA-17", party: "Democrat" as const },
+  { firstName: "Rohit", lastName: "Khanna", displayName: "Ro Khanna", district: "CA-17", party: "Democrat" as const },
   { firstName: "Michael", lastName: "McCaul", displayName: "Michael McCaul", district: "TX-10", party: "Republican" as const },
 ];
 
