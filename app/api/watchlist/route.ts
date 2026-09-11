@@ -1,8 +1,10 @@
 import { asc } from "drizzle-orm";
 import { getDb } from "../../../db";
 import { trackedMembers } from "../../../db/schema";
+import { getChatGPTUser } from "../../chatgpt-auth";
 
 export async function GET() {
+  if (!await getChatGPTUser()) return Response.json({ error: "Sign in with ChatGPT to continue." }, { status: 401 });
   try {
     const members = await getDb().select().from(trackedMembers).orderBy(asc(trackedMembers.displayName));
     return Response.json({ members });
@@ -12,6 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!await getChatGPTUser()) return Response.json({ error: "Sign in with ChatGPT to continue." }, { status: 401 });
   const body = await request.json() as { id?: string; firstName?: string; lastName?: string; displayName?: string; district?: string };
   if (!body.id || !body.firstName || !body.lastName || !body.displayName) {
     return Response.json({ error: "Member identity is incomplete." }, { status: 400 });

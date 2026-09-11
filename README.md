@@ -6,6 +6,8 @@ Some of the data collection, analysis, and website work was done with Codex. The
 
 **Explore the details:** [capitol-ledger.yeefangxu.chatgpt.site](https://capitol-ledger.yeefangxu.chatgpt.site/)
 
+The hosted tracker is link-accessible and uses the platform’s built-in Sign in with ChatGPT flow before showing the dashboard.
+
 ## Two halves of the project
 
 ### 1. Data collection and analysis

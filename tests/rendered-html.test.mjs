@@ -14,6 +14,8 @@ test("ships the completed congressional disclosure tracker", async () => {
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(page, /TrackerDashboard/);
+  assert.match(page, /requireChatGPTUser/);
+  assert.match(page, /force-dynamic/);
   assert.match(dashboard, /Raw Clerk pipeline/);
   assert.match(dashboard, /Latest material changes/);
   assert.match(dashboard, /House performance table/);

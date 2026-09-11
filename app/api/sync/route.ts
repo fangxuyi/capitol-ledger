@@ -1,6 +1,7 @@
 import { strFromU8, unzipSync } from "fflate";
 import { getDb } from "../../../db";
 import { filings, syncRuns, trackedMembers } from "../../../db/schema";
+import { getChatGPTUser } from "../../chatgpt-auth";
 
 type ClerkRow = {
   firstName: string;
@@ -32,6 +33,7 @@ function parseIndex(text: string, year: number, sourceIndexUrl: string, firstNam
 }
 
 export async function POST(request: Request) {
+  if (!await getChatGPTUser()) return Response.json({ error: "Sign in with ChatGPT to continue." }, { status: 401 });
   const body = await request.json() as { memberId?: string; firstName?: string; lastName?: string; years?: number[] };
   const memberId = body.memberId?.trim();
   const firstName = body.firstName?.trim() ?? "";

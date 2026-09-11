@@ -41,7 +41,7 @@ a { color: inherit; }
 .refresh-button:disabled { cursor: wait; }
 .spin { display: inline-block; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.avatar { border: 0; width: 34px; height: 34px; border-radius: 50%; background: #d4b96f; color: #203129; font-size: 11px; font-weight: 800; cursor: pointer; }
+.avatar { border: 0; width: 34px; height: 34px; border-radius: 50%; background: #d4b96f; color: #203129; font-size: 11px; font-weight: 800; cursor: pointer; display: grid; place-items: center; text-decoration: none; }
 
 .workspace { display: grid; grid-template-columns: 238px 1fr; min-height: calc(100vh - 68px); }
 .sidebar { background: #f8f6ef; border-right: 1px solid var(--line); padding: 24px 16px; position: sticky; top: 68px; height: calc(100vh - 68px); display: flex; flex-direction: column; }

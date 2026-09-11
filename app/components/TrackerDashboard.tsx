@@ -564,7 +564,7 @@ function Methodology() {
   );
 }
 
-export default function TrackerDashboard() {
+export default function TrackerDashboard({ viewer }: { viewer: { displayName: string; email: string } }) {
   const [activeTab, setActiveTab] = useState<Tab>("House Summary");
   const [showAdd, setShowAdd] = useState(false);
   const [tracked, setTracked] = useState(initialTrackedMembers);
@@ -574,6 +574,7 @@ export default function TrackerDashboard() {
   const selectedMember = tracked.find((item) => item.id === selectedMemberId) ?? tracked[0];
   const isPelosi = selectedMember.id === member.id;
   const selectedSummary = houseMembersPerformance.find((row) => row.id === selectedMember.id);
+  const viewerInitials = viewer.displayName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "ME";
 
   const addMember = async (candidate: (typeof suggestedMembers)[number]) => {
     const slug = `${candidate.firstName}-${candidate.lastName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -609,7 +610,7 @@ export default function TrackerDashboard() {
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Capitol Ledger home"><span className="brand-mark">✦</span><span><strong>CAPITOL</strong><b>LEDGER</b></span></a>
         <form className="global-search" onSubmit={jumpFromSearch}><span>⌕</span><input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} placeholder="Search a member, ticker, or filing…" aria-label="Search tracker" /><kbd>↵</kbd></form>
-        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing" || selectedMember.chamber === "U.S. Senate"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{selectedMember.chamber === "U.S. Senate" ? "Senate source pending" : syncState === "syncing" ? "Checking…" : syncState === "done" ? "Up to date" : syncState === "error" ? "Try again" : "Check filings"}</button><button className="avatar" aria-label="Account menu">OC</button></div>
+        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing" || selectedMember.chamber === "U.S. Senate"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{selectedMember.chamber === "U.S. Senate" ? "Senate source pending" : syncState === "syncing" ? "Checking…" : syncState === "done" ? "Up to date" : syncState === "error" ? "Try again" : "Check filings"}</button><a className="avatar" href="/signout-with-chatgpt?return_to=%2F" aria-label={`Signed in as ${viewer.email}. Sign out.`} title={`Signed in as ${viewer.displayName} · Sign out`}>{viewerInitials}</a></div>
       </header>
 
       <div className="workspace" id="top">
