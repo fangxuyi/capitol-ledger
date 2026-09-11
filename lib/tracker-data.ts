@@ -156,7 +156,7 @@ export type TrackedMember = {
 
 export const trackedMembers: TrackedMember[] = [
   { id: "nancy-pelosi", firstName: "Nancy", lastName: "Pelosi", initials: "NP", name: "Nancy Pelosi", district: "CA · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
-  { id: "james-lankford", firstName: "James", lastName: "Lankford", initials: "JL", name: "James Lankford", district: "OK · Senate", chamber: "U.S. Senate", party: "Republican", sourceStatus: "Senate source pending" },
+  { id: "james-langevin", firstName: "James R.", lastName: "Langevin", initials: "JL", name: "James R. Langevin", district: "RI-02 · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
   { id: "ed-perlmutter", firstName: "Ed", lastName: "Perlmutter", initials: "EP", name: "Ed Perlmutter", district: "CO-07 · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
   { id: "marjorie-greene", firstName: "Marjorie Taylor", lastName: "Greene", initials: "MG", name: "Marjorie Taylor Greene", district: "GA-14 · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
   { id: "dean-phillips", firstName: "Dean", lastName: "Phillips", initials: "DP", name: "Dean Phillips", district: "MN-03 · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },

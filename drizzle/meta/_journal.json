@@ -15,6 +15,13 @@
       "when": 1789166400000,
       "tag": "0001_seed_tracked_members",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789167600000,
+      "tag": "0002_replace_lankford_with_langevin",
+      "breakpoints": true
     }
   ]
 }

@@ -72,7 +72,7 @@ function TrackedMemberSnapshot({ profile }: { profile: TrackedMember }) {
         <section className="panel source-gap-panel">
           <span className="kicker">Tracked target · separate raw source</span>
           <h2>{profile.name} is saved to your watchlist</h2>
-          <p>James Lankford’s disclosures belong to the Senate eFD system, not the House Clerk database used for the current performance engine. The tracker keeps him visible, but does not substitute or invent House results while the Senate source adapter is pending.</p>
+          <p>{profile.name} does not have a matching record in the House Clerk dataset used for the current performance engine. The tracker keeps the name visible, but does not substitute or invent performance while the correct raw-source record is unavailable.</p>
           <a href="https://efdsearch.senate.gov/search/home/" target="_blank" rel="noreferrer">Open raw Senate eFD search ↗</a>
         </section>
       </div>
@@ -600,7 +600,7 @@ export default function TrackerDashboard() {
           </div>
           <button className="add-member" onClick={() => setShowAdd(true)}><span>＋</span> Add House member</button>
           <div className="sidebar-source"><span className="seal">H</span><p><strong>House Clerk</strong><small>Primary source</small></p><b>Connected</b></div>
-          <p className="sidebar-note">House performance is live. James Lankford remains labeled separately until the Senate eFD adapter is connected.</p>
+          <p className="sidebar-note">Tracked profiles use the House Clerk’s raw filing index and original PTR documents.</p>
         </aside>
 
         <section className="main-content">
