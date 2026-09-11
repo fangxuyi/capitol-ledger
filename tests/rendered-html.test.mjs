@@ -29,6 +29,8 @@ test("ships the completed congressional disclosure tracker", async () => {
   assert.match(houseCsv, /^member_id,member,state_district,ticker/);
   assert.match(dashboard, /Average holding period/);
   assert.match(dashboard, /Download JSON/);
+  assert.match(dashboard, /Informational research only/);
+  assert.match(dashboard, /not investment advice/);
   assert.match(dashboard, /House leaderboard/);
   assert.match(dashboard, /Reconstructed open positions/);
   assert.match(dashboard, /Every reconstructed episode/);

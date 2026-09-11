@@ -642,6 +642,11 @@ export default function TrackerDashboard({ viewer }: { viewer: { displayName: st
           {activeTab === "Trades" && (isPelosi ? <Trades /> : <TrackedMemberDetail profile={selectedMember} section="Trades" />)}
           {activeTab === "Alerts" && <Alerts key={selectedMember.id} profile={selectedMember} />}
           {activeTab === "Methodology" && <Methodology />}
+
+          <footer className="site-disclaimer" aria-label="Research disclaimer">
+            <strong>Informational research only — not investment advice.</strong>
+            <span>Disclosure amounts and dates may be reported as ranges, and modeled returns are estimates rather than verified portfolio results. Check the original filings before relying on any result.</span>
+          </footer>
         </section>
       </div>
 

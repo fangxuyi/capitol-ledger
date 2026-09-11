@@ -395,6 +395,9 @@ a { color: inherit; }
 .source-buttons a { padding: 9px 11px; border: 1px solid #d5d4cc; border-radius: 5px; color: var(--green-dark); text-decoration: none; font-size: 9px; font-weight: 700; }
 .source-buttons a:hover { border-color: var(--green); }
 
+.site-disclaimer { margin: 0 34px 24px; padding: 14px 17px; display: flex; align-items: baseline; gap: 9px; color: #6c766f; background: #ebe8df; border: 1px solid #d8d4ca; border-radius: 6px; font-size: 9px; line-height: 1.5; }
+.site-disclaimer strong { color: var(--ink); white-space: nowrap; }
+
 .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(18,31,25,.55); backdrop-filter: blur(3px); display: grid; place-items: center; padding: 20px; }
 .member-modal { width: min(470px, 100%); background: #fbfaf6; border-radius: 9px; box-shadow: var(--shadow); padding: 25px; position: relative; }
 .modal-close { position: absolute; right: 15px; top: 12px; border: 0; background: transparent; color: #68736d; font-size: 23px; cursor: pointer; }
@@ -470,6 +473,8 @@ a { color: inherit; }
   .method-card h3 { margin-top: 21px; }
   .truth-banner { grid-template-columns: 30px 1fr; }
   .truth-banner a { grid-column: 2; }
+  .site-disclaimer { margin: 0 14px 18px; display: block; }
+  .site-disclaimer strong { display: block; margin-bottom: 3px; white-space: normal; }
 }
 
 @media (max-width: 480px) {

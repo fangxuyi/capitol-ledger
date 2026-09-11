@@ -8,6 +8,8 @@ Some of the data collection, analysis, and website work was done with Codex. The
 
 The hosted tracker is link-accessible and uses the platform’s built-in Sign in with ChatGPT flow before showing the dashboard.
 
+[![Capitol Ledger House performance dashboard](docs/capitol-ledger-dashboard.png)](https://capitol-ledger.yeefangxu.chatgpt.site/)
+
 ## Two halves of the project
 
 ### 1. Data collection and analysis
@@ -53,7 +55,7 @@ The first data refresh downloads thousands of official filings. Later runs reuse
 
 The primary sources are the [House Clerk financial-disclosure search](https://disclosures-clerk.house.gov/FinancialDisclosure/ViewSearch), annual ZIP indexes, and original PTR PDFs. Market returns use adjusted daily prices as a separate analytical input.
 
-This is not an exact brokerage ledger and definitely not investment advice. Congressional disclosures usually provide value bands rather than exact amounts, omit cost basis, and can arrive weeks after the transaction. Options are measured using the underlying stock direction when reliable historical option prices are unavailable. Open positions mean “no machine-readable full exit was matched,” not “we have peeked inside the brokerage account.”
+This is informational research—not investment, legal, tax, or personalized financial advice. It is not an exact brokerage ledger. Congressional disclosures usually provide value bands rather than exact amounts, omit cost basis, and can arrive weeks after the transaction. Modeled returns are estimates, options are measured using the underlying stock direction when reliable historical option prices are unavailable, and open positions mean “no machine-readable full exit was matched,” not “we have peeked inside the brokerage account.” Verify the original filings before relying on any result.
 
 ## Reuse, updates, and collaboration
 
