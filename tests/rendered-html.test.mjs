@@ -25,6 +25,15 @@ test("ships the completed congressional disclosure tracker", async () => {
   assert.match(dashboard, /Average holding period/);
   assert.match(dashboard, /Download JSON/);
   assert.match(data, /Nancy Pelosi/);
+  assert.match(data, /James Lankford/);
+  assert.match(data, /Ed Perlmutter/);
+  assert.match(data, /Marjorie Taylor Greene/);
+  assert.match(data, /Dean Phillips/);
+  assert.match(data, /John James/);
+  assert.match(data, /Carol Devine Miller/);
+  assert.match(data, /Gary Palmer/);
+  assert.match(data, /Daniel Crenshaw/);
+  assert.match(dashboard, /Senate source adapter is pending/);
   assert.match(data, /disclosures-clerk\.house\.gov/);
   assert.match(layout, /Capitol Ledger/);
   assert.doesNotMatch(`${page}${dashboard}${layout}`, /codex-preview|react-loading-skeleton/i);

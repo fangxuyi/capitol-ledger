@@ -142,15 +142,34 @@ export const openPickPerformance = [
   { ticker: "AB", instrument: "Units", opened: "Jan 16, 2026", quantity: "25,000 units", returnValue: -3.9, benchmark: 11.1, excess: -15.0, status: "Open", note: "Daily adjusted-close proxy through Sep 11, 2026." },
 ];
 
-export const trackedMembers = [
-  { id: "nancy-pelosi", initials: "NP", name: "Nancy Pelosi", district: "D · CA-11", active: true },
+export type TrackedMember = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  initials: string;
+  name: string;
+  district: string;
+  chamber: "U.S. House" | "U.S. Senate";
+  party: "Democrat" | "Republican";
+  sourceStatus: "House data ready" | "Senate source pending";
+};
+
+export const trackedMembers: TrackedMember[] = [
+  { id: "nancy-pelosi", firstName: "Nancy", lastName: "Pelosi", initials: "NP", name: "Nancy Pelosi", district: "CA · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
+  { id: "james-lankford", firstName: "James", lastName: "Lankford", initials: "JL", name: "James Lankford", district: "OK · Senate", chamber: "U.S. Senate", party: "Republican", sourceStatus: "Senate source pending" },
+  { id: "ed-perlmutter", firstName: "Ed", lastName: "Perlmutter", initials: "EP", name: "Ed Perlmutter", district: "CO-07 · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
+  { id: "marjorie-greene", firstName: "Marjorie Taylor", lastName: "Greene", initials: "MG", name: "Marjorie Taylor Greene", district: "GA-14 · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
+  { id: "dean-phillips", firstName: "Dean", lastName: "Phillips", initials: "DP", name: "Dean Phillips", district: "MN-03 · House history", chamber: "U.S. House", party: "Democrat", sourceStatus: "House data ready" },
+  { id: "john-james", firstName: "John", lastName: "James", initials: "JJ", name: "John James", district: "MI-10 · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
+  { id: "carol-miller", firstName: "Carol Devine", lastName: "Miller", initials: "CM", name: "Carol Devine Miller", district: "WV · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
+  { id: "gary-palmer", firstName: "Gary", lastName: "Palmer", initials: "GP", name: "Gary Palmer", district: "AL-06 · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
+  { id: "daniel-crenshaw", firstName: "Daniel", lastName: "Crenshaw", initials: "DC", name: "Daniel Crenshaw", district: "TX-02 · House history", chamber: "U.S. House", party: "Republican", sourceStatus: "House data ready" },
 ];
 
 export const suggestedMembers = [
-  { firstName: "Josh", lastName: "Gottheimer", displayName: "Josh Gottheimer", district: "NJ-05" },
-  { firstName: "Marjorie Taylor", lastName: "Greene", displayName: "Marjorie Taylor Greene", district: "GA-14" },
-  { firstName: "Ro", lastName: "Khanna", displayName: "Ro Khanna", district: "CA-17" },
-  { firstName: "Michael", lastName: "McCaul", displayName: "Michael McCaul", district: "TX-10" },
+  { firstName: "Josh", lastName: "Gottheimer", displayName: "Josh Gottheimer", district: "NJ-05", party: "Democrat" as const },
+  { firstName: "Ro", lastName: "Khanna", displayName: "Ro Khanna", district: "CA-17", party: "Democrat" as const },
+  { firstName: "Michael", lastName: "McCaul", displayName: "Michael McCaul", district: "TX-10", party: "Republican" as const },
 ];
 
 export const officialSources = {

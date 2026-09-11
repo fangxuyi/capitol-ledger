@@ -235,6 +235,17 @@ a { color: inherit; }
 .featured-picks span { font: 700 7.5px/1 var(--font-geist-mono), monospace; }
 .featured-picks small { grid-column: 1 / -1; color: #858e89; font-size: 6.8px; }
 .no-picks { color: #939995; font-size: 8px; font-style: italic; }
+.tracked-snapshot-panel { margin-top: 14px; padding: 18px; }
+.tracked-summary-line { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+.tracked-summary-line p { margin: 0; padding: 12px; display: flex; flex-direction: column; gap: 5px; border: 1px solid #e2ded5; border-radius: 5px; background: #faf8f3; }
+.tracked-summary-line strong { color: var(--ink); font-size: 10px; }
+.tracked-summary-line span { color: #818984; font-size: 8px; }
+.tracked-featured-picks { overflow: visible; }
+.tracked-featured-picks a { flex: 1; min-height: 54px; }
+.source-gap-panel { padding: 25px; }
+.source-gap-panel h2 { margin: 10px 0 8px; font: 600 25px/1.1 Georgia, serif; }
+.source-gap-panel p { max-width: 720px; color: #68756e; font-size: 10px; line-height: 1.6; }
+.source-gap-panel a { display: inline-block; margin-top: 9px; color: var(--green-dark); font-size: 9px; font-weight: 700; }
 .performance-callout { margin-top: 14px; padding: 15px 18px; border-radius: 7px; background: #173e30; color: #f2f0e9; display: grid; grid-template-columns: auto 1fr; gap: 17px; align-items: center; }
 .performance-callout > span { padding: 6px 8px; border: 1px solid rgba(229,194,117,.45); border-radius: 4px; color: #e5c275; font: 800 8px/1 var(--font-geist-mono), monospace; letter-spacing: .08em; white-space: nowrap; }
 .performance-callout strong { font-size: 10px; }
@@ -413,6 +424,8 @@ a { color: inherit; }
   .method-strip { grid-template-columns: 1fr; }
   .house-summary-hero { display: block; }
   .house-summary-actions { display: inline-flex; margin-top: 14px; }
+  .tracked-summary-line { grid-template-columns: 1fr; }
+  .tracked-featured-picks { flex-wrap: wrap; }
   .coverage-banner { grid-template-columns: 1fr; gap: 10px; }
   .leader-strip { grid-template-columns: 48px 1fr; }
   .leader-strip > strong { grid-column: 2; }

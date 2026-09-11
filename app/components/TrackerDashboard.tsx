@@ -13,6 +13,7 @@ import {
   suggestedMembers,
   trackedMembers as initialTrackedMembers,
   trades,
+  type TrackedMember,
   type Trade,
 } from "../../lib/tracker-data";
 
@@ -58,6 +59,56 @@ function MetricCard({ eyebrow, value, note, tone = "default" }: { eyebrow: strin
       <strong>{value}</strong>
       <p>{note}</p>
     </article>
+  );
+}
+
+function TrackedMemberSnapshot({ profile }: { profile: TrackedMember }) {
+  const summary = houseMembersPerformance.find((row) => row.id === profile.id);
+  const signed = (value: number | null) => value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+
+  if (!summary) {
+    return (
+      <div className="tab-content">
+        <section className="panel source-gap-panel">
+          <span className="kicker">Tracked target · separate raw source</span>
+          <h2>{profile.name} is saved to your watchlist</h2>
+          <p>James Lankford’s disclosures belong to the Senate eFD system, not the House Clerk database used for the current performance engine. The tracker keeps him visible, but does not substitute or invent House results while the Senate source adapter is pending.</p>
+          <a href="https://efdsearch.senate.gov/search/home/" target="_blank" rel="noreferrer">Open raw Senate eFD search ↗</a>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tab-content">
+      <section className="performance-metrics">
+        <MetricCard eyebrow="Scored episodes" value={summary.scoredCount.toLocaleString()} note={`${summary.closedCount} closed · ${summary.openCount} latest-price marks.`} />
+        <MetricCard eyebrow="Average holding return" value={signed(summary.averageReturn)} note="Equal-weighted across reconstructed selection episodes." tone="green" />
+        <MetricCard eyebrow="Average excess vs SPY" value={signed(summary.averageExcess)} note="Matched to each episode’s disclosed holding period." />
+        <MetricCard eyebrow="Positive rate" value={summary.hitRate === null ? "—" : `${summary.hitRate.toFixed(1)}%`} note={`${summary.averageHoldingDays?.toLocaleString() ?? "—"} calendar days average holding period.`} tone="amber" />
+      </section>
+
+      <section className="panel tracked-snapshot-panel">
+        <div className="panel-head">
+          <div><span className="kicker">Raw House Clerk history</span><h2>Selected outcomes</h2></div>
+          <span className="readiness-pill">{summary.filingCount} PTRs indexed</span>
+        </div>
+        <div className="tracked-summary-line">
+          <p><strong>{summary.longCount} long</strong><span>{summary.shortCount} short selections</span></p>
+          <p><strong>{summary.selectionCount} episodes found</strong><span>{summary.scoredCount} have matching prices</span></p>
+          <p><strong>{summary.stateDistrict}</strong><span>District code in the Clerk index</span></p>
+        </div>
+        <div className="featured-picks tracked-featured-picks">
+          {summary.featuredPicks.map((pick) => (
+            <a href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id} title={`${pick.direction} ${pick.instrument} · ${pick.transactionDate} to ${pick.closeDate} · ${pick.status}`}>
+              <b>{pick.ticker}</b><span className={pick.returnValue !== null && pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</span><small>{pick.periodDays ?? "—"}d · {signed(pick.excessReturn)} excess</small>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <div className="inline-note"><strong>Tracking status:</strong> {profile.name} is now part of the saved tracker list. Performance uses official PTR episodes already present in the House-wide dataset; future raw-source refreshes will update the same member record.</div>
+    </div>
   );
 }
 
@@ -403,14 +454,15 @@ const defaultRules = [
   { id: "late", name: "Filing lag", detail: "Transaction appears more than 45 days after trade", on: false },
 ];
 
-function Alerts() {
+function Alerts({ profile }: { profile: TrackedMember }) {
   const [rules, setRules] = useState(defaultRules);
   const [threshold, setThreshold] = useState("$1 million");
+  const summary = houseMembersPerformance.find((row) => row.id === profile.id);
   const toggleRule = async (id: string) => {
     setRules((current) => current.map((rule) => rule.id === id ? { ...rule, on: !rule.on } : rule));
     const rule = rules.find((item) => item.id === id);
     try {
-      await fetch("/api/alert-rules", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ memberId: member.id, ruleType: id, enabled: !rule?.on }) });
+      await fetch("/api/alert-rules", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ memberId: profile.id, ruleType: id, enabled: !rule?.on }) });
     } catch { /* UI remains useful if local persistence is unavailable. */ }
   };
   return (
@@ -435,14 +487,21 @@ function Alerts() {
         </article>
 
         <article className="panel alert-feed">
-          <div className="panel-head"><div><span className="kicker">Recent alerts</span><h2>4 major changes</h2></div><button className="quiet-button">Mark read</button></div>
-          {trades.filter((trade) => trade.severity === "urgent").slice(0, 4).map((trade) => (
+          <div className="panel-head"><div><span className="kicker">Tracked record</span><h2>{profile.id === member.id ? "4 major changes" : `${profile.name} monitoring`}</h2></div><button className="quiet-button">Mark read</button></div>
+          {profile.id === member.id ? trades.filter((trade) => trade.severity === "urgent").slice(0, 4).map((trade) => (
             <a className="alert-row" href={trade.sourceUrl} target="_blank" rel="noreferrer" key={trade.id}>
               <span className={`alert-symbol ${trade.action === "Purchase" ? "buy" : "sell"}`}>{trade.action === "Purchase" ? "↑" : "↓"}</span>
               <div><strong>{trade.ticker} · {trade.action}</strong><p>{trade.amount} reported for {trade.transactionDate}</p><small>Disclosed {trade.filedDate} · {trade.owner}</small></div>
               <span>↗</span>
             </a>
+          )) : summary?.featuredPicks.map((pick) => (
+            <a className="alert-row" href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id}>
+              <span className={`alert-symbol ${pick.direction === "Long" ? "buy" : "sell"}`}>{pick.direction === "Long" ? "↑" : "↓"}</span>
+              <div><strong>{pick.ticker} · {pick.direction} {pick.instrument}</strong><p>{pick.status} · {pick.periodDays ?? "—"} day episode</p><small>Official PTR opened {pick.transactionDate}</small></div>
+              <span>↗</span>
+            </a>
           ))}
+          {profile.id !== member.id && !summary && <div className="empty-state">Senate eFD monitoring will appear here when that source adapter is connected.</div>}
         </article>
       </section>
       <div className="inline-note"><strong>Alert language matters:</strong> a filing alert is evidence of delayed public disclosure, not evidence of a live trade, wrongdoing, or a recommendation to follow it.</div>
@@ -488,13 +547,18 @@ export default function TrackerDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("House Summary");
   const [showAdd, setShowAdd] = useState(false);
   const [tracked, setTracked] = useState(initialTrackedMembers);
+  const [selectedMemberId, setSelectedMemberId] = useState(member.id);
   const [globalQuery, setGlobalQuery] = useState("");
   const [syncState, setSyncState] = useState<"idle" | "syncing" | "done" | "error">("idle");
+  const selectedMember = tracked.find((item) => item.id === selectedMemberId) ?? tracked[0];
+  const isPelosi = selectedMember.id === member.id;
+  const selectedSummary = houseMembersPerformance.find((row) => row.id === selectedMember.id);
+  const visibleTabs = isPelosi ? tabs : tabs.filter((tab) => tab !== "Positions" && tab !== "Trades");
 
   const addMember = async (candidate: (typeof suggestedMembers)[number]) => {
     const slug = `${candidate.firstName}-${candidate.lastName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     if (!tracked.some((item) => item.id === slug)) {
-      setTracked((current) => [...current, { id: slug, initials: `${candidate.firstName[0]}${candidate.lastName[0]}`, name: candidate.displayName, district: candidate.district, active: false }]);
+      setTracked((current) => [...current, { id: slug, firstName: candidate.firstName, lastName: candidate.lastName, initials: `${candidate.firstName[0]}${candidate.lastName[0]}`, name: candidate.displayName, district: `${candidate.district} · House history`, chamber: "U.S. House", party: candidate.party, sourceStatus: "House data ready" }]);
       try {
         await fetch("/api/watchlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...candidate, id: slug }) });
       } catch { /* The member remains visible for this session. */ }
@@ -503,9 +567,13 @@ export default function TrackerDashboard() {
   };
 
   const runSync = async () => {
+    if (selectedMember.chamber === "U.S. Senate") {
+      setSyncState("error");
+      return;
+    }
     setSyncState("syncing");
     try {
-      const response = await fetch("/api/sync", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ firstName: "Nancy", lastName: "Pelosi", memberId: member.id, years: [2025, 2026] }) });
+      const response = await fetch("/api/sync", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ firstName: selectedMember.firstName, lastName: selectedMember.lastName, memberId: selectedMember.id, years: [2025, 2026] }) });
       if (!response.ok) throw new Error("Sync failed");
       setSyncState("done");
     } catch { setSyncState("error"); }
@@ -521,36 +589,36 @@ export default function TrackerDashboard() {
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Capitol Ledger home"><span className="brand-mark">✦</span><span><strong>CAPITOL</strong><b>LEDGER</b></span></a>
         <form className="global-search" onSubmit={jumpFromSearch}><span>⌕</span><input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} placeholder="Search a member, ticker, or filing…" aria-label="Search tracker" /><kbd>↵</kbd></form>
-        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{syncState === "syncing" ? "Checking…" : syncState === "done" ? "Up to date" : syncState === "error" ? "Try again" : "Check filings"}</button><button className="avatar" aria-label="Account menu">OC</button></div>
+        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing" || selectedMember.chamber === "U.S. Senate"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{selectedMember.chamber === "U.S. Senate" ? "Senate source pending" : syncState === "syncing" ? "Checking…" : syncState === "done" ? "Up to date" : syncState === "error" ? "Try again" : "Check filings"}</button><button className="avatar" aria-label="Account menu">OC</button></div>
       </header>
 
       <div className="workspace" id="top">
         <aside className="sidebar">
           <div className="sidebar-label"><span>Tracked members</span><small>{tracked.length}</small></div>
           <div className="member-list">
-            {tracked.map((item) => <button className={`member-button ${item.active ? "active" : ""}`} key={item.id} onClick={() => item.active && setActiveTab("Overview")}><span>{item.initials}</span><p><strong>{item.name}</strong><small>{item.district}</small></p>{item.active && <i />}</button>)}
+            {tracked.map((item) => <button className={`member-button ${item.id === selectedMember.id ? "active" : ""}`} key={item.id} onClick={() => { setSelectedMemberId(item.id); setActiveTab("Overview"); setSyncState("idle"); }}><span>{item.initials}</span><p><strong>{item.name}</strong><small>{item.sourceStatus}</small></p>{item.id === selectedMember.id && <i />}</button>)}
           </div>
           <button className="add-member" onClick={() => setShowAdd(true)}><span>＋</span> Add House member</button>
           <div className="sidebar-source"><span className="seal">H</span><p><strong>House Clerk</strong><small>Primary source</small></p><b>Connected</b></div>
-          <p className="sidebar-note">House data only. Senate disclosures use a separate source adapter.</p>
+          <p className="sidebar-note">House performance is live. James Lankford remains labeled separately until the Senate eFD adapter is connected.</p>
         </aside>
 
         <section className="main-content">
           {activeTab !== "House Summary" && <header className="member-hero">
-            <div className="member-identity"><span className="large-initials">NP</span><div><div className="member-tag"><span>{member.chamber}</span><i />{member.party}</div><h1>{member.name}</h1><p>{member.district} · {member.descriptor}</p></div></div>
-            <div className="member-asof"><span>Latest annual anchor</span><strong>{member.annualAsOf}</strong><small>Filed {member.annualFiled}</small></div>
+            <div className="member-identity"><span className="large-initials">{selectedMember.initials}</span><div><div className="member-tag"><span>{selectedMember.chamber}</span><i />{selectedMember.party}</div><h1>{selectedMember.name}</h1><p>{selectedMember.district} · {selectedMember.sourceStatus}</p></div></div>
+            <div className="member-asof"><span>{isPelosi ? "Latest annual anchor" : "Historical performance"}</span><strong>{isPelosi ? member.annualAsOf : selectedSummary ? `${selectedSummary.scoredCount} scored episodes` : "Awaiting Senate adapter"}</strong><small>{isPelosi ? `Filed ${member.annualFiled}` : selectedSummary ? `${selectedSummary.filingCount} official PTRs` : "Raw source kept separate"}</small></div>
           </header>}
 
           <nav className="tabs" aria-label="Tracker sections">
-            {tabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}{tab === "Alerts" && <span>4</span>}</button>)}
+            {visibleTabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}{tab === "Alerts" && isPelosi && <span>4</span>}</button>)}
           </nav>
 
           {activeTab === "House Summary" && <HouseSummary />}
-          {activeTab === "Overview" && <Overview />}
+          {activeTab === "Overview" && (isPelosi ? <Overview /> : <TrackedMemberSnapshot profile={selectedMember} />)}
           {activeTab === "Positions" && <Positions />}
-          {activeTab === "Performance" && <Performance />}
+          {activeTab === "Performance" && (isPelosi ? <Performance /> : <TrackedMemberSnapshot profile={selectedMember} />)}
           {activeTab === "Trades" && <Trades />}
-          {activeTab === "Alerts" && <Alerts />}
+          {activeTab === "Alerts" && <Alerts key={selectedMember.id} profile={selectedMember} />}
           {activeTab === "Methodology" && <Methodology />}
         </section>
       </div>
