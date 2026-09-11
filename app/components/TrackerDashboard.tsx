@@ -178,22 +178,22 @@ function Performance() {
   return (
     <div className="tab-content">
       <section className="performance-metrics" aria-label="Pick performance summary">
-        <MetricCard eyebrow="Closed, fully linkable cycles" value="7" note="Option purchases matched to an explicit exercise in a later official filing." />
-        <MetricCard eyebrow="Midpoint success rate" value="85.7%" note="6 of 7 modeled premium-band midpoints finished positive; definite-win floor is 57.1%." tone="green" />
-        <MetricCard eyebrow="Underlying beat SPY" value="57.1%" note="4 of 7 underlying securities outperformed SPY over the same holding window." />
-        <MetricCard eyebrow="Modeled exercise-value P&L" value="$1.2M–$7.1M" note="Range across the seven cycles; disclosed-band midpoint is about $4.2M." tone="amber" />
+        <MetricCard eyebrow="Closed, fully linkable cycles" value="15" note="Option purchases matched to a disclosed exercise, sale, expiry, or official loss." />
+        <MetricCard eyebrow="Midpoint-positive rate" value="60.0%" note="9 of 15 premium-band midpoint scenarios finished positive; definite-win floor is 40.0%." tone="green" />
+        <MetricCard eyebrow="Underlying beat SPY" value="53.3%" note="8 of 15 underlying securities outperformed SPY over the same holding window." />
+        <MetricCard eyebrow="Attributable P&L range" value="−$0.4M to +$7.1M" note="Range across all 15 cycles; premium-band midpoint scenario is about +$3.4M." tone="amber" />
       </section>
 
       <section className="performance-callout">
         <span>MODELED · NOT AUDITED</span>
-        <div><strong>This is the narrowest performance sample the raw filings can support.</strong><p>It includes only option purchases with exact contract terms and a later explicit exercise. Open positions, ambiguous sales, and trades without enough lifecycle detail are excluded, so the score is useful evidence—not a complete portfolio return.</p></div>
+        <div><strong>This is the narrowest historical sample the raw filings can support.</strong><p>It includes 15 option purchases with enough terms and a later disclosed close. Four losses come directly from reported gain/loss figures; other rows are filing-band models. Open positions and ambiguous lifecycles are excluded, so this is not a complete portfolio return.</p></div>
       </section>
 
       <section className="panel pick-panel">
-        <div className="panel-head"><div><span className="kicker">Purchase → full exercise</span><h2>Closed option cycles</h2></div><span className="asof">Daily adjusted-close model · USD</span></div>
+        <div className="panel-head"><div><span className="kicker">Purchase → disclosed close</span><h2>Closed option cycles</h2></div><span className="asof">Official losses + price model · USD</span></div>
         <div className="pick-scroll">
           <div className="pick-table closed-picks">
-            <div className="pick-head"><span>Security</span><span>Lifecycle</span><span>Underlying</span><span>SPY</span><span>Excess</span><span>Modeled option ROI</span><span>Modeled P&amp;L</span><span>Outcome</span></div>
+            <div className="pick-head"><span>Security</span><span>Lifecycle</span><span>Underlying</span><span>SPY</span><span>Excess</span><span>Option ROI / range</span><span>P&amp;L / range</span><span>Outcome</span></div>
             {closedPickPerformance.map((pick) => (
               <div className="pick-row" key={pick.id} title={pick.note}>
                 <div className="pick-security"><span className="ticker-chip">{pick.ticker}</span><p><strong>{pick.instrument}</strong><small><a href={pick.purchaseSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[0]} ↗</a> → <a href={pick.closeSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[1]} ↗</a></small></p></div>
@@ -203,12 +203,12 @@ function Performance() {
                 <strong className={pick.excessReturn >= 0 ? "return-positive" : "return-negative"}>{signed(pick.excessReturn)}</strong>
                 <div className="roi-range"><strong className={pick.optionReturnMid >= 0 ? "return-positive" : "return-negative"}>{signed(pick.optionReturnMid)} mid</strong><span>{signed(pick.optionReturnLow)} to {signed(pick.optionReturnHigh)}</span></div>
                 <div className="roi-range"><strong>{money(pick.pnlMid)} mid</strong><span>{money(pick.pnlLow)} to {money(pick.pnlHigh)}</span></div>
-                <span className={`result-badge ${pick.result === "Definite win" ? "win" : "uncertain"}`}>{pick.result}</span>
+                <span className={`result-badge ${pick.result === "Definite win" ? "win" : pick.result === "Official loss" ? "loss" : "uncertain"}`}>{pick.result}</span>
               </div>
             ))}
           </div>
         </div>
-        <p className="chart-note">Exercise value = max(split-adjusted actual close − adjusted strike, 0) × shares received. Total-return comparisons use dividend-adjusted closes. Modeled P&amp;L subtracts the disclosed premium band; modeled ROI divides by that band. A “definite win” means even the low estimate is positive.</p>
+        <p className="chart-note">Where the filing reports gain or loss, that figure is used directly. Otherwise, exercise value = max(split-adjusted actual close − adjusted strike, 0) × shares received; modeled P&amp;L subtracts the disclosed premium band. Total-return comparisons use dividend-adjusted closes. “Definite win” means even the low estimate is positive.</p>
       </section>
 
       <section className="panel pick-panel open-performance">

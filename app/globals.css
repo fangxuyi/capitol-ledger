@@ -217,6 +217,7 @@ a { color: inherit; }
 .return-negative { color: var(--red) !important; }
 .result-badge { justify-self: start; padding: 5px 7px; border-radius: 10px; font: 700 7px/1 var(--font-geist-mono), monospace; white-space: nowrap; }
 .result-badge.win { background: #dcece3; color: #246348; }
+.result-badge.loss { background: #f1dfdc; color: var(--red); }
 .result-badge.uncertain { background: #f2e5cf; color: #845a1f; }
 .result-badge.open { background: #e5e8e5; color: #5d6962; }
 .open-performance { margin-top: 14px; }
