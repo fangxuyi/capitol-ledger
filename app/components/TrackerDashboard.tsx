@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from "react";
 import {
+  closedPickPerformance,
   filingCadence,
   member,
+  openPickPerformance,
   officialSources,
   positions,
   reportedIncomeHistory,
@@ -171,19 +173,71 @@ function Positions() {
 
 function Performance() {
   const maxAnnual = Math.max(...reportedIncomeHistory.map((item) => item.gainTaggedFloor));
+  const signed = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+  const money = (value: number) => `${value < 0 ? "−" : "+"}$${Math.abs(value).toFixed(3)}M`;
   return (
     <div className="tab-content">
-      <section className="performance-hero">
-        <article className="performance-primary">
-          <span className="kicker">Cumulative profit estimate</span>
-          <div className="unavailable-line"><strong>Not decision-grade</strong><span>Insufficient cost basis</span></div>
-          <p>The raw filings do not reveal exact execution values, complete tax lots, or opening cost basis. An exact cumulative profit number would be invented precision.</p>
-        </article>
-        <MetricCard eyebrow="Capital-gain-tagged income floor · 2020–25" value="≥ $21.6M" note="Cumulative gross floor from annual income lines; not net P&L and not fully attributable when income types share a band." tone="green" />
-        <MetricCard eyebrow="2026 gross activity" value="$23.1M–$95.4M" note="Purchases, sales, gifts, exercises, and exchanges. Turnover—not return." />
+      <section className="performance-metrics" aria-label="Pick performance summary">
+        <MetricCard eyebrow="Closed, fully linkable cycles" value="7" note="Option purchases matched to an explicit exercise in a later official filing." />
+        <MetricCard eyebrow="Midpoint success rate" value="85.7%" note="6 of 7 modeled premium-band midpoints finished positive; definite-win floor is 57.1%." tone="green" />
+        <MetricCard eyebrow="Underlying beat SPY" value="57.1%" note="4 of 7 underlying securities outperformed SPY over the same holding window." />
+        <MetricCard eyebrow="Modeled exercise-value P&L" value="$1.2M–$7.1M" note="Range across the seven cycles; disclosed-band midpoint is about $4.2M." tone="amber" />
       </section>
 
-      <section className="performance-grid">
+      <section className="performance-callout">
+        <span>MODELED · NOT AUDITED</span>
+        <div><strong>This is the narrowest performance sample the raw filings can support.</strong><p>It includes only option purchases with exact contract terms and a later explicit exercise. Open positions, ambiguous sales, and trades without enough lifecycle detail are excluded, so the score is useful evidence—not a complete portfolio return.</p></div>
+      </section>
+
+      <section className="panel pick-panel">
+        <div className="panel-head"><div><span className="kicker">Purchase → full exercise</span><h2>Closed option cycles</h2></div><span className="asof">Daily adjusted-close model · USD</span></div>
+        <div className="pick-scroll">
+          <div className="pick-table closed-picks">
+            <div className="pick-head"><span>Security</span><span>Lifecycle</span><span>Underlying</span><span>SPY</span><span>Excess</span><span>Modeled option ROI</span><span>Modeled P&amp;L</span><span>Outcome</span></div>
+            {closedPickPerformance.map((pick) => (
+              <div className="pick-row" key={pick.id} title={pick.note}>
+                <div className="pick-security"><span className="ticker-chip">{pick.ticker}</span><p><strong>{pick.instrument}</strong><small><a href={pick.purchaseSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[0]} ↗</a> → <a href={pick.closeSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[1]} ↗</a></small></p></div>
+                <div className="pick-life"><strong>{pick.opened}</strong><span>to {pick.closed}</span><small>{pick.days} days</small></div>
+                <strong className={pick.underlyingReturn >= 0 ? "return-positive" : "return-negative"}>{signed(pick.underlyingReturn)}</strong>
+                <span>{signed(pick.benchmarkReturn)}</span>
+                <strong className={pick.excessReturn >= 0 ? "return-positive" : "return-negative"}>{signed(pick.excessReturn)}</strong>
+                <div className="roi-range"><strong className={pick.optionReturnMid >= 0 ? "return-positive" : "return-negative"}>{signed(pick.optionReturnMid)} mid</strong><span>{signed(pick.optionReturnLow)} to {signed(pick.optionReturnHigh)}</span></div>
+                <div className="roi-range"><strong>{money(pick.pnlMid)} mid</strong><span>{money(pick.pnlLow)} to {money(pick.pnlHigh)}</span></div>
+                <span className={`result-badge ${pick.result === "Definite win" ? "win" : "uncertain"}`}>{pick.result}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="chart-note">Exercise value = max(adjusted closing price − adjusted strike, 0) × shares received. Modeled P&amp;L subtracts the disclosed premium band; modeled ROI divides by that band. A “definite win” means even the low estimate is positive.</p>
+      </section>
+
+      <section className="panel pick-panel open-performance">
+        <div className="panel-head"><div><span className="kicker">Right-censored</span><h2>Open picks through Sep 11, 2026</h2></div><span className="asof">Excluded from closed success rate</span></div>
+        <div className="pick-scroll">
+          <div className="pick-table open-picks">
+            <div className="pick-head"><span>Security</span><span>Opened</span><span>Disclosed quantity</span><span>Underlying proxy</span><span>SPY</span><span>Excess</span><span>Status</span></div>
+            {openPickPerformance.map((pick) => (
+              <div className="pick-row" key={`${pick.ticker}-${pick.instrument}`} title={pick.note}>
+                <div className="pick-security"><span className="ticker-chip">{pick.ticker}</span><p><strong>{pick.instrument}</strong><small>{pick.note}</small></p></div>
+                <span>{pick.opened}</span>
+                <strong>{pick.quantity}</strong>
+                <strong className={pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</strong>
+                <span>{signed(pick.benchmark)}</span>
+                <strong className={pick.excess >= 0 ? "return-positive" : "return-negative"}>{signed(pick.excess)}</strong>
+                <span className="result-badge open">{pick.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="method-strip">
+        <div><span>1</span><p><strong>Official terms</strong><small>Contract count, strike, expiry, transaction date, premium band, and exercise come from Clerk PDFs.</small></p></div>
+        <div><span>2</span><p><strong>Separate price proxy</strong><small>Split-adjusted daily closes value the underlying and SPY on matching dates; they are not official filing data.</small></p></div>
+        <div><span>3</span><p><strong>No invented option marks</strong><small>Actual option return is omitted unless a licensed historical quote source is added.</small></p></div>
+      </section>
+
+      <section className="performance-grid secondary-performance">
         <article className="panel income-history">
           <div className="panel-head"><div><span className="kicker">Raw-source proxy</span><h2>Capital-gain-tagged income floor</h2></div><span className="asof">Annual reports · USD millions</span></div>
           <div className="income-bars">
@@ -200,19 +254,19 @@ function Performance() {
         </article>
 
         <aside className="panel pnl-readiness">
-          <div className="panel-head"><div><span className="kicker">Estimate readiness</span><h2>What is needed for P&amp;L</h2></div><span className="readiness-pill">Partial</span></div>
+          <div className="panel-head"><div><span className="kicker">Evidence boundaries</span><h2>What the score does not claim</h2></div><span className="readiness-pill">Estimated</span></div>
           <div className="readiness-list">
-            <div><i className="ready" /><p><strong>Official trade chronology</strong><small>66 PTRs indexed since 2013</small></p><b>Ready</b></div>
-            <div><i className="ready" /><p><strong>Annual value anchors</strong><small>Year-end bands, not exact balances</small></p><b>Ready</b></div>
-            <div><i className="partial" /><p><strong>Exact quantities</strong><small>Available only when descriptions supply them</small></p><b>Partial</b></div>
-            <div><i className="missing" /><p><strong>Complete starting cost basis</strong><small>Not disclosed in House reports</small></p><b>Missing</b></div>
-            <div><i className="missing" /><p><strong>Historical option marks</strong><small>Requires a separate market-data source</small></p><b>Missing</b></div>
+            <div><i className="ready" /><p><strong>Official trade chronology</strong><small>Purchase and exercise dates are directly disclosed</small></p><b>Fact</b></div>
+            <div><i className="ready" /><p><strong>Exact exercise quantities</strong><small>Available for these seven selected cycles</small></p><b>Fact</b></div>
+            <div><i className="partial" /><p><strong>Premium paid</strong><small>Only a broad dollar band is disclosed</small></p><b>Range</b></div>
+            <div><i className="partial" /><p><strong>Daily price at exercise</strong><small>Close is a proxy, not the intraday execution mark</small></p><b>Proxy</b></div>
+            <div><i className="missing" /><p><strong>Actual historical option marks</strong><small>Reliable consolidated history requires licensed market data</small></p><b>Omitted</b></div>
           </div>
-          <div className="pnl-formula"><span>Defensible since-anchor estimate</span><code>sale cash − purchase cash + ending value − starting value + eligible income</code></div>
+          <div className="pnl-formula"><span>Closed-cycle estimate</span><code>exercise intrinsic value − disclosed premium band</code></div>
         </aside>
       </section>
 
-      <div className="inline-note"><strong>Interpretation:</strong> “at least $21.6M” is a gross reported-income floor on gain-tagged annual rows, not proof of trading skill, a net return, or the household’s total wealth change.</div>
+      <div className="inline-note"><strong>Two different measures:</strong> the pick tables estimate security-level outcomes for linkable cycles. The income chart is an annual filing floor. Neither is a complete household time-weighted return, and the two should not be added together.</div>
     </div>
   );
 }
@@ -311,7 +365,7 @@ function Methodology() {
           ["02", "Extract", "Download the official PDF, retain its source URL and hash, read embedded text, and use OCR only when necessary."],
           ["03", "Normalize", "Keep the original wording while mapping owner, asset, action, dates, amount range, ticker, options terms, and amendments."],
           ["04", "Reconstruct", "Anchor positions to annual year-end value bands, then apply later PTR flows without turning missing data into zero."],
-          ["05", "Estimate", "Model low, midpoint-scenario, and high outcomes only when market prices and sufficient quantities exist. Options require option prices."],
+          ["05", "Estimate", "Model low, midpoint-scenario, and high outcomes only when enough terms exist. Explicit exercises can support an intrinsic-value model; actual option returns require licensed quote history."],
           ["06", "Alert", "Trigger on interval-aware thresholds, new/closed issuers, amendments, options activity, position-band changes, and filing lag."],
         ].map(([number, title, copy]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
       </section>
@@ -325,6 +379,7 @@ function Methodology() {
           <a href={officialSources.search} target="_blank" rel="noreferrer">Clerk disclosure database ↗</a>
           <a href={officialSources.annual} target="_blank" rel="noreferrer">Pelosi 2025 annual filing ↗</a>
           <a href={officialSources.guidance} target="_blank" rel="noreferrer">Official instruction guide ↗</a>
+          <a href="https://datashop.cboe.com/option-eod-summary" target="_blank" rel="noreferrer">Licensed historical option data ↗</a>
         </div>
       </section>
     </div>
