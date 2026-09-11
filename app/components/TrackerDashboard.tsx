@@ -208,7 +208,7 @@ function Performance() {
             ))}
           </div>
         </div>
-        <p className="chart-note">Exercise value = max(adjusted closing price − adjusted strike, 0) × shares received. Modeled P&amp;L subtracts the disclosed premium band; modeled ROI divides by that band. A “definite win” means even the low estimate is positive.</p>
+        <p className="chart-note">Exercise value = max(split-adjusted actual close − adjusted strike, 0) × shares received. Total-return comparisons use dividend-adjusted closes. Modeled P&amp;L subtracts the disclosed premium band; modeled ROI divides by that band. A “definite win” means even the low estimate is positive.</p>
       </section>
 
       <section className="panel pick-panel open-performance">
@@ -233,7 +233,7 @@ function Performance() {
 
       <section className="method-strip">
         <div><span>1</span><p><strong>Official terms</strong><small>Contract count, strike, expiry, transaction date, premium band, and exercise come from Clerk PDFs.</small></p></div>
-        <div><span>2</span><p><strong>Separate price proxy</strong><small>Split-adjusted daily closes value the underlying and SPY on matching dates; they are not official filing data.</small></p></div>
+        <div><span>2</span><p><strong>Separate price proxy</strong><small>Actual closes value exercises; dividend-adjusted closes measure total return for the underlying and SPY. They are not official filing data.</small></p></div>
         <div><span>3</span><p><strong>No invented option marks</strong><small>Actual option return is omitted unless a licensed historical quote source is added.</small></p></div>
       </section>
 
