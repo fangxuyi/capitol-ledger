@@ -64,7 +64,7 @@ function MetricCard({ eyebrow, value, note, tone = "default" }: { eyebrow: strin
 function HouseSummary() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<"ranked" | "all">("ranked");
-  const [sort, setSort] = useState<"excess" | "return" | "hit" | "picks">("excess");
+  const [sort, setSort] = useState<"excess" | "return" | "hit" | "holding" | "picks">("excess");
   const eligibleCount = houseMembersPerformance.filter((row) => row.scoredCount >= 12).length;
   const shortCount = houseMembersPerformance.reduce((sum, row) => sum + row.shortCount, 0);
   const readableShare = housePerformanceMeta.textReadablePtrCount / housePerformanceMeta.ptrCount * 100;
@@ -74,6 +74,7 @@ function HouseSummary() {
       if (sort === "picks") return row.scoredCount;
       if (sort === "return") return row.averageReturn ?? -Infinity;
       if (sort === "hit") return row.hitRate ?? -Infinity;
+      if (sort === "holding") return row.averageHoldingDays ?? -Infinity;
       return row.averageExcess ?? -Infinity;
     };
     return houseMembersPerformance
@@ -91,7 +92,11 @@ function HouseSummary() {
           <h2>Who selected stocks well over the holding period?</h2>
           <p>Each episode runs from the first disclosed purchase to a reported close. Partial-sale residuals and positions without a reliable close use the latest available price and are labeled approximate. Stock and call purchases are long; purchased puts are short. Options use the underlying stock return as a directional proxy.</p>
         </div>
-        <a href={officialSources.search} target="_blank" rel="noreferrer">Open raw Clerk database ↗</a>
+        <div className="house-summary-actions">
+          <a href={officialSources.search} target="_blank" rel="noreferrer">Raw Clerk database ↗</a>
+          <a href="/data/house-performance.json" download>Download JSON</a>
+          <a href="/data/house-performance-episodes.csv" download>Download CSV</a>
+        </div>
       </section>
 
       <section className="performance-metrics house-metrics">
@@ -115,17 +120,17 @@ function HouseSummary() {
       </section>}
 
       <section className="section-intro house-controls">
-        <div><span className="kicker">Equal-weighted estimated episodes</span><h2>House performance table</h2><p>Returns begin on the reported transaction date. A reported close ends the episode; otherwise the latest price marks the residual. Featured selections show the member’s best, worst, and latest available examples.</p></div>
+        <div><span className="kicker">Equal-weighted estimated episodes</span><h2>House performance table</h2><p>The default rank is average holding-period excess return versus SPY, among members with 12+ scored episodes. Average holding period is the equal-weighted mean number of calendar days across those episodes.</p></div>
         <div className="filters">
           <label><span>Find a member</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name or district" /></label>
           <label><span>Coverage</span><select value={scope} onChange={(event) => setScope(event.target.value as "ranked" | "all")}><option value="ranked">Ranked · 12+ picks</option><option value="all">All indexed filers</option></select></label>
-          <label><span>Sort by</span><select value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="excess">Average excess</option><option value="return">Average return</option><option value="hit">Positive rate</option><option value="picks">Scored picks</option></select></label>
+          <label><span>Sort by</span><select value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="excess">Average excess · default</option><option value="return">Average return</option><option value="hit">Positive rate</option><option value="holding">Average holding period</option><option value="picks">Scored picks</option></select></label>
         </div>
       </section>
 
       <section className="panel house-table-panel">
         <div className="house-table">
-          <div className="house-head"><span>Rank / member</span><span>Episodes</span><span>Direction</span><span>Avg holding return</span><span>Avg excess</span><span>Positive rate</span><span>Selected stocks · featured outcomes</span></div>
+          <div className="house-head"><span>Rank / member</span><span>Episodes</span><span>Direction</span><span>Avg holding return</span><span>Avg excess</span><span>Positive rate</span><span>Avg hold</span><span>Selected stocks · featured outcomes</span></div>
           {rows.map((row, index) => (
             <div className="house-row" key={row.id}>
               <div className="house-member"><span>{String(index + 1).padStart(2, "0")}</span><p><strong>{row.name}</strong><small>{row.stateDistrict || "District unavailable"} · {row.filingCount} PTRs</small></p></div>
@@ -134,6 +139,7 @@ function HouseSummary() {
               <strong className={row.averageReturn !== null && row.averageReturn >= 0 ? "return-positive" : "return-negative"}>{signed(row.averageReturn)}</strong>
               <strong className={row.averageExcess !== null && row.averageExcess >= 0 ? "return-positive" : "return-negative"}>{signed(row.averageExcess)}</strong>
               <span>{row.hitRate === null ? "—" : `${row.hitRate.toFixed(1)}%`}</span>
+              <span>{row.averageHoldingDays === null ? "—" : `${row.averageHoldingDays.toLocaleString()}d`}</span>
               <div className="featured-picks">
                 {row.featuredPicks.length ? row.featuredPicks.map((pick) => (
                   <a href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id} title={`${pick.direction} ${pick.instrument} · ${pick.transactionDate} to ${pick.closeDate} · ${pick.status}`}>
@@ -147,7 +153,7 @@ function HouseSummary() {
         {!rows.length && <div className="empty-state">No House filer matches that search.</div>}
       </section>
 
-      <div className="inline-note"><strong>Approximation:</strong> this is not exact portfolio performance. Missing quantities and lot matching mean each reconstructed episode is equal-weighted. Partial sales keep a residual open at the latest price; options use underlying-stock direction; inferred expiries and image-only PTR gaps are flagged. A standardized 90-day excess measure is retained in the dataset as a secondary comparison.</div>
+      <div className="inline-note"><strong>Saved dataset:</strong> the downloadable JSON preserves the member summaries and episode-level records; the CSV contains one row per episode. Both are versioned with this site so the same snapshot can be referenced and reused later. <strong>Approximation:</strong> this is not exact portfolio performance. Missing quantities and lot matching mean each reconstructed episode is equal-weighted.</div>
     </div>
   );
 }

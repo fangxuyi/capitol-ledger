@@ -3,11 +3,13 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("ships the completed congressional disclosure tracker", async () => {
-  const [page, dashboard, data, houseData, layout] = await Promise.all([
+  const [page, dashboard, data, houseData, houseJson, houseCsv, layout] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/TrackerDashboard.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/tracker-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/house-performance.generated.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/data/house-performance.json", import.meta.url), "utf8"),
+    readFile(new URL("../public/data/house-performance-episodes.csv", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(page, /TrackerDashboard/);
@@ -16,6 +18,12 @@ test("ships the completed congressional disclosure tracker", async () => {
   assert.match(dashboard, /House performance table/);
   assert.match(houseData, /"filerCount": 401/);
   assert.match(houseData, /"scoredEpisodeCount":/);
+  assert.match(houseData, /"averageHoldingDays":/);
+  assert.match(houseJson, /"members":/);
+  assert.match(houseJson, /"episodes":/);
+  assert.match(houseCsv, /^member_id,member,state_district,ticker/);
+  assert.match(dashboard, /Average holding period/);
+  assert.match(dashboard, /Download JSON/);
   assert.match(data, /Nancy Pelosi/);
   assert.match(data, /disclosures-clerk\.house\.gov/);
   assert.match(layout, /Capitol Ledger/);

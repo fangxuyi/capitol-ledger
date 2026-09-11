@@ -1,6 +1,6 @@
 // Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.
 export const housePerformanceMeta = {
-  "generatedAt": "2026-09-11T21:26:26.935Z",
+  "generatedAt": "2026-09-11T21:40:43.171Z",
   "sourceStartYear": 2013,
   "sourceEndYear": 2026,
   "filerCount": 401,
@@ -10,6 +10,7 @@ export const housePerformanceMeta = {
   "episodeCount": 7139,
   "scoredEpisodeCount": 6536,
   "residualEpisodeCount": 2498,
+  "averageHoldingDays": 706,
   "methodology": "Equal-weighted estimated holding-period return from first disclosed purchase to a reported close; partial-sale residuals and other open episodes use the latest available price. Options use the underlying security as a directional proxy. The 90-day excess return is retained as a secondary standardized comparison."
 } as const;
 
@@ -27,6 +28,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 1638.8,
     "averageExcess": 1496.5,
+    "averageHoldingDays": 2198,
     "average90dExcess": -1.3,
     "hitRate": 100,
     "featuredPicks": [
@@ -58,6 +60,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 746,
     "averageExcess": 497.4,
+    "averageHoldingDays": 2367,
     "average90dExcess": 25.5,
     "hitRate": 100,
     "featuredPicks": [
@@ -89,6 +92,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 484.2,
     "averageExcess": 256.6,
+    "averageHoldingDays": 2830,
     "average90dExcess": 1.8,
     "hitRate": 100,
     "featuredPicks": [
@@ -133,6 +137,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 276.6,
     "averageExcess": 129.6,
+    "averageHoldingDays": 1528,
     "average90dExcess": -9.2,
     "hitRate": 50,
     "featuredPicks": [
@@ -203,6 +208,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 177.8,
     "averageExcess": 106.4,
+    "averageHoldingDays": 1090,
     "average90dExcess": -4.5,
     "hitRate": 63.6,
     "featuredPicks": [
@@ -273,6 +279,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 229.9,
     "averageExcess": 97.2,
+    "averageHoldingDays": 1686,
     "average90dExcess": 1,
     "hitRate": 100,
     "featuredPicks": [
@@ -330,6 +337,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 121,
     "averageExcess": 96,
+    "averageHoldingDays": 477,
     "average90dExcess": 23.9,
     "hitRate": 100,
     "featuredPicks": [
@@ -361,6 +369,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 130.6,
     "averageExcess": 82.4,
+    "averageHoldingDays": 842,
     "average90dExcess": 28.2,
     "hitRate": 100,
     "featuredPicks": [
@@ -392,6 +401,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 93.2,
     "averageExcess": 72.5,
+    "averageHoldingDays": 235,
     "average90dExcess": 13.7,
     "hitRate": 75,
     "featuredPicks": [
@@ -449,6 +459,7 @@ export const houseMembersPerformance = [
     "shortCount": 2,
     "averageReturn": 111.8,
     "averageExcess": 70.7,
+    "averageHoldingDays": 618,
     "average90dExcess": -6.4,
     "hitRate": 53.1,
     "featuredPicks": [
@@ -519,6 +530,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 269.3,
     "averageExcess": 59.7,
+    "averageHoldingDays": 2932,
     "average90dExcess": 6.1,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -576,6 +588,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 83.3,
     "averageExcess": 58.6,
+    "averageHoldingDays": 548,
     "average90dExcess": 7.1,
     "hitRate": 54.5,
     "featuredPicks": [
@@ -646,6 +659,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 143.8,
     "averageExcess": 55.3,
+    "averageHoldingDays": 1300,
     "average90dExcess": -3.4,
     "hitRate": 68.8,
     "featuredPicks": [
@@ -703,6 +717,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 140.5,
     "averageExcess": 50.4,
+    "averageHoldingDays": 1885,
     "average90dExcess": -8.6,
     "hitRate": 62.5,
     "featuredPicks": [
@@ -773,6 +788,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 89.5,
     "averageExcess": 41.8,
+    "averageHoldingDays": 519,
     "average90dExcess": 11.9,
     "hitRate": 100,
     "featuredPicks": [
@@ -817,6 +833,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 91.2,
     "averageExcess": 29.6,
+    "averageHoldingDays": 1122,
     "average90dExcess": -2.9,
     "hitRate": 77.6,
     "featuredPicks": [
@@ -887,6 +904,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 130.6,
     "averageExcess": 28.1,
+    "averageHoldingDays": 1148,
     "average90dExcess": 1.9,
     "hitRate": 86.7,
     "featuredPicks": [
@@ -957,6 +975,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 123.4,
     "averageExcess": 21,
+    "averageHoldingDays": 1579,
     "average90dExcess": -6.6,
     "hitRate": 100,
     "featuredPicks": [
@@ -988,6 +1007,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 46.9,
     "averageExcess": 20.3,
+    "averageHoldingDays": 376,
     "average90dExcess": 4.3,
     "hitRate": 87.5,
     "featuredPicks": [
@@ -1058,6 +1078,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 91.3,
     "averageExcess": 18.9,
+    "averageHoldingDays": 1403,
     "average90dExcess": 10.9,
     "hitRate": 100,
     "featuredPicks": [
@@ -1102,6 +1123,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 30.2,
     "averageExcess": 17.4,
+    "averageHoldingDays": 273,
     "average90dExcess": 1.6,
     "hitRate": 100,
     "featuredPicks": [
@@ -1172,6 +1194,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 200.6,
     "averageExcess": 17.3,
+    "averageHoldingDays": 2276,
     "average90dExcess": -0.2,
     "hitRate": 86.3,
     "featuredPicks": [
@@ -1242,6 +1265,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 98.6,
     "averageExcess": 15.6,
+    "averageHoldingDays": 1333,
     "average90dExcess": 0.4,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -1312,6 +1336,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 46.8,
     "averageExcess": 15.4,
+    "averageHoldingDays": 606,
     "average90dExcess": 0.9,
     "hitRate": 71.4,
     "featuredPicks": [
@@ -1382,6 +1407,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 19.8,
     "averageExcess": 14.4,
+    "averageHoldingDays": 200,
     "average90dExcess": -1.9,
     "hitRate": 61.5,
     "featuredPicks": [
@@ -1452,6 +1478,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.9,
     "averageExcess": 14.3,
+    "averageHoldingDays": 226,
     "average90dExcess": 0,
     "hitRate": 50,
     "featuredPicks": [
@@ -1522,6 +1549,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 70.6,
     "averageExcess": 12.6,
+    "averageHoldingDays": 887,
     "average90dExcess": -0.9,
     "hitRate": 52.3,
     "featuredPicks": [
@@ -1592,6 +1620,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 15.2,
     "averageExcess": 12.2,
+    "averageHoldingDays": 17,
     "average90dExcess": -10.6,
     "hitRate": 100,
     "featuredPicks": [
@@ -1623,6 +1652,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 22.8,
     "averageExcess": 10.3,
+    "averageHoldingDays": 319,
     "average90dExcess": -14.3,
     "hitRate": 100,
     "featuredPicks": [
@@ -1654,6 +1684,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 66.2,
     "averageExcess": 10.1,
+    "averageHoldingDays": 853,
     "average90dExcess": 0.7,
     "hitRate": 66.9,
     "featuredPicks": [
@@ -1724,6 +1755,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 20.5,
     "averageExcess": 8.9,
+    "averageHoldingDays": 212,
     "average90dExcess": 1.2,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -1781,6 +1813,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.4,
     "averageExcess": 8.4,
+    "averageHoldingDays": 308,
     "average90dExcess": 14.5,
     "hitRate": 59.4,
     "featuredPicks": [
@@ -1851,6 +1884,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 107,
     "averageExcess": 8.1,
+    "averageHoldingDays": 1477,
     "average90dExcess": -7.2,
     "hitRate": 100,
     "featuredPicks": [
@@ -1882,6 +1916,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -2.5,
     "averageExcess": 6.4,
+    "averageHoldingDays": 231,
     "average90dExcess": 1.3,
     "hitRate": 40,
     "featuredPicks": [
@@ -1939,6 +1974,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 23,
     "averageExcess": 6.1,
+    "averageHoldingDays": 348,
     "average90dExcess": -2.4,
     "hitRate": 50.4,
     "featuredPicks": [
@@ -2009,6 +2045,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -5.3,
     "averageExcess": 5.8,
+    "averageHoldingDays": 133,
     "average90dExcess": 6.8,
     "hitRate": 50,
     "featuredPicks": [
@@ -2079,6 +2116,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 20.7,
     "averageExcess": 5,
+    "averageHoldingDays": 358,
     "average90dExcess": 7.5,
     "hitRate": 64.7,
     "featuredPicks": [
@@ -2149,6 +2187,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 27.3,
     "averageExcess": 4.2,
+    "averageHoldingDays": 364,
     "average90dExcess": 3.1,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -2206,6 +2245,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 32.5,
     "averageExcess": 4.1,
+    "averageHoldingDays": 539,
     "average90dExcess": -0.2,
     "hitRate": 92.9,
     "featuredPicks": [
@@ -2276,6 +2316,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 25.3,
     "averageExcess": 3.8,
+    "averageHoldingDays": 340,
     "average90dExcess": -0.4,
     "hitRate": 47.1,
     "featuredPicks": [
@@ -2346,6 +2387,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 154.9,
     "averageExcess": 3.4,
+    "averageHoldingDays": 2229,
     "average90dExcess": 1.6,
     "hitRate": 100,
     "featuredPicks": [
@@ -2377,6 +2419,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 31.5,
     "averageExcess": 3.1,
+    "averageHoldingDays": 523,
     "average90dExcess": -1,
     "hitRate": 63.1,
     "featuredPicks": [
@@ -2447,6 +2490,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 11.2,
     "averageExcess": 2.6,
+    "averageHoldingDays": 154,
     "average90dExcess": 1.1,
     "hitRate": 70.6,
     "featuredPicks": [
@@ -2517,6 +2561,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -8,
     "averageExcess": 2.6,
+    "averageHoldingDays": 46,
     "average90dExcess": 1.1,
     "hitRate": 17.3,
     "featuredPicks": [
@@ -2587,6 +2632,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 17.9,
     "averageExcess": 2.2,
+    "averageHoldingDays": 263,
     "average90dExcess": 3.4,
     "hitRate": 37.8,
     "featuredPicks": [
@@ -2657,6 +2703,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 4.4,
     "averageExcess": 1.8,
+    "averageHoldingDays": 106,
     "average90dExcess": 0.1,
     "hitRate": 42.5,
     "featuredPicks": [
@@ -2727,6 +2774,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 32.6,
     "averageExcess": 1.3,
+    "averageHoldingDays": 591,
     "average90dExcess": -4.8,
     "hitRate": 75,
     "featuredPicks": [
@@ -2797,6 +2845,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 6.2,
     "averageExcess": 1.3,
+    "averageHoldingDays": 25,
     "average90dExcess": -8.6,
     "hitRate": 100,
     "featuredPicks": [
@@ -2841,6 +2890,7 @@ export const houseMembersPerformance = [
     "shortCount": 3,
     "averageReturn": 6.3,
     "averageExcess": 1.1,
+    "averageHoldingDays": 87,
     "average90dExcess": -5.4,
     "hitRate": 37.9,
     "featuredPicks": [
@@ -2911,6 +2961,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 6.7,
     "averageExcess": 0.8,
+    "averageHoldingDays": 87,
     "average90dExcess": 0.3,
     "hitRate": 66.2,
     "featuredPicks": [
@@ -2981,6 +3032,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 5.8,
     "averageExcess": 0.5,
+    "averageHoldingDays": 73,
     "average90dExcess": -2.5,
     "hitRate": 36.6,
     "featuredPicks": [
@@ -3051,6 +3103,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 6.9,
     "averageExcess": 0.1,
+    "averageHoldingDays": 58,
     "average90dExcess": -2.1,
     "hitRate": 80,
     "featuredPicks": [
@@ -3121,6 +3174,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -1.7,
     "averageExcess": 0,
+    "averageHoldingDays": 23,
     "average90dExcess": -2.6,
     "hitRate": 0,
     "featuredPicks": [
@@ -3152,6 +3206,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 0,
     "averageExcess": 0,
+    "averageHoldingDays": 0,
     "average90dExcess": -33.5,
     "hitRate": 0,
     "featuredPicks": [
@@ -3183,6 +3238,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 0.9,
     "averageExcess": 0,
+    "averageHoldingDays": 32,
     "average90dExcess": 10.8,
     "hitRate": 50,
     "featuredPicks": [
@@ -3240,6 +3296,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 0.4,
     "averageExcess": 0,
+    "averageHoldingDays": 39,
     "average90dExcess": 0.1,
     "hitRate": 41.9,
     "featuredPicks": [
@@ -3310,6 +3367,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 5.6,
     "averageExcess": -0.1,
+    "averageHoldingDays": 578,
     "average90dExcess": 1.7,
     "hitRate": 40,
     "featuredPicks": [
@@ -3380,6 +3438,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 71,
     "averageExcess": -0.6,
+    "averageHoldingDays": 1065,
     "average90dExcess": 0.3,
     "hitRate": 73,
     "featuredPicks": [
@@ -3450,6 +3509,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 24.2,
     "averageExcess": -0.7,
+    "averageHoldingDays": 478,
     "average90dExcess": -0.2,
     "hitRate": 62.4,
     "featuredPicks": [
@@ -3520,6 +3580,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 16.7,
     "averageExcess": -1.1,
+    "averageHoldingDays": 228,
     "average90dExcess": 0.3,
     "hitRate": 62.5,
     "featuredPicks": [
@@ -3590,6 +3651,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 7,
     "averageExcess": -1.7,
+    "averageHoldingDays": 214,
     "average90dExcess": 9.4,
     "hitRate": 100,
     "featuredPicks": [
@@ -3647,6 +3709,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 17.2,
     "averageExcess": -1.8,
+    "averageHoldingDays": 581,
     "average90dExcess": 0.1,
     "hitRate": 73.5,
     "featuredPicks": [
@@ -3717,6 +3780,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -0.9,
     "averageExcess": -2,
+    "averageHoldingDays": 18,
     "average90dExcess": -5.1,
     "hitRate": 57.1,
     "featuredPicks": [
@@ -3787,6 +3851,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 23.5,
     "averageExcess": -2,
+    "averageHoldingDays": 293,
     "average90dExcess": -0.6,
     "hitRate": 86.1,
     "featuredPicks": [
@@ -3857,6 +3922,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 2.3,
     "averageExcess": -2.4,
+    "averageHoldingDays": 88,
     "average90dExcess": 4.8,
     "hitRate": 64.7,
     "featuredPicks": [
@@ -3927,6 +3993,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 55.6,
     "averageExcess": -2.5,
+    "averageHoldingDays": 766,
     "average90dExcess": 4.2,
     "hitRate": 51.5,
     "featuredPicks": [
@@ -3997,6 +4064,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 10.4,
     "averageExcess": -2.6,
+    "averageHoldingDays": 391,
     "average90dExcess": 2.9,
     "hitRate": 52.2,
     "featuredPicks": [
@@ -4067,6 +4135,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 13.5,
     "averageExcess": -2.7,
+    "averageHoldingDays": 177,
     "average90dExcess": 59.4,
     "hitRate": 100,
     "featuredPicks": [
@@ -4098,6 +4167,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 24.3,
     "averageExcess": -3.2,
+    "averageHoldingDays": 363,
     "average90dExcess": -1.2,
     "hitRate": 50,
     "featuredPicks": [
@@ -4168,6 +4238,7 @@ export const houseMembersPerformance = [
     "shortCount": 2,
     "averageReturn": 51.5,
     "averageExcess": -4.1,
+    "averageHoldingDays": 751,
     "average90dExcess": 1.9,
     "hitRate": 58.6,
     "featuredPicks": [
@@ -4238,6 +4309,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 9.3,
     "averageExcess": -5,
+    "averageHoldingDays": 291,
     "average90dExcess": -2,
     "hitRate": 64.8,
     "featuredPicks": [
@@ -4308,6 +4380,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.9,
     "averageExcess": -5.2,
+    "averageHoldingDays": 544,
     "average90dExcess": -11.9,
     "hitRate": 50,
     "featuredPicks": [
@@ -4365,6 +4438,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 138.6,
     "averageExcess": -5.7,
+    "averageHoldingDays": 1896,
     "average90dExcess": -0.6,
     "hitRate": 77.5,
     "featuredPicks": [
@@ -4435,6 +4509,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 49.9,
     "averageExcess": -5.9,
+    "averageHoldingDays": 1143,
     "average90dExcess": -0.2,
     "hitRate": 72.9,
     "featuredPicks": [
@@ -4505,6 +4580,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 5.6,
     "averageExcess": -6.5,
+    "averageHoldingDays": 191,
     "average90dExcess": -19.3,
     "hitRate": 100,
     "featuredPicks": [
@@ -4536,6 +4612,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 44.5,
     "averageExcess": -7.2,
+    "averageHoldingDays": 812,
     "average90dExcess": 0.3,
     "hitRate": 53.1,
     "featuredPicks": [
@@ -4606,6 +4683,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 9.4,
     "averageExcess": -8.3,
+    "averageHoldingDays": 294,
     "average90dExcess": -0.2,
     "hitRate": 63,
     "featuredPicks": [
@@ -4676,6 +4754,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 0.5,
     "averageExcess": -8.5,
+    "averageHoldingDays": 169,
     "average90dExcess": -3.1,
     "hitRate": 46.2,
     "featuredPicks": [
@@ -4746,6 +4825,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 73.2,
     "averageExcess": -8.6,
+    "averageHoldingDays": 1477,
     "average90dExcess": 3.7,
     "hitRate": 100,
     "featuredPicks": [
@@ -4803,6 +4883,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 58.3,
     "averageExcess": -9.1,
+    "averageHoldingDays": 1376,
     "average90dExcess": -2,
     "hitRate": 70.6,
     "featuredPicks": [
@@ -4873,6 +4954,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -0.2,
     "averageExcess": -9.2,
+    "averageHoldingDays": 139,
     "average90dExcess": -1.6,
     "hitRate": 52.2,
     "featuredPicks": [
@@ -4943,6 +5025,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 20.1,
     "averageExcess": -10.3,
+    "averageHoldingDays": 390,
     "average90dExcess": -5,
     "hitRate": 49.8,
     "featuredPicks": [
@@ -5013,6 +5096,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 25.8,
     "averageExcess": -10.6,
+    "averageHoldingDays": 592,
     "average90dExcess": 1.9,
     "hitRate": 64.7,
     "featuredPicks": [
@@ -5083,6 +5167,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 84.2,
     "averageExcess": -11,
+    "averageHoldingDays": 1495,
     "average90dExcess": -26.2,
     "hitRate": 100,
     "featuredPicks": [
@@ -5114,6 +5199,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 33.8,
     "averageExcess": -11,
+    "averageHoldingDays": 801,
     "average90dExcess": -3.1,
     "hitRate": 56.5,
     "featuredPicks": [
@@ -5184,6 +5270,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 179.6,
     "averageExcess": -11.2,
+    "averageHoldingDays": 2040,
     "average90dExcess": 13.5,
     "hitRate": 85.7,
     "featuredPicks": [
@@ -5241,6 +5328,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 7,
     "averageExcess": -11.2,
+    "averageHoldingDays": 569,
     "average90dExcess": -1.1,
     "hitRate": 53.1,
     "featuredPicks": [
@@ -5311,6 +5399,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 7.4,
     "averageExcess": -11.6,
+    "averageHoldingDays": 426,
     "average90dExcess": -3.9,
     "hitRate": 54.1,
     "featuredPicks": [
@@ -5381,6 +5470,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 24.9,
     "averageExcess": -12.1,
+    "averageHoldingDays": 719,
     "average90dExcess": -1.5,
     "hitRate": 75,
     "featuredPicks": [
@@ -5438,6 +5528,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 103.5,
     "averageExcess": -12.8,
+    "averageHoldingDays": 1693,
     "average90dExcess": 0.8,
     "hitRate": 85.2,
     "featuredPicks": [
@@ -5508,6 +5599,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 182,
     "averageExcess": -13.4,
+    "averageHoldingDays": 2498,
     "average90dExcess": 0,
     "hitRate": 82.6,
     "featuredPicks": [
@@ -5578,6 +5670,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 7.3,
     "averageExcess": -13.7,
+    "averageHoldingDays": 467,
     "average90dExcess": -8.2,
     "hitRate": 69.8,
     "featuredPicks": [
@@ -5648,6 +5741,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 47.5,
     "averageExcess": -13.9,
+    "averageHoldingDays": 1013,
     "average90dExcess": -1.3,
     "hitRate": 57.1,
     "featuredPicks": [
@@ -5718,6 +5812,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 19.1,
     "averageExcess": -15.7,
+    "averageHoldingDays": 930,
     "average90dExcess": 0.8,
     "hitRate": 70.6,
     "featuredPicks": [
@@ -5788,6 +5883,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 36.2,
     "averageExcess": -16.1,
+    "averageHoldingDays": 763,
     "average90dExcess": 1.3,
     "hitRate": 75,
     "featuredPicks": [
@@ -5858,6 +5954,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 13.3,
     "averageExcess": -16.2,
+    "averageHoldingDays": 462,
     "average90dExcess": -11.2,
     "hitRate": 50,
     "featuredPicks": [
@@ -5902,6 +5999,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 25.2,
     "averageExcess": -16.2,
+    "averageHoldingDays": 635,
     "average90dExcess": -0.1,
     "hitRate": 65.6,
     "featuredPicks": [
@@ -5972,6 +6070,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 48.9,
     "averageExcess": -16.6,
+    "averageHoldingDays": 1267,
     "average90dExcess": 2.1,
     "hitRate": 76.1,
     "featuredPicks": [
@@ -6029,6 +6128,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 0.9,
     "averageExcess": -16.8,
+    "averageHoldingDays": 319,
     "average90dExcess": -3.3,
     "hitRate": 45.7,
     "featuredPicks": [
@@ -6099,6 +6199,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 46,
     "averageExcess": -17.4,
+    "averageHoldingDays": 919,
     "average90dExcess": 7.9,
     "hitRate": 88.9,
     "featuredPicks": [
@@ -6169,6 +6270,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 28.1,
     "averageExcess": -18,
+    "averageHoldingDays": 712,
     "average90dExcess": -3.3,
     "hitRate": 72.2,
     "featuredPicks": [
@@ -6239,6 +6341,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -0.2,
     "averageExcess": -19.7,
+    "averageHoldingDays": 359,
     "average90dExcess": -3.5,
     "hitRate": 69.7,
     "featuredPicks": [
@@ -6309,6 +6412,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 153.7,
     "averageExcess": -20.7,
+    "averageHoldingDays": 2557,
     "average90dExcess": 0,
     "hitRate": 79.3,
     "featuredPicks": [
@@ -6379,6 +6483,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.2,
     "averageExcess": -21,
+    "averageHoldingDays": 747,
     "average90dExcess": -0.1,
     "hitRate": 53.7,
     "featuredPicks": [
@@ -6449,6 +6554,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 193.7,
     "averageExcess": -21.1,
+    "averageHoldingDays": 2349,
     "average90dExcess": -2,
     "hitRate": 100,
     "featuredPicks": [
@@ -6519,6 +6625,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 18.6,
     "averageExcess": -21.7,
+    "averageHoldingDays": 732,
     "average90dExcess": -0.4,
     "hitRate": 61,
     "featuredPicks": [
@@ -6589,6 +6696,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 51.2,
     "averageExcess": -23.2,
+    "averageHoldingDays": 1163,
     "average90dExcess": -6.3,
     "hitRate": 81.8,
     "featuredPicks": [
@@ -6659,6 +6767,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 50.6,
     "averageExcess": -24.3,
+    "averageHoldingDays": 1247,
     "average90dExcess": -1.2,
     "hitRate": 70.7,
     "featuredPicks": [
@@ -6729,6 +6838,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 13.2,
     "averageExcess": -25.9,
+    "averageHoldingDays": 707,
     "average90dExcess": -9.9,
     "hitRate": 87.5,
     "featuredPicks": [
@@ -6799,6 +6909,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 60.4,
     "averageExcess": -27,
+    "averageHoldingDays": 1346,
     "average90dExcess": -5.5,
     "hitRate": 83,
     "featuredPicks": [
@@ -6869,6 +6980,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 56.5,
     "averageExcess": -27.3,
+    "averageHoldingDays": 1364,
     "average90dExcess": 1.2,
     "hitRate": 78.7,
     "featuredPicks": [
@@ -6939,6 +7051,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 28.9,
     "averageExcess": -27.4,
+    "averageHoldingDays": 941,
     "average90dExcess": -1.4,
     "hitRate": 64.9,
     "featuredPicks": [
@@ -7009,6 +7122,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 9.7,
     "averageExcess": -28.3,
+    "averageHoldingDays": 556,
     "average90dExcess": -7.8,
     "hitRate": 47.6,
     "featuredPicks": [
@@ -7079,6 +7193,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 184.8,
     "averageExcess": -29.3,
+    "averageHoldingDays": 2936,
     "average90dExcess": 8.7,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -7136,6 +7251,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 10.5,
     "averageExcess": -30.1,
+    "averageHoldingDays": 493,
     "average90dExcess": 12.7,
     "hitRate": 60,
     "featuredPicks": [
@@ -7206,6 +7322,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -12.2,
     "averageExcess": -30.8,
+    "averageHoldingDays": 294,
     "average90dExcess": -15.8,
     "hitRate": 33.3,
     "featuredPicks": [
@@ -7276,6 +7393,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 47,
     "averageExcess": -31.6,
+    "averageHoldingDays": 1477,
     "average90dExcess": -24.6,
     "hitRate": 66.7,
     "featuredPicks": [
@@ -7333,6 +7451,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.4,
     "averageExcess": -33.2,
+    "averageHoldingDays": 876,
     "average90dExcess": 2.1,
     "hitRate": 57.1,
     "featuredPicks": [
@@ -7390,6 +7509,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 9,
     "averageExcess": -33.5,
+    "averageHoldingDays": 712,
     "average90dExcess": -4.2,
     "hitRate": 60,
     "featuredPicks": [
@@ -7460,6 +7580,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 61.8,
     "averageExcess": -34.7,
+    "averageHoldingDays": 1311,
     "average90dExcess": 0.2,
     "hitRate": 60.9,
     "featuredPicks": [
@@ -7530,6 +7651,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 60.3,
     "averageExcess": -35.4,
+    "averageHoldingDays": 1329,
     "average90dExcess": -6,
     "hitRate": 60,
     "featuredPicks": [
@@ -7587,6 +7709,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 98.9,
     "averageExcess": -37.7,
+    "averageHoldingDays": 1912,
     "average90dExcess": -1.2,
     "hitRate": 61.8,
     "featuredPicks": [
@@ -7657,6 +7780,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -0.7,
     "averageExcess": -38,
+    "averageHoldingDays": 490,
     "average90dExcess": -22.5,
     "hitRate": 0,
     "featuredPicks": [
@@ -7688,6 +7812,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 63.2,
     "averageExcess": -39,
+    "averageHoldingDays": 1310,
     "average90dExcess": -2.5,
     "hitRate": 68.8,
     "featuredPicks": [
@@ -7758,6 +7883,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 48.5,
     "averageExcess": -40.7,
+    "averageHoldingDays": 1123,
     "average90dExcess": -5.5,
     "hitRate": 92.6,
     "featuredPicks": [
@@ -7828,6 +7954,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -30.2,
     "averageExcess": -42.4,
+    "averageHoldingDays": 317,
     "average90dExcess": -20.8,
     "hitRate": 0,
     "featuredPicks": [
@@ -7859,6 +7986,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 47,
     "averageExcess": -43.4,
+    "averageHoldingDays": 1508,
     "average90dExcess": 2.7,
     "hitRate": 69.6,
     "featuredPicks": [
@@ -7929,6 +8057,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 93.1,
     "averageExcess": -47.1,
+    "averageHoldingDays": 1948,
     "average90dExcess": 1,
     "hitRate": 89.5,
     "featuredPicks": [
@@ -7999,6 +8128,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -17.3,
     "averageExcess": -47.9,
+    "averageHoldingDays": 562,
     "average90dExcess": -12.8,
     "hitRate": 55.6,
     "featuredPicks": [
@@ -8069,6 +8199,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 42.8,
     "averageExcess": -48.2,
+    "averageHoldingDays": 1550,
     "average90dExcess": 3.1,
     "hitRate": 84.6,
     "featuredPicks": [
@@ -8139,6 +8270,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 123.1,
     "averageExcess": -49.7,
+    "averageHoldingDays": 2057,
     "average90dExcess": -6.6,
     "hitRate": 60,
     "featuredPicks": [
@@ -8196,6 +8328,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 84.6,
     "averageExcess": -49.9,
+    "averageHoldingDays": 1924,
     "average90dExcess": 9.8,
     "hitRate": 86.4,
     "featuredPicks": [
@@ -8266,6 +8399,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 25.2,
     "averageExcess": -50.2,
+    "averageHoldingDays": 1747,
     "average90dExcess": -4.3,
     "hitRate": 83.3,
     "featuredPicks": [
@@ -8323,6 +8457,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 122.2,
     "averageExcess": -50.8,
+    "averageHoldingDays": 2277,
     "average90dExcess": 1.8,
     "hitRate": 83.3,
     "featuredPicks": [
@@ -8380,6 +8515,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 68.2,
     "averageExcess": -61.2,
+    "averageHoldingDays": 1504,
     "average90dExcess": -1.3,
     "hitRate": 75,
     "featuredPicks": [
@@ -8437,6 +8573,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 89.8,
     "averageExcess": -67.5,
+    "averageHoldingDays": 2031,
     "average90dExcess": -1,
     "hitRate": 87.5,
     "featuredPicks": [
@@ -8507,6 +8644,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 113,
     "averageExcess": -71.3,
+    "averageHoldingDays": 2499,
     "average90dExcess": 16.1,
     "hitRate": 100,
     "featuredPicks": [
@@ -8551,6 +8689,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 65.7,
     "averageExcess": -71.6,
+    "averageHoldingDays": 2041,
     "average90dExcess": -1.4,
     "hitRate": 83.3,
     "featuredPicks": [
@@ -8608,6 +8747,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 89.9,
     "averageExcess": -73.7,
+    "averageHoldingDays": 1882,
     "average90dExcess": 1.1,
     "hitRate": 66.8,
     "featuredPicks": [
@@ -8678,6 +8818,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -35.3,
     "averageExcess": -77.7,
+    "averageHoldingDays": 822,
     "average90dExcess": -21.4,
     "hitRate": 20,
     "featuredPicks": [
@@ -8748,6 +8889,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 26.4,
     "averageExcess": -85.3,
+    "averageHoldingDays": 1522,
     "average90dExcess": -9.9,
     "hitRate": 100,
     "featuredPicks": [
@@ -8792,6 +8934,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -63.4,
     "averageExcess": -92.7,
+    "averageHoldingDays": 626,
     "average90dExcess": -2,
     "hitRate": 0,
     "featuredPicks": [
@@ -8823,6 +8966,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -47,
     "averageExcess": -97,
+    "averageHoldingDays": 897,
     "average90dExcess": -39,
     "hitRate": 0,
     "featuredPicks": [
@@ -8867,6 +9011,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 68.5,
     "averageExcess": -97.6,
+    "averageHoldingDays": 2300,
     "average90dExcess": -24,
     "hitRate": 60,
     "featuredPicks": [
@@ -8937,6 +9082,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 80,
     "averageExcess": -117.3,
+    "averageHoldingDays": 2918,
     "average90dExcess": -7.5,
     "hitRate": 100,
     "featuredPicks": [
@@ -8994,6 +9140,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -14.1,
     "averageExcess": -123.1,
+    "averageHoldingDays": 1999,
     "average90dExcess": -38.5,
     "hitRate": 50,
     "featuredPicks": [
@@ -9038,6 +9185,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -3.6,
     "averageExcess": -125.1,
+    "averageHoldingDays": 2082,
     "average90dExcess": 0.6,
     "hitRate": 33.3,
     "featuredPicks": [
@@ -9095,6 +9243,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": 16.1,
     "averageExcess": -192.2,
+    "averageHoldingDays": 442,
     "average90dExcess": null,
     "hitRate": 100,
     "featuredPicks": [
@@ -9126,6 +9275,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": -100,
     "averageExcess": -252.8,
+    "averageHoldingDays": 2181,
     "average90dExcess": -43.5,
     "hitRate": 0,
     "featuredPicks": [
@@ -9157,6 +9307,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9174,6 +9325,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9191,6 +9343,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9208,6 +9361,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9225,6 +9379,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9242,6 +9397,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9259,6 +9415,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9276,6 +9433,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9293,6 +9451,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9310,6 +9469,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9327,6 +9487,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9344,6 +9505,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9361,6 +9523,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9378,6 +9541,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9395,6 +9559,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9412,6 +9577,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9429,6 +9595,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9446,6 +9613,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9463,6 +9631,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9480,6 +9649,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9497,6 +9667,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9514,6 +9685,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9531,6 +9703,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9548,6 +9721,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9565,6 +9739,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9582,6 +9757,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9599,6 +9775,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9616,6 +9793,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9633,6 +9811,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9650,6 +9829,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9667,6 +9847,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9684,6 +9865,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9701,6 +9883,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9718,6 +9901,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9735,6 +9919,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9752,6 +9937,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9769,6 +9955,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9786,6 +9973,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9803,6 +9991,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9820,6 +10009,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9837,6 +10027,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9854,6 +10045,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9871,6 +10063,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9888,6 +10081,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9905,6 +10099,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9922,6 +10117,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9939,6 +10135,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9956,6 +10153,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9973,6 +10171,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -9990,6 +10189,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10007,6 +10207,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10024,6 +10225,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10041,6 +10243,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10058,6 +10261,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10075,6 +10279,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10092,6 +10297,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10109,6 +10315,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10126,6 +10333,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10143,6 +10351,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10160,6 +10369,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10177,6 +10387,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10194,6 +10405,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10211,6 +10423,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10228,6 +10441,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10245,6 +10459,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10262,6 +10477,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10279,6 +10495,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10296,6 +10513,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10313,6 +10531,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10330,6 +10549,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10347,6 +10567,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10364,6 +10585,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10381,6 +10603,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10398,6 +10621,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10415,6 +10639,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10432,6 +10657,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10449,6 +10675,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10466,6 +10693,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10483,6 +10711,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10500,6 +10729,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10517,6 +10747,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10534,6 +10765,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10551,6 +10783,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10568,6 +10801,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10585,6 +10819,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10602,6 +10837,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10619,6 +10855,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10636,6 +10873,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10653,6 +10891,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10670,6 +10909,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10687,6 +10927,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10704,6 +10945,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10721,6 +10963,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10738,6 +10981,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10755,6 +10999,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10772,6 +11017,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10789,6 +11035,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10806,6 +11053,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10823,6 +11071,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10840,6 +11089,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10857,6 +11107,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10874,6 +11125,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10891,6 +11143,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10908,6 +11161,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10925,6 +11179,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10942,6 +11197,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10959,6 +11215,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10976,6 +11233,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -10993,6 +11251,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11010,6 +11269,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11027,6 +11287,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11044,6 +11305,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11061,6 +11323,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11078,6 +11341,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11095,6 +11359,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11112,6 +11377,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11129,6 +11395,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11146,6 +11413,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11163,6 +11431,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11180,6 +11449,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11197,6 +11467,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11214,6 +11485,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11231,6 +11503,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11248,6 +11521,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11265,6 +11539,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11282,6 +11557,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11299,6 +11575,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11316,6 +11593,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11333,6 +11611,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11350,6 +11629,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11367,6 +11647,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11384,6 +11665,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11401,6 +11683,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11418,6 +11701,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11435,6 +11719,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11452,6 +11737,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11469,6 +11755,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11486,6 +11773,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11503,6 +11791,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11520,6 +11809,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11537,6 +11827,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11554,6 +11845,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11571,6 +11863,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11588,6 +11881,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11605,6 +11899,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11622,6 +11917,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11639,6 +11935,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11656,6 +11953,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11673,6 +11971,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11690,6 +11989,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11707,6 +12007,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11724,6 +12025,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11741,6 +12043,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11758,6 +12061,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11775,6 +12079,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11792,6 +12097,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11809,6 +12115,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11826,6 +12133,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11843,6 +12151,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11860,6 +12169,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11877,6 +12187,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11894,6 +12205,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11911,6 +12223,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11928,6 +12241,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11945,6 +12259,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11962,6 +12277,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11979,6 +12295,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -11996,6 +12313,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12013,6 +12331,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12030,6 +12349,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": [
@@ -12061,6 +12381,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12078,6 +12399,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12095,6 +12417,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12112,6 +12435,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12129,6 +12453,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12146,6 +12471,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12163,6 +12489,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12180,6 +12507,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12197,6 +12525,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12214,6 +12543,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12231,6 +12561,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12248,6 +12579,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12265,6 +12597,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12282,6 +12615,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12299,6 +12633,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": [
@@ -12330,6 +12665,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12347,6 +12683,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12364,6 +12701,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12381,6 +12719,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12398,6 +12737,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12415,6 +12755,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12432,6 +12773,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12449,6 +12791,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12466,6 +12809,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12483,6 +12827,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12500,6 +12845,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12517,6 +12863,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12534,6 +12881,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12551,6 +12899,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12568,6 +12917,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12585,6 +12935,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12602,6 +12953,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12619,6 +12971,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12636,6 +12989,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12653,6 +13007,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12670,6 +13025,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12687,6 +13043,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12704,6 +13061,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12721,6 +13079,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12738,6 +13097,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12755,6 +13115,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12772,6 +13133,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12789,6 +13151,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12806,6 +13169,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12823,6 +13187,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12840,6 +13205,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12857,6 +13223,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12874,6 +13241,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12891,6 +13259,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12908,6 +13277,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12925,6 +13295,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12942,6 +13313,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12959,6 +13331,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12976,6 +13349,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -12993,6 +13367,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13010,6 +13385,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13027,6 +13403,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13044,6 +13421,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13061,6 +13439,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13078,6 +13457,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13095,6 +13475,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13112,6 +13493,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13129,6 +13511,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13146,6 +13529,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13163,6 +13547,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13180,6 +13565,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": [
@@ -13211,6 +13597,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13228,6 +13615,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13245,6 +13633,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13262,6 +13651,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13279,6 +13669,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13296,6 +13687,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13313,6 +13705,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13330,6 +13723,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13347,6 +13741,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13364,6 +13759,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13381,6 +13777,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13398,6 +13795,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13415,6 +13813,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13432,6 +13831,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13449,6 +13849,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []
@@ -13466,6 +13867,7 @@ export const houseMembersPerformance = [
     "shortCount": 0,
     "averageReturn": null,
     "averageExcess": null,
+    "averageHoldingDays": null,
     "average90dExcess": null,
     "hitRate": null,
     "featuredPicks": []

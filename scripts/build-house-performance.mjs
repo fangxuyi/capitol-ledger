@@ -10,6 +10,9 @@ const root = new URL("../", import.meta.url).pathname;
 const textCache = join(root, "work", "house-ptrs");
 const priceCache = join(root, "work", "house-prices");
 const outputPath = join(root, "lib", "house-performance.generated.ts");
+const publicDataDirectory = join(root, "public", "data");
+const jsonOutputPath = join(publicDataDirectory, "house-performance.json");
+const csvOutputPath = join(publicDataDirectory, "house-performance-episodes.csv");
 const currentYear = new Date().getUTCFullYear();
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const docLimit = limitArg ? Number(limitArg.split("=")[1]) : Infinity;
@@ -18,6 +21,7 @@ const endYear = Math.min(currentYear, 2026);
 
 await mkdir(textCache, { recursive: true });
 await mkdir(priceCache, { recursive: true });
+await mkdir(publicDataDirectory, { recursive: true });
 
 function slug(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -197,6 +201,12 @@ function round(value, digits = 1) {
   return Number(value.toFixed(digits));
 }
 
+function csvCell(value) {
+  if (value === null || value === undefined) return "";
+  const text = String(value);
+  return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
 const filings = await fetchIndexes();
 const members = new Map();
 for (const filing of filings) {
@@ -300,6 +310,7 @@ const summaries = [...members.values()].map((member) => {
     shortCount: allPicks.filter((pick) => pick.direction === "Short").length,
     averageReturn: avg("returnValue"),
     averageExcess: avg("excessReturn"),
+    averageHoldingDays: avg("periodDays") === null ? null : round(avg("periodDays"), 0),
     average90dExcess: standardized.length ? round(standardized.reduce((sum, pick) => sum + pick.excess90d, 0) / standardized.length) : null,
     hitRate: scored.length ? round(scored.filter((pick) => pick.returnValue > 0).length / scored.length * 100) : null,
     featuredPicks: featured.map(({ id, ticker, instrument, direction, transactionDate, closeDate, status, periodDays, returnValue, excessReturn, sourceUrl }) => ({ id, ticker, instrument, direction, transactionDate, closeDate, status, periodDays, returnValue, excessReturn, sourceUrl })),
@@ -317,9 +328,21 @@ const meta = {
   episodeCount: episodes.length,
   scoredEpisodeCount: measured.filter((pick) => pick.returnValue !== null).length,
   residualEpisodeCount: measured.filter((pick) => pick.status.includes("latest mark")).length,
+  averageHoldingDays: round(measured.filter((pick) => pick.periodDays !== null).reduce((sum, pick) => sum + pick.periodDays, 0) / measured.filter((pick) => pick.periodDays !== null).length, 0),
   methodology: "Equal-weighted estimated holding-period return from first disclosed purchase to a reported close; partial-sale residuals and other open episodes use the latest available price. Options use the underlying security as a directional proxy. The 90-day excess return is retained as a secondary standardized comparison.",
 };
 
 const source = `// Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.\nexport const housePerformanceMeta = ${JSON.stringify(meta, null, 2)} as const;\n\nexport const houseMembersPerformance = ${JSON.stringify(summaries, null, 2)} as const;\n`;
 await writeFile(outputPath, source);
+await writeFile(jsonOutputPath, `${JSON.stringify({ meta, members: summaries, episodes: measured }, null, 2)}\n`);
+
+const csvFields = [
+  "member_id", "member", "state_district", "ticker", "instrument", "direction", "opened_at", "closed_or_marked_at", "status", "holding_days",
+  "holding_return_pct", "spy_return_pct", "excess_return_pct", "return_90d_pct", "excess_90d_pct", "filing_id", "source_url",
+];
+const csvRows = measured.map((pick) => [
+  pick.memberId, pick.member, pick.stateDistrict, pick.ticker, pick.instrument, pick.direction, pick.transactionDate, pick.closeDate, pick.status, pick.periodDays,
+  pick.returnValue, pick.benchmarkReturn, pick.excessReturn, pick.return90d, pick.excess90d, pick.filingId, pick.sourceUrl,
+].map(csvCell).join(","));
+await writeFile(csvOutputPath, `${csvFields.join(",")}\n${csvRows.join("\n")}\n`);
 console.log(JSON.stringify(meta, null, 2));
