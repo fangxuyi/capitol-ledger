@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20020070-ABBV-2021-12-13-Long-S",
+      "memberId": "adam-schiff",
+      "member": "Adam B. Schiff",
+      "stateDistrict": "CA28",
+      "ticker": "ABBV",
+      "assetName": "AbbVie Inc. (ABBV) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2021-12-13",
+      "filingDate": "12/21/2021",
+      "filingId": "20020070",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20020070.pdf"
+    },
+    {
+      "id": "20019197-ABBV-2021-07-23-Long-S",
+      "memberId": "adam-schiff",
+      "member": "Adam B. Schiff",
+      "stateDistrict": "CA28",
+      "ticker": "ABBV",
+      "assetName": "AbbVie Inc. (ABBV) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-07-23",
+      "filingDate": "7/30/2021",
+      "filingId": "20019197",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019197.pdf"
+    }
+  ],
+  "episodes": []
+}

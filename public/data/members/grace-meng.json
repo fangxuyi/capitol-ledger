@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20017020-HRS-2019-07-01-Long-E",
+      "memberId": "grace-meng",
+      "member": "Grace Meng",
+      "stateDistrict": "NY06",
+      "ticker": "HRS",
+      "assetName": "l3Harris Technologies, Inc. (lHX)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "SP",
+      "action": "E",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2019-07-01",
+      "filingDate": "8/11/2020",
+      "filingId": "20017020",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20017020.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,57 @@
+{
+  "transactions": [
+    {
+      "id": "20019726-DWAC-2021-10-25-Long-P",
+      "memberId": "larry-bucshon",
+      "member": "Larry Bucshon",
+      "stateDistrict": "IN08",
+      "ticker": "DWAC",
+      "assetName": "Digital World Acquisition Corp. -",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-10-25",
+      "filingDate": "11/1/2021",
+      "filingId": "20019726",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019726.pdf"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "20019726-DWAC-2021-10-25-Long-P",
+      "memberId": "larry-bucshon",
+      "member": "Larry Bucshon",
+      "stateDistrict": "IN08",
+      "ticker": "DWAC",
+      "assetName": "Digital World Acquisition Corp. -",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-10-25",
+      "filingDate": "11/1/2021",
+      "filingId": "20019726",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019726.pdf",
+      "purchaseCount": 1,
+      "partialSaleSeen": false,
+      "closeDate": "2026-09-15",
+      "status": "No price match",
+      "closeSourceUrl": null,
+      "periodDays": null,
+      "returnValue": null,
+      "benchmarkReturn": null,
+      "excessReturn": null,
+      "return90d": null,
+      "excess90d": null
+    }
+  ]
+}

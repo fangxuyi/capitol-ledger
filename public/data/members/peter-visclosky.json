@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20017674-CMCSA-2020-10-15-Long-S",
+      "memberId": "peter-visclosky",
+      "member": "Peter J. Visclosky",
+      "stateDistrict": "IN01",
+      "ticker": "CMCSA",
+      "assetName": "Comcast Corporation - Class A",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2020-10-15",
+      "filingDate": "11/10/2020",
+      "filingId": "20017674",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20017674.pdf"
+    }
+  ],
+  "episodes": []
+}

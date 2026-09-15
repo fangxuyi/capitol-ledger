@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20025916-WNRP-2022-11-17-Long-S",
+      "memberId": "darin-lahood",
+      "member": "Darin McKay LaHood",
+      "stateDistrict": "IL16",
+      "ticker": "WNRP",
+      "assetName": "West Suburban Bancorp, Inc.",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2022-11-17",
+      "filingDate": "9/27/2024",
+      "filingId": "20025916",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2024/20025916.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20017017-JNJ-2019-08-27-Long-S",
+      "memberId": "bill-pascrell",
+      "member": "Bill Pascrell Jr.",
+      "stateDistrict": "NJ09",
+      "ticker": "JNJ",
+      "assetName": "Johnson & Johnson (JNJ) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2019-08-27",
+      "filingDate": "7/31/2020",
+      "filingId": "20017017",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20017017.pdf"
+    }
+  ],
+  "episodes": []
+}

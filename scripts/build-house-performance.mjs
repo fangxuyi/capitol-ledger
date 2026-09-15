@@ -21,8 +21,9 @@ const currentYear = new Date().getUTCFullYear();
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const docLimit = limitArg ? Number(limitArg.split("=")[1]) : Infinity;
 const startYear = 2013;
-const endYear = Math.min(currentYear, 2026);
-const trackedDetailMemberIds = ["nancy-pelosi", "james-langevin", "ed-perlmutter", "marjorie-greene", "dean-phillips", "john-james", "carol-miller", "gary-palmer", "daniel-crenshaw", "josh-gottheimer", "rohit-khanna", "michael-mccaul"];
+const endYear = currentYear;
+const refreshPrices = process.argv.includes("--refresh-prices");
+const priceRefreshFailures = [];
 
 await mkdir(textCache, { recursive: true });
 await mkdir(priceCache, { recursive: true });
@@ -170,27 +171,34 @@ function extractTransactions(text, filing) {
 
 async function priceSeries(ticker) {
   const cachePath = join(priceCache, `${ticker}.json`);
+  let cached = null;
   try {
-    return JSON.parse(await readFile(cachePath, "utf8"));
+    cached = JSON.parse(await readFile(cachePath, "utf8"));
+    if (!refreshPrices) return cached;
   } catch { /* fetch below */ }
+  const unavailable = () => {
+    if (refreshPrices && cached?.length) priceRefreshFailures.push(ticker);
+    return cached;
+  };
   const period1 = Math.floor(Date.parse("2012-12-20T00:00:00Z") / 1000);
   const period2 = Math.floor((Date.now() + 86400000) / 1000);
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?period1=${period1}&period2=${period2}&interval=1d&events=div%2Csplits&includeAdjustedClose=true`;
   let response;
   try {
-    response = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 Capitol-Ledger/1.0" } });
+    response = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 Capitol-Ledger/1.0" }, signal: AbortSignal.timeout(30000) });
   } catch {
-    return null;
+    return unavailable();
   }
-  if (!response.ok) return null;
+  if (!response.ok) return unavailable();
   const payload = await response.json();
   const result = payload?.chart?.result?.[0];
-  if (!result?.timestamp?.length) return null;
+  if (!result?.timestamp?.length) return unavailable();
   const adjusted = result.indicators?.adjclose?.[0]?.adjclose ?? result.indicators?.quote?.[0]?.close;
   const rows = result.timestamp.flatMap((timestamp, index) => {
     const close = adjusted?.[index];
     return Number.isFinite(close) ? [{ date: new Date(timestamp * 1000).toISOString().slice(0, 10), close }] : [];
   });
+  if (!rows.length || (cached?.length && rows.at(-1).date < cached.at(-1).date)) return unavailable();
   await writeFile(cachePath, JSON.stringify(rows));
   return rows;
 }
@@ -234,6 +242,8 @@ const tickers = [...new Set(transactions.map((transaction) => transaction.ticker
 const prices = new Map();
 await mapConcurrent(["SPY", ...tickers], 5, async (ticker) => prices.set(ticker, await priceSeries(ticker)));
 const spy = prices.get("SPY");
+if (priceRefreshFailures.length) throw new Error(`Price refresh failed for ${priceRefreshFailures.length} cached securities; existing published outputs preserved. First failures: ${priceRefreshFailures.slice(0, 20).join(", ")}`);
+if (!spy?.length) throw new Error("SPY price history unavailable; refusing to generate unbenchmarked performance.");
 const today = new Date().toISOString().slice(0, 10);
 
 const groupedTransactions = new Map();
@@ -286,6 +296,7 @@ const measured = episodes.map((episode) => {
   const spy90d = spyExit90d ? (spyExit90d.close / spyEntry.close - 1) * 100 : null;
   return {
     ...episode,
+    closeDate: episode.status.includes("latest mark") ? exit.date : episode.closeDate,
     periodDays: Math.round((Date.parse(exit.date) - Date.parse(entry.date)) / 86400000),
     returnValue: round(sign * stockReturn),
     benchmarkReturn: round(sign * benchmarkReturn),
@@ -327,6 +338,7 @@ const summaries = [...members.values()].map((member) => {
 
 const meta = {
   generatedAt: new Date().toISOString(),
+  benchmarkPriceAsOf: spy.at(-1).date,
   sourceStartYear: startYear,
   sourceEndYear: endYear,
   filerCount: members.size,
@@ -342,7 +354,7 @@ const meta = {
 
 const source = `// Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.\nexport const housePerformanceMeta = ${JSON.stringify(meta, null, 2)} as const;\n\nexport const houseMembersPerformance = ${JSON.stringify(summaries, null, 2)} as const;\n`;
 await writeFile(outputPath, source);
-const trackedDetails = Object.fromEntries(trackedDetailMemberIds.map((memberId) => [memberId, {
+const trackedDetails = Object.fromEntries([...members.keys()].map((memberId) => [memberId, {
   transactions: transactions.filter((transaction) => transaction.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
   episodes: measured.filter((episode) => episode.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
 }]));

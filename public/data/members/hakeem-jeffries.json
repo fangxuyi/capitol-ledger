@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20011302-SDY-2019-02-12-Long-S",
+      "memberId": "hakeem-jeffries",
+      "member": "Hakeem S. Jeffries",
+      "stateDistrict": "NY08",
+      "ticker": "SDY",
+      "assetName": "SPDR S&P Dividend ETF (SDY)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2019-02-12",
+      "filingDate": "3/16/2019",
+      "filingId": "20011302",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2019/20011302.pdf"
+    },
+    {
+      "id": "20010333-VNQ-2018-08-21-Long-S",
+      "memberId": "hakeem-jeffries",
+      "member": "Hakeem S. Jeffries",
+      "stateDistrict": "NY08",
+      "ticker": "VNQ",
+      "assetName": "Vanguard Real Estate ETF (VNQ)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2018-08-21",
+      "filingDate": "9/19/2018",
+      "filingId": "20010333",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2018/20010333.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20016924-NYMX-2021-01-22-Long-S",
+      "memberId": "greg-murphy",
+      "member": "Greg Francis Murphy",
+      "stateDistrict": "NC03",
+      "ticker": "NYMX",
+      "assetName": "Nymox Pharmaceutical",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2021-01-22",
+      "filingDate": "2/12/2021",
+      "filingId": "20016924",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20016924.pdf"
+    }
+  ],
+  "episodes": []
+}

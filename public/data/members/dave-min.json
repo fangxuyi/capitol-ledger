@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20029100-FSLR-2025-03-19-Long-S",
+      "memberId": "dave-min",
+      "member": "Dave Min",
+      "stateDistrict": "CA47",
+      "ticker": "FSLR",
+      "assetName": "First Solar, Inc. - Common Stock",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-03-19",
+      "filingDate": "4/14/2025",
+      "filingId": "20029100",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20029100.pdf"
+    },
+    {
+      "id": "20029100-ZOOM-2025-03-19-Long-S",
+      "memberId": "dave-min",
+      "member": "Dave Min",
+      "stateDistrict": "CA47",
+      "ticker": "ZOOM",
+      "assetName": "Zoom Technologies, Inc. (ZOOM)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-03-19",
+      "filingDate": "4/14/2025",
+      "filingId": "20029100",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20029100.pdf"
+    }
+  ],
+  "episodes": []
+}

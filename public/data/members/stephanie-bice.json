@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20019292-WFC-2021-08-06-Long-S",
+      "memberId": "stephanie-bice",
+      "member": "Stephanie Bice",
+      "stateDistrict": "OK05",
+      "ticker": "WFC",
+      "assetName": "Wells Fargo & Company (WFC)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-08-06",
+      "filingDate": "8/12/2021",
+      "filingId": "20019292",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019292.pdf"
+    }
+  ],
+  "episodes": []
+}

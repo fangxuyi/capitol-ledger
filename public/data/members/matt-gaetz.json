@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20013811-FBSI-2019-12-19-Long-S",
+      "memberId": "matt-gaetz",
+      "member": "Matt Gaetz",
+      "stateDistrict": "FL01",
+      "ticker": "FBSI",
+      "assetName": "First Bancshares, Inc. (FBSI) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2019-12-19",
+      "filingDate": "1/3/2020",
+      "filingId": "20013811",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20013811.pdf"
+    },
+    {
+      "id": "20013811-FBSI-2019-10-31-Long-E",
+      "memberId": "matt-gaetz",
+      "member": "Matt Gaetz",
+      "stateDistrict": "FL01",
+      "ticker": "FBSI",
+      "assetName": "First Bancshares, Inc. (FBSI) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "E",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2019-10-31",
+      "filingDate": "1/3/2020",
+      "filingId": "20013811",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20013811.pdf"
+    }
+  ],
+  "episodes": []
+}

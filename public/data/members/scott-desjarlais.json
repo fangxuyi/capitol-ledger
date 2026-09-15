@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20033490-PEP-2025-10-28-Long-S",
+      "memberId": "scott-desjarlais",
+      "member": "Scott DesJarlais",
+      "stateDistrict": "TN04",
+      "ticker": "PEP",
+      "assetName": "Pepsico, Inc. (PEP) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-10-28",
+      "filingDate": "11/18/2025",
+      "filingId": "20033490",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033490.pdf"
+    },
+    {
+      "id": "20033490-UPS-2025-10-28-Long-S",
+      "memberId": "scott-desjarlais",
+      "member": "Scott DesJarlais",
+      "stateDistrict": "TN04",
+      "ticker": "UPS",
+      "assetName": "United Parcel Service, Inc. Common",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2025-10-28",
+      "filingDate": "11/18/2025",
+      "filingId": "20033490",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033490.pdf"
+    }
+  ],
+  "episodes": []
+}

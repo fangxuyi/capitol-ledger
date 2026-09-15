@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20011095-ESRX-2018-12-21-Long-E",
+      "memberId": "keith-rothfus",
+      "member": "Keith J. Rothfus",
+      "stateDistrict": "PA12",
+      "ticker": "ESRX",
+      "assetName": "Express Scripts Holding Company",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "SP",
+      "action": "E",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2018-12-21",
+      "filingDate": "2/4/2019",
+      "filingId": "20011095",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2019/20011095.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20034736-NVDA-2026-07-21-Long-S",
+      "memberId": "sam-liccardo",
+      "member": "Sam T. Liccardo",
+      "stateDistrict": "CA16",
+      "ticker": "NVDA",
+      "assetName": "NVIDIA Corporation - Common Stock",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2026-07-21",
+      "filingDate": "7/27/2026",
+      "filingId": "20034736",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034736.pdf"
+    }
+  ],
+  "episodes": []
+}

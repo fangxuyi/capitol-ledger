@@ -19,7 +19,7 @@ test("ships the completed congressional disclosure tracker", async () => {
   assert.match(dashboard, /Raw Clerk pipeline/);
   assert.match(dashboard, /Latest material changes/);
   assert.match(dashboard, /House performance table/);
-  assert.match(houseData, /"filerCount": 401/);
+  assert.equal(JSON.parse(houseJson).meta.filerCount, JSON.parse(houseJson).members.length);
   assert.match(houseData, /"scoredEpisodeCount":/);
   assert.match(houseData, /"averageHoldingDays":/);
   assert.match(trackedDetails, /"transactions":/);

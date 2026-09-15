@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20034160-NWL-2023-10-31-Long-S",
+      "memberId": "pramila-jayapal",
+      "member": "Pramila Jayapal",
+      "stateDistrict": "WA07",
+      "ticker": "NWL",
+      "assetName": "Newell Brands Inc. (NWL) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2023-10-31",
+      "filingDate": "3/15/2026",
+      "filingId": "20034160",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034160.pdf"
+    }
+  ],
+  "episodes": []
+}

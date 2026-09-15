@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20034562-REXR-2025-02-26-Long-S",
+      "memberId": "daniel-webster",
+      "member": "Daniel Webster",
+      "stateDistrict": "FL11",
+      "ticker": "REXR",
+      "assetName": "Rexford Industrial Realty, Inc.",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2025-02-26",
+      "filingDate": "6/1/2026",
+      "filingId": "20034562",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034562.pdf"
+    }
+  ],
+  "episodes": []
+}

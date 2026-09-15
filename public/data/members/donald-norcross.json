@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20030894-TD-2024-06-04-Long-S",
+      "memberId": "donald-norcross",
+      "member": "Donald W. Norcross",
+      "stateDistrict": "NJ01",
+      "ticker": "TD",
+      "assetName": "Toronto Dominion Bank (TD) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2024-06-04",
+      "filingDate": "9/4/2025",
+      "filingId": "20030894",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20030894.pdf"
+    }
+  ],
+  "episodes": []
+}

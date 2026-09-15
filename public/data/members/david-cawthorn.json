@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20019640-AMZN-2021-09-24-Long-S",
+      "memberId": "david-cawthorn",
+      "member": "David Madison Cawthorn",
+      "stateDistrict": "NC11",
+      "ticker": "AMZN",
+      "assetName": "Amazon.com, Inc. (AMZN) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-09-24",
+      "filingDate": "10/17/2021",
+      "filingId": "20019640",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019640.pdf"
+    }
+  ],
+  "episodes": []
+}

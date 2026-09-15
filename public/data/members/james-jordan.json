@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20033803-CBSI-2025-10-27-Long-S",
+      "memberId": "james-jordan",
+      "member": "James D Jordan",
+      "stateDistrict": "OH04",
+      "ticker": "CBSI",
+      "assetName": "Central Bancshares, Inc. New (CBSI)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "SP",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2025-10-27",
+      "filingDate": "1/14/2026",
+      "filingId": "20033803",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20033803.pdf"
+    }
+  ],
+  "episodes": []
+}

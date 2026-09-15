@@ -1,0 +1,57 @@
+{
+  "transactions": [
+    {
+      "id": "20033488-NWL-2025-10-27-Long-P",
+      "memberId": "peter-stauber",
+      "member": "Peter Allen Stauber",
+      "stateDistrict": "MN08",
+      "ticker": "NWL",
+      "assetName": "Newell Brands Inc. (NWL) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2025-10-27",
+      "filingDate": "11/21/2025",
+      "filingId": "20033488",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033488.pdf"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "20033488-NWL-2025-10-27-Long-P",
+      "memberId": "peter-stauber",
+      "member": "Peter Allen Stauber",
+      "stateDistrict": "MN08",
+      "ticker": "NWL",
+      "assetName": "Newell Brands Inc. (NWL) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2025-10-27",
+      "filingDate": "11/21/2025",
+      "filingId": "20033488",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033488.pdf",
+      "purchaseCount": 1,
+      "partialSaleSeen": false,
+      "closeDate": "2026-09-11",
+      "status": "Open · latest mark",
+      "closeSourceUrl": null,
+      "periodDays": 319,
+      "returnValue": 22.8,
+      "benchmarkReturn": 12.5,
+      "excessReturn": 10.3,
+      "return90d": -13.4,
+      "excess90d": -14.3
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20034311-VZ-2026-04-07-Long-S",
+      "memberId": "jennifer-mcclellan",
+      "member": "Jennifer McClellan",
+      "stateDistrict": "VA04",
+      "ticker": "VZ",
+      "assetName": "Verizon Communications Inc.",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2026-04-07",
+      "filingDate": "4/16/2026",
+      "filingId": "20034311",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034311.pdf"
+    },
+    {
+      "id": "20022895-VZ-2023-05-04-Long-S",
+      "memberId": "jennifer-mcclellan",
+      "member": "Jennifer McClellan",
+      "stateDistrict": "VA04",
+      "ticker": "VZ",
+      "assetName": "Verizon Communications Inc. (VZ)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": "partial",
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2023-05-04",
+      "filingDate": "6/1/2023",
+      "filingId": "20022895",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2023/20022895.pdf"
+    }
+  ],
+  "episodes": []
+}

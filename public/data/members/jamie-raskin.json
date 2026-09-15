@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20025439-IXNZF-2024-07-02-Long-S",
+      "memberId": "jamie-raskin",
+      "member": "Jamie Raskin",
+      "stateDistrict": "MD08",
+      "ticker": "IXNZF",
+      "assetName": "I (IXNZF) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$50,001 - $100,000",
+      "transactionDate": "2024-07-02",
+      "filingDate": "7/12/2024",
+      "filingId": "20025439",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2024/20025439.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20022886-ANDE-2022-10-21-Long-S",
+      "memberId": "marcy-kaptur",
+      "member": "Marcy Kaptur",
+      "stateDistrict": "OH09",
+      "ticker": "ANDE",
+      "assetName": "The Andersons, Inc. (ANDE) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2022-10-21",
+      "filingDate": "5/15/2023",
+      "filingId": "20022886",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2023/20022886.pdf"
+    }
+  ],
+  "episodes": []
+}

@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20011775-GBDC-2021-01-20-Long-S",
+      "memberId": "teresa-leger-fernandez",
+      "member": "Teresa Leger Fernandez",
+      "stateDistrict": "NM03",
+      "ticker": "GBDC",
+      "assetName": "Golub Capital BDC, Inc. (GBDC) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2021-01-20",
+      "filingDate": "12/7/2022",
+      "filingId": "20011775",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2022/20011775.pdf"
+    }
+  ],
+  "episodes": []
+}

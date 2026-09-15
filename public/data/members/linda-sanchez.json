@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20033755-CSCO-2025-10-28-Long-S",
+      "memberId": "linda-sanchez",
+      "member": "Linda T. Sanchez",
+      "stateDistrict": "CA38",
+      "ticker": "CSCO",
+      "assetName": "Cisco Systems, Inc. - Common Stock",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "DC",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-10-28",
+      "filingDate": "1/9/2026",
+      "filingId": "20033755",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20033755.pdf"
+    }
+  ],
+  "episodes": []
+}

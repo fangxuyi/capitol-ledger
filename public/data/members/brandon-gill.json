@@ -1,0 +1,57 @@
+{
+  "transactions": [
+    {
+      "id": "20033476-IBIT-2025-10-29-Long-P",
+      "memberId": "brandon-gill",
+      "member": "Brandon Gill",
+      "stateDistrict": "TX26",
+      "ticker": "IBIT",
+      "assetName": "iShares Bitcoin Trust ETF (IBIT) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2025-10-29",
+      "filingDate": "11/18/2025",
+      "filingId": "20033476",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033476.pdf"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "20033476-IBIT-2025-10-29-Long-P",
+      "memberId": "brandon-gill",
+      "member": "Brandon Gill",
+      "stateDistrict": "TX26",
+      "ticker": "IBIT",
+      "assetName": "iShares Bitcoin Trust ETF (IBIT) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$15,001 - $50,000",
+      "transactionDate": "2025-10-29",
+      "filingDate": "11/18/2025",
+      "filingId": "20033476",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20033476.pdf",
+      "purchaseCount": 1,
+      "partialSaleSeen": false,
+      "closeDate": "2026-09-11",
+      "status": "Open · latest mark",
+      "closeSourceUrl": null,
+      "periodDays": 317,
+      "returnValue": -30.2,
+      "benchmarkReturn": 12.1,
+      "excessReturn": -42.4,
+      "return90d": -19.3,
+      "excess90d": -20.8
+    }
+  ]
+}

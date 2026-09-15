@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20009451-SIRI-2018-01-04-Long-S",
+      "memberId": "stephanie-murphy",
+      "member": "Stephanie Murphy",
+      "stateDistrict": "FL07",
+      "ticker": "SIRI",
+      "assetName": "Sirius XM Holdings Inc. (SIRI)",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2018-01-04",
+      "filingDate": "5/4/2018",
+      "filingId": "20009451",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2018/20009451.pdf"
+    }
+  ],
+  "episodes": []
+}

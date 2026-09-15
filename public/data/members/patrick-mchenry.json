@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20018005-D-2020-11-19-Long-S",
+      "memberId": "patrick-mchenry",
+      "member": "Patrick T. McHenry",
+      "stateDistrict": "NC10",
+      "ticker": "D",
+      "assetName": "Dominion Energy, Inc. (D) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2020-11-19",
+      "filingDate": "1/10/2021",
+      "filingId": "20018005",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20018005.pdf"
+    }
+  ],
+  "episodes": []
+}

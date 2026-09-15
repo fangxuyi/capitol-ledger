@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "id": "20020875-T-2022-04-11-Long-E",
+      "memberId": "david-kustoff",
+      "member": "David Kustoff",
+      "stateDistrict": "TN08",
+      "ticker": "T",
+      "assetName": "AT&T Inc. (T) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "E",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2022-04-11",
+      "filingDate": "5/2/2022",
+      "filingId": "20020875",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2022/20020875.pdf"
+    },
+    {
+      "id": "20020875-WBD-2022-04-11-Long-E",
+      "memberId": "david-kustoff",
+      "member": "David Kustoff",
+      "stateDistrict": "TN08",
+      "ticker": "WBD",
+      "assetName": "Warner Bros. Discovery, Inc. - Series",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "JT",
+      "action": "E",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "See official filing",
+      "transactionDate": "2022-04-11",
+      "filingDate": "5/2/2022",
+      "filingId": "20020875",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2022/20020875.pdf"
+    }
+  ],
+  "episodes": []
+}

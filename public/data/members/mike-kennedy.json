@@ -1,0 +1,57 @@
+{
+  "transactions": [
+    {
+      "id": "20030542-BRK-B-2025-05-09-Long-P",
+      "memberId": "mike-kennedy",
+      "member": "Mike Kennedy",
+      "stateDistrict": "UT03",
+      "ticker": "BRK-B",
+      "assetName": "Berkshire Hathaway Inc. New",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-05-09",
+      "filingDate": "6/20/2025",
+      "filingId": "20030542",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20030542.pdf"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "20030542-BRK-B-2025-05-09-Long-P",
+      "memberId": "mike-kennedy",
+      "member": "Mike Kennedy",
+      "stateDistrict": "UT03",
+      "ticker": "BRK-B",
+      "assetName": "Berkshire Hathaway Inc. New",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "P",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2025-05-09",
+      "filingDate": "6/20/2025",
+      "filingId": "20030542",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2025/20030542.pdf",
+      "purchaseCount": 1,
+      "partialSaleSeen": false,
+      "closeDate": "2026-09-11",
+      "status": "Open · latest mark",
+      "closeSourceUrl": null,
+      "periodDays": 490,
+      "returnValue": -0.7,
+      "benchmarkReturn": 37.3,
+      "excessReturn": -38,
+      "return90d": -10.2,
+      "excess90d": -22.5
+    }
+  ]
+}

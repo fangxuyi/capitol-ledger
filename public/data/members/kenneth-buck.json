@@ -1,0 +1,25 @@
+{
+  "transactions": [
+    {
+      "id": "20019641-HP-2021-09-09-Long-S",
+      "memberId": "kenneth-buck",
+      "member": "Kenneth R. Buck",
+      "stateDistrict": "CO04",
+      "ticker": "HP",
+      "assetName": "Helmerich & Payne, Inc. (HP) [ST]",
+      "instrument": "Stock",
+      "direction": "Long",
+      "owner": "Not stated",
+      "action": "S",
+      "closeKind": null,
+      "expirationDate": null,
+      "strike": null,
+      "amount": "$1,001 - $15,000",
+      "transactionDate": "2021-09-09",
+      "filingDate": "10/17/2021",
+      "filingId": "20019641",
+      "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2021/20019641.pdf"
+    }
+  ],
+  "episodes": []
+}
