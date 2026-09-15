@@ -363,13 +363,13 @@
       "sourceUrl": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2020/20017104.pdf",
       "purchaseCount": 15,
       "partialSaleSeen": true,
-      "closeDate": "2026-09-11",
+      "closeDate": "2026-09-14",
       "status": "Residual · latest mark",
       "closeSourceUrl": null,
-      "periodDays": 2229,
-      "returnValue": 154.9,
-      "benchmarkReturn": 151.4,
-      "excessReturn": 3.4,
+      "periodDays": 2232,
+      "returnValue": 157.2,
+      "benchmarkReturn": 150.3,
+      "excessReturn": 6.8,
       "return90d": 2,
       "excess90d": 1.6
     }
