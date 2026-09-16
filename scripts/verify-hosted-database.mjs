@@ -25,7 +25,8 @@ try {
   assert.equal(data.transactions.length,db.prepare('SELECT COUNT(*) n FROM transactions WHERE member_id=?').get(member.id).n);
   const episodes=local.filter(e=>e.member_id===member.id);assert.equal(data.episodes.length,episodes.length);
   const byId=new Map(episodes.map(e=>[e.id,e]));
-  for(const row of data.episodes){assert.equal(row.returnValue,byId.get(row.id).return_value);assert.equal(row.excessReturn,byId.get(row.id).excess_return);assert.equal(row.status,byId.get(row.id).status);}
+  const numeric=value=>value===0?0:value; // JSON serializes negative zero as zero.
+  for(const row of data.episodes){assert.equal(row.returnValue,numeric(byId.get(row.id).return_value));assert.equal(row.excessReturn,numeric(byId.get(row.id).excess_return));assert.equal(row.status,byId.get(row.id).status);}
   details[member.id]=data;
  }
  const day=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date());
