@@ -1,9 +1,10 @@
 import { env } from 'cloudflare:workers';
+import { getDashboardData, getMemberDetails } from '../../../db/analytics';
 
-type Kind = 'members'|'transactions'|'filings'|'prices';
+type Kind = 'members'|'transactions'|'filings'|'prices'|'quality';
 type Manifest = {chunks:Record<Kind,number>;counts:Record<Kind,number>;priceTotal:number;meta:{source_generated_at:string;source_start_year:number;source_end_year:number;readable_ptr_count:number;methodology:string}};
 type Run = {id:string;base_imported_at:string|null;seed:number;status:string;manifest:string};
-const kinds: Kind[]=['members','transactions','filings','prices'];
+const kinds: Kind[]=['members','transactions','filings','prices','quality'];
 const reply=(value:unknown,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store'}});
 async function authorized(request:Request) {
   const secret=(env as unknown as {CAPITOL_INGEST_KEY?:string}).CAPITOL_INGEST_KEY;
@@ -18,9 +19,12 @@ const priceSQL=(source:string)=>`INSERT INTO price_history(ticker,date,adjusted_
  ON CONFLICT(ticker,date) DO UPDATE SET adjusted_close=excluded.adjusted_close`;
 export async function GET(request:Request) {
   if (!await authorized(request)) return reply({error:'Unauthorized'},401);
+  const query=new URL(request.url).searchParams;
+  if (query.get('view')==='dashboard') return reply(await getDashboardData());
+  if (query.get('member')) return reply(await getMemberDetails(query.get('member')!));
   const db=env.DB;
-  const [imports,runs]=await db.batch([db.prepare('SELECT * FROM dataset_imports'),db.prepare("SELECT id,status,created_at,published_at FROM ingestion_runs ORDER BY created_at DESC LIMIT 5")]);
-  return reply({import:imports.results[0]??null,runs:runs.results});
+  const [imports,runs,tracked,rules]=await db.batch([db.prepare('SELECT * FROM dataset_imports'),db.prepare("SELECT id,status,created_at,published_at FROM ingestion_runs ORDER BY created_at DESC LIMIT 5"),db.prepare('SELECT * FROM tracked_members ORDER BY id'),db.prepare('SELECT * FROM alert_rules ORDER BY id')]);
+  return reply({import:imports.results[0]??null,runs:runs.results,trackedMembers:tracked.results,alertRules:rules.results});
 }
 export async function POST(request:Request) {
   if (!await authorized(request)) return reply({error:'Unauthorized'},401);
@@ -30,7 +34,7 @@ export async function POST(request:Request) {
     if (text.length>1_800_000) return reply({error:'Chunk too large'},413);
     const body=JSON.parse(text);
     if (typeof body.runId!=='string'||!/^[-a-zA-Z0-9_.:]{1,100}$/.test(body.runId)) return reply({error:'Invalid run ID'},400);
-    let run=await db.prepare('SELECT * FROM ingestion_runs WHERE id=?').bind(body.runId).first<Run>();
+    const run=await db.prepare('SELECT * FROM ingestion_runs WHERE id=?').bind(body.runId).first<Run>();
     if (body.action==='begin') {
       if (run) return reply({id:run.id,status:run.status,seed:!!run.seed});
       const manifest=body.manifest as Manifest;
@@ -45,6 +49,10 @@ export async function POST(request:Request) {
     }
     if (!run) return reply({error:'Unknown import'},404);
     if (run.status==='published' && body.action==='publish') return reply({status:'published',id:run.id});
+    if (run.status==='published' && body.action==='cleanup') {
+      await db.prepare('DELETE FROM ingestion_chunks WHERE run_id=?').bind(run.id).run();
+      return reply({cleaned:true,id:run.id});
+    }
     if (run.status!=='staging') return reply({error:'Import is not staging'},409);
     const manifest=JSON.parse(run.manifest) as Manifest;
     if (body.action==='chunk') {
@@ -86,8 +94,9 @@ export async function POST(request:Request) {
         transactions:`INSERT INTO transactions SELECT json_extract(value,'$.id'),json_extract(value,'$.member_id'),json_extract(value,'$.ticker'),json_extract(value,'$.instrument'),json_extract(value,'$.direction'),json_extract(value,'$.action'),json_extract(value,'$.close_kind'),json_extract(value,'$.expiration_date'),json_extract(value,'$.strike'),json_extract(value,'$.transaction_date'),json_extract(value,'$.filing_id'),json_extract(value,'$.payload') FROM json_each(${source})`,
         filings:`INSERT INTO filings SELECT json_extract(value,'$.doc_id'),json_extract(value,'$.member_id'),json_extract(value,'$.filing_type'),json_extract(value,'$.filing_year'),json_extract(value,'$.filed_at'),json_extract(value,'$.source_index_url'),json_extract(value,'$.source_pdf_url'),json_extract(value,'$.discovered_at') FROM json_each(${source}) WHERE 1 ON CONFLICT(doc_id) DO UPDATE SET member_id=excluded.member_id,filed_at=excluded.filed_at,source_pdf_url=excluded.source_pdf_url`,
         prices:priceSQL(source),
+        quality:`INSERT INTO price_exclusions SELECT json_extract(value,'$.ticker'),json_extract(value,'$.reason'),json_extract(value,'$.checked_at'),json_extract(value,'$.last_good_price_date') FROM json_each(${source})`,
       };
-      const statements=[db.prepare('DELETE FROM transactions')];
+      const statements=[db.prepare('DELETE FROM transactions'),db.prepare('DELETE FROM price_exclusions')];
       for (const kind of kinds) for (const chunk of chunks.results.filter(c=>c.kind===kind)) {
         if (kind==='prices'&&run.seed) continue;
         statements.push(db.prepare(sql[kind]).bind(run.id,kind,chunk.chunk_index));

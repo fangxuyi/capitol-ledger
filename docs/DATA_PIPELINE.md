@@ -1,92 +1,89 @@
-# Data collection and analysis
+# Daily database workflow
 
-The pipeline is intentionally raw-source-first. It does not import transaction rows from a third-party congressional-trading tracker.
+The existing Capitol Ledger Site reads its hosted Cloudflare D1 database. SQL views
+calculate holding episodes and returns from raw transactions and adjusted prices.
+The daily monitor runs at 9 a.m. America/New_York in the existing setup thread.
+A normal daily update imports database records; it does not rebuild or redeploy.
 
-## Main entry point
+## Daily sequence
 
-`scripts/build-house-performance.mjs` performs the complete refresh:
+Use Node/npm/Git/pdftotext from `/Users/openclaw/.local/share/capitol-tools/bin`.
+Stop the local preview before a bulk import. Keep all run evidence under ignored
+`work/daily-runs/YYYY-MM-DD/` and do not edit `sources/`.
 
-1. Downloads each annual House Clerk financial-disclosure ZIP index from 2013 through the current supported year.
-2. Selects Periodic Transaction Reports and preserves the filer name, district code, document ID, filing date, and original PDF URL.
-3. Downloads each original PTR PDF and extracts its embedded text with `pdftotext`. Extracted text is cached in `work/house-ptrs/`, which is ignored by Git.
-4. Parses machine-readable single-name stock and option rows, including owner code, action, transaction date, ticker, instrument, expiration, strike, disclosed amount band when recoverable, and source document.
-5. Downloads and caches adjusted daily price histories in `work/house-prices/` for the selected security and SPY.
-6. Groups related transactions into approximate holding episodes.
-7. Measures holding-period return, matching SPY return, excess return, 90-day comparison, direction, status, and calendar holding days.
-8. Writes the application summary, full JSON/CSV snapshot, and on-demand member detail files.
+1. Run `npm run db:backup`. Preserve the last hosted mirror and successful run state.
+2. Run `npm run db:verify-hosted -- --before` to record the previous live calculation,
+   watchlist and alert preferences. It compares against `work/hosted-database.sqlite`.
+3. Run `npm run data:audit`. It downloads official yearly indexes, all current-year
+   PTR originals, existing Pelosi hash baselines, and tracked members' recent annual
+   disclosures. Changed readable PTR text replaces only its affected cache, with a
+   backup. A failed audit blocks publication. Review index changes against the prior
+   successful run; historical baselines are not new trades. Older originals outside
+   the baseline/recent audit window are not re-downloaded every day.
+4. Run `npm run data:refresh -- --quarantine-unavailable-prices`. It parses the complete House universe without a limit,
+   refreshes adjusted prices, and imports raw observations in a local transaction.
+   SPY establishes the latest completed session as of refresh start; intraday marks
+   are excluded. The default command aborts on any previously available history failure. The explicit
+   quarantine mode preserves failed histories but stores an exclusion record so they
+   cannot contribute scored returns or ranks. It still aborts for SPY failure, more
+   than 50 failures, failures above 2% of tickers, or suspicious record-count drops.
+   The website displays the exclusions; report them as pricing limitations. Missing
+   securities and entry-price gaps greater than seven calendar days remain unscored.
+5. Run `npm run data:verify`. Compare source, transaction and price coverage. When
+   code changes, also run `npm run check` and the applicable API integration tests.
+6. Run `npm run db:publish`. This uploads to the existing hosted database through the
+   authenticated `/api/ingest` endpoint. It reads a scoped credential from macOS
+   Keychain, service `capitol-ledger-ingest`, account `openclaw`; never print it.
+7. Run `npm run db:verify-hosted`. It compares live database-backed calculations with
+   the local database for every member summary and each tracked member's detail.
+   Verify that watchlist membership and alert rules match the before snapshot.
+8. Record checked, refreshed, imported and verified times separately. Advance the
+   successful state only after hosted API verification. Keep source generation time
+   distinct from import time and benchmark price date.
 
-Run the complete refresh with:
+## Atomic publication and recovery
 
-```bash
-npm run data:refresh
-```
+The importer stores bounded, hashed, idempotent chunks in staging. It rejects missing
+chunks, changed baselines and suspicious count drops. After the initial migration,
+all raw transaction and price changes become visible in one D1 batch transaction.
+No frontend datasets, totals, returns or rankings are generated or embedded.
 
-For a daily update, refresh adjusted security prices and SPY as well:
+Initial price loading is allowed only before the first analytics dataset activates;
+the old website remains live during that backfill. Ordinary daily price uploads are
+deltas against the exact last successful hosted mirror, including corrections to
+historical adjusted closes. They are staged and cannot change the live site early.
+A successful import saves a consistent local mirror and a hosted import identifier.
+Published staging payloads are then removed; import metadata remains for audit.
 
-```bash
-npm run data:refresh -- --refresh-prices
-npm run check
-```
+If upload is interrupted, rerun with the same unchanged local dataset and baseline.
+The deterministic run ID resumes identical chunks. A conflicting or stale mirror
+must be investigated, not overwritten or treated as a new seed. Keep the last good
+hosted data and report the exact failure. Do not create a replacement database or
+Site, weaken authentication, or revert to static frontend data.
 
-This mode preserves cached histories when a provider request fails and stops before
-replacing analytical outputs if a previously available history could not be refreshed.
-Do not publish that failed run as a current snapshot. Delisted or renamed securities
-may need source review before a complete price refresh can succeed.
+Permanent implementation changes must be committed and pushed to the existing GitHub
+repository. Publish code changes through Sites with the current authentication and
+access settings. Data-only updates need no source commit or website rebuild.
 
-Member detail files are generated for every House filer in the summary, so adding a
-House member to the watchlist no longer requires a separate code whitelist. Verification
-checks each member's detail against the shared summary snapshot. Positions remain
-reconstructed unresolved PTR purchase episodes, not verified brokerage balances or
-a complete inventory of assets from annual disclosures.
+## Daily summary and email
 
-Before each daily refresh, retain the previous successful snapshot in ignored `work/`
-storage. Compare newly disclosed purchases, sales and amendments for every active
-tracked member, their open episodes and equal-weighted performance, and the House
-leaderboard. Describe changes since the previous snapshot, not as same-day trades.
-Price-driven performance changes must be distinguished from new disclosure activity.
-Use official filing links and reported value bands in summaries.
+Compare the same calculation method before and after refresh: new/amended disclosures,
+open/closed episodes, tracked-member excess return and eligible House rankings
+(minimum 12 scored episodes). Separate price changes, new filings, parser corrections
+and method changes. A reprocessed historical row is not a newly disclosed trade.
 
-For email summaries, treat a new/amended tracked-member disclosure, a new or closed
-tracked position, a tracked member's excess-return change of at least 2 percentage
-points, or a move of at least 10 ranks among eligible House members as material.
-Report sample sizes and the comparison dates. Do not email unchanged historical data
-as news, and record successful delivery to prevent duplicate messages. Email recipient
-configuration belongs in private automation state, not this public repository.
+Email the user's authorized connected Gmail account when there is a new/amended
+tracked disclosure, an opened/closed tracked episode, an excess-return move of at
+least 2 percentage points, or a rank move of at least 10 places. Include source links,
+filing/transaction dates, comparison dates and sample sizes. Save the Gmail message
+ID and snapshot identifier to prevent duplicate sends. Report failures in the task;
+never call a failed run up to date. Preserve a draft if Gmail is unavailable.
 
-Only publish after verification succeeds; preserve the existing Site, authentication,
-watchlist membership and alert preferences. Permanent code changes belong in Git.
+## Interpretation limits
 
-For a small parser-development pass, the script accepts a document limit:
-
-```bash
-node scripts/build-house-performance.mjs --limit=250
-```
-
-Do not publish a limited run as a complete dataset.
-
-## Episode rules
-
-- A disclosed purchase opens an episode.
-- Additional purchases in the same security/contract remain in the episode because exact quantities and lot matching are not consistently available.
-- A full sale or exchange closes the episode.
-- A partial sale leaves a residual episode open.
-- An unmatched open episode is marked to the latest price.
-- A purchased stock or call is treated as long; a purchased put is treated as short.
-- A reported stock sale is an exit or trim, not a new short position.
-- Options are grouped by ticker, direction, expiration, and strike where those fields are recoverable.
-- When exact historical option quotes are unavailable, the return shown is the directional return of the underlying stock, clearly labeled as a proxy.
-
-Member and House summary metrics are arithmetic, equal-weighted averages across scored episodes. They are not time-weighted or capital-weighted portfolio returns.
-
-## Outputs
-
-- `lib/house-performance.generated.ts` — compact House-level summaries used by the leaderboard.
-- `public/data/house-performance.json` — metadata, member summaries, and all reconstructed episodes.
-- `public/data/house-performance-episodes.csv` — one portable row per episode.
-- `public/data/members/*.json` — transaction and episode detail loaded on demand for tracked/addable members.
-
-Run `npm run data:verify` after a refresh. It checks record counts, member files, and source provenance before the site is built.
-
-## Known limitations
-
-Image-only PTRs require OCR and are not yet fully represented. Exact quantities, cost basis, execution prices, and option premiums are often absent or expressed only as broad bands. Ticker normalization and corporate actions can also require manual review. The dashboard exposes these limits rather than turning missing facts into suspiciously precise arithmetic.
+Positions are unresolved PTR purchase episodes, not verified brokerage holdings.
+Returns are equal-weighted historical selection estimates, not portfolio P&L.
+Owners and option terms separate episodes; partial exits retain residuals. Purchased
+puts use a negative underlying-return proxy. Security and SPY marks share the same
+dates. Missing prices remain unknown. Image-only PDFs, non-ticker assets, exact cost
+basis, quantities and option premiums remain outside supported extraction.

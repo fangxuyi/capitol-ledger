@@ -34,7 +34,9 @@ function parseIndex(text: string, year: number, sourceIndexUrl: string, firstNam
 
 export async function POST(request: Request) {
   if (!await getChatGPTUser()) return Response.json({ error: "Sign in with ChatGPT to continue." }, { status: 401 });
-  const body = await request.json() as { memberId?: string; firstName?: string; lastName?: string; years?: number[] };
+  let body: { memberId?: string; firstName?: string; lastName?: string; years?: number[] };
+  try { body = await request.json(); } catch { return Response.json({error:"Invalid JSON."},{status:400}); }
+  if (!body || typeof body.memberId!=="string" || typeof body.lastName!=="string" || (body.firstName!==undefined && typeof body.firstName!=="string") || (body.years!==undefined && (!Array.isArray(body.years) || body.years.some((year) => !Number.isInteger(year))))) return Response.json({error:"Invalid sync request."},{status:400});
   const memberId = body.memberId?.trim();
   const firstName = body.firstName?.trim() ?? "";
   const lastName = body.lastName?.trim();
@@ -46,7 +48,7 @@ export async function POST(request: Request) {
   try {
     for (const year of years) {
       const sourceIndexUrl = `https://disclosures-clerk.house.gov/public_disc/financial-pdfs/${year}FD.zip`;
-      const response = await fetch(sourceIndexUrl, { headers: { "user-agent": "Capitol-Ledger/1.0 disclosure-monitor" } });
+      const response = await fetch(sourceIndexUrl, { signal: AbortSignal.timeout(30000), headers: { "user-agent": "Capitol-Ledger/1.0 disclosure-monitor" } });
       if (!response.ok) throw new Error(`Clerk index returned ${response.status} for ${year}`);
       const archive = unzipSync(new Uint8Array(await response.arrayBuffer()));
       const file = archive[`${year}FD.txt`];
@@ -54,16 +56,14 @@ export async function POST(request: Request) {
       found.push(...parseIndex(strFromU8(file), year, sourceIndexUrl, firstName, lastName));
     }
 
-    try {
-      const db = getDb();
-      await db.insert(trackedMembers).values({ id: memberId, firstName: firstName || found[0]?.firstName || "Unknown", lastName, displayName: `${firstName} ${lastName}`.trim(), stateDistrict: found[0]?.stateDistrict }).onConflictDoNothing();
-      await db.insert(syncRuns).values({ id: runId, memberId, status: "completed", filingCount: found.length, completedAt: new Date().toISOString() });
-      for (const row of found) {
-        await db.insert(filings).values({ docId: row.docId, memberId, filingType: row.filingType, filingYear: row.filingYear, filedAt: row.filingDate, sourceIndexUrl: row.sourceIndexUrl, sourcePdfUrl: row.sourcePdfUrl }).onConflictDoNothing();
-      }
-    } catch {
-      // The official-source check still succeeds while a fresh D1 database is being initialized.
-    }
+    const db = getDb();
+    const writes = found.map((row) => db.insert(filings).values({ docId: row.docId, memberId, filingType: row.filingType, filingYear: row.filingYear, filedAt: row.filingDate, sourceIndexUrl: row.sourceIndexUrl, sourcePdfUrl: row.sourcePdfUrl }).onConflictDoNothing());
+    // D1 batches are atomic: never mark a sync completed if its filing writes failed.
+    await db.batch([
+      db.insert(trackedMembers).values({ id: memberId, firstName: firstName || found[0]?.firstName || "Unknown", lastName, displayName: `${firstName} ${lastName}`.trim(), stateDistrict: found[0]?.stateDistrict }).onConflictDoNothing(),
+      ...writes,
+      db.insert(syncRuns).values({ id: runId, memberId, status: "completed", filingCount: found.length, completedAt: new Date().toISOString() }),
+    ]);
 
     return Response.json({ runId, status: "completed", filings: found, filingCount: found.length, source: "Office of the Clerk, U.S. House of Representatives" });
   } catch (error) {

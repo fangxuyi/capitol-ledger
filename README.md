@@ -1,66 +1,122 @@
 # Capitol Ledger
 
-Capitol Ledger is a raw-source-first look at stock selections disclosed by members of the U.S. House. It starts with the House Clerk’s own indexes and PTR documents, reconstructs approximate holding episodes, and turns the result into a small research dashboard.
+A database-backed congressional disclosure tracker. The website reads Cloudflare
+D1 (SQLite) through server APIs. Transactions, daily adjusted prices, watchlists,
+and alert preferences are persisted. SQL views reconstruct holding episodes and
+calculate returns on demand; no build is needed after database updates.
 
-Some of the data collection, analysis, and website work was done with Codex. The judgment calls, caveats, and occasional raised eyebrow remain very human.
+## Run locally — no paid service or cloud account required
 
-**Explore the details:** [capitol-ledger.yeefangxu.chatgpt.site](https://capitol-ledger.yeefangxu.chatgpt.site/)
+Requires Node 22.13+ and the existing price cache in `work/house-prices/`.
 
-The hosted tracker is link-accessible and uses the platform’s built-in Sign in with ChatGPT flow before showing the dashboard.
+```sh
+npm ci
+npm run db:setup
+npm run dev -- --port 3001
+```
 
-[![Capitol Ledger House performance dashboard](docs/capitol-ledger-dashboard.png)](https://capitol-ledger.yeefangxu.chatgpt.site/)
+Open http://localhost:3001. Development on localhost uses a local workspace identity.
+Production still requires the existing ChatGPT authentication gateway. The dev-only
+identity branch is removed from production builds. Bind local development to loopback;
+do not expose the Vite server to the public internet.
 
-## Two halves of the project
+`db:setup` applies versioned SQL migrations and imports the previous raw transaction
+snapshot plus the cached price histories. It does not import precomputed returns or
+rankings. The bootstrap import upserts stable records, preserving saved watchlists
+and alert preferences. Repeating it intentionally restores bootstrap observations;
+use the full refresh for current source data.
 
-### 1. Data collection and analysis
+Local state lives under `.wrangler/state/v3/d1/` (ignored by Git). Wrangler and Vite
+use the same `wrangler.jsonc` binding and state directory. The importer locates the
+SQLite file by its schema and refuses ambiguous matches. It runs one SQLite
+transaction: an import failure leaves the previous database intact. Stop the dev
+server before bulk imports/migrations. The website itself uses the D1 binding;
+only local maintenance scripts open SQLite directly for efficient bulk loading.
 
-The pipeline lives in [`scripts/`](scripts/) and produces the structured files in [`public/data/`](public/data/). It:
+## Refresh data
 
-- downloads the official annual House Clerk filing indexes;
-- reads the original Periodic Transaction Report PDFs;
-- normalizes single-name stock and option transactions;
-- reconstructs purchase-to-exit holding episodes;
-- marks unresolved or partially sold positions to the latest available price;
-- calculates directional return, SPY return, excess return, positive rate, and holding period; and
-- saves reusable JSON and CSV outputs.
-
-The full walk-through is in [docs/DATA_PIPELINE.md](docs/DATA_PIPELINE.md).
-
-### 2. The Capitol Ledger tracker
-
-The application lives mainly in [`app/`](app/), with persistent watchlists and alert rules defined in [`db/`](db/) and [`drizzle/`](drizzle/). It includes the House leaderboard and detailed member views for positions, performance episodes, transactions, alerts, and methodology.
-
-The application map is in [docs/TRACKER.md](docs/TRACKER.md).
-
-## Run it
-
-You will need Node.js 22.13 or newer and `pdftotext` for a fresh data rebuild.
-
-```bash
-npm install
+```sh
 npm run data:refresh
-npm run data:verify
-npm run dev
 ```
 
-For a production check:
+This reads official House Clerk yearly indexes, extracts PTR transaction rows, updates
+adjusted daily prices, and commits the validated dataset to the local database.
+It requires internet access and `pdftotext` (Poppler). It reuses cached filing text.
+Cached price refresh failures abort publication so incomplete prices do not silently
+replace the previous dataset. Missing price histories remain unscored. Nonpositive
+price observations are excluded and counted in the import output.
 
-```bash
-npm run check
+The dashboard polls its APIs every minute while visible, and all API reads bypass
+HTTP caches. **Live calculations mean calculations from the latest stored inputs;
+this is not a streaming market-data feed.** The page displays the benchmark price
+date and import time. The existing daily monitor runs at 9 a.m. New York time and
+uses the hosted ingestion workflow documented in `docs/DATA_PIPELINE.md`.
+
+“Check filings” only discovers and saves official filing metadata. It does not parse
+new PDFs or update prices; use the full refresh command for those steps.
+
+## Storage and calculation model
+
+| Table/view | Purpose |
+| --- | --- |
+| `research_members` | Member identities and indexed filing coverage |
+| `filings` | Discovered filing metadata and official source URLs |
+| `transactions` | Parsed observations, owner and contract terms, original row JSON |
+| `price_history` | Daily adjusted closes keyed by ticker and date |
+| `holding_episodes` | SQL view pairing purchases with full exits; partial sales retain residuals |
+| `performance_episodes` | SQL view deriving returns, matched SPY returns, and holding days |
+| `dataset_imports` | Source generation time, import time, and extraction coverage |
+| `tracked_members`, `alert_rules` | Persistent shared-workspace preferences |
+| `sync_runs` | Successful index-check records |
+
+Episodes are separated by member, household owner, security, instrument, and option
+terms. Returns use the first available security price on/after purchase and last
+price on/before close. SPY is measured on those same price dates. Missing prices yield
+unknown returns, not zero. Purchased puts use the negative underlying return proxy;
+this is not an actual option valuation. These remain approximate, equally weighted
+selection results, not portfolio returns. Image-only PDFs require a future OCR adapter.
+
+The old manually maintained Pelosi panels have been retired. Pelosi uses the same
+calculation engine as all other members. Old source snapshots are preserved under
+`data/` for migration/audit purposes and are not shipped as public assets. Household
+owner separation and matched benchmark dates can change prior published rankings.
+
+## Maintain and verify
+
+```sh
+npm run db:migrate       # apply new numbered SQL files under drizzle/
+npm run db:types         # regenerate Cloudflare runtime/binding types
+npm run data:verify      # SQLite integrity, foreign keys, and calculation coverage
+npm run db:backup        # consistent SQLite backup under ignored backups/
+npm run check           # calculation tests, TypeScript, build, lint
+npm run test:live       # API integration test against localhost:3001
 ```
 
-The first data refresh downloads thousands of official filings. Later runs reuse the ignored `work/` cache, because repeatedly downloading the same government PDFs is not a personality trait.
+Use sequential SQL migrations for schema and view changes. `db/schema.ts` supplies
+Drizzle mappings for application writes; `drizzle/*.sql` is the migration authority.
+The older Drizzle snapshot metadata is historical; do not regenerate/apply duplicate
+migrations from it. Production builds package all SQL migrations for the existing
+Sites hosting workflow.
 
-## Sources and important caveats
+To restore: stop development, locate the database printed by `data:verify`, move its
+SQLite file and any matching `-wal`/`-shm` files into a safe archive, then copy a backup
+to the original SQLite pathname and restart. Keep backups outside this machine too.
+Never delete `.wrangler/state` as a cleanup step without backing it up first.
 
-The primary sources are the [House Clerk financial-disclosure search](https://disclosures-clerk.house.gov/FinancialDisclosure/ViewSearch), annual ZIP indexes, and original PTR PDFs. Market returns use adjusted daily prices as a separate analytical input.
+## Hosted deployment
 
-This is informational research—not investment, legal, tax, or personalized financial advice. It is not an exact brokerage ledger. Congressional disclosures usually provide value bands rather than exact amounts, omit cost basis, and can arrive weeks after the transaction. Modeled returns are estimates, options are measured using the underlying stock direction when reliable historical option prices are unavailable, and open positions mean “no machine-readable full exit was matched,” not “we have peeked inside the brokerage account.” Verify the original filings before relying on any result.
+The existing Site uses its managed D1 binding. Versioned migrations are packaged
+with code deployments. The local placeholder in `wrangler.jsonc` is used only by
+local development; Sites supplies the existing production binding.
 
-The MIT License covers this project’s code and original documentation, not third-party source documents or market data. Financial-disclosure reports remain subject to the prohibited-use rules in [5 U.S.C. § 13107(c)](https://uscode.house.gov/view.xhtml?edition=prelim&num=0&req=granuleid%3AUSC-prelim-title5-section13107), including restrictions on unlawful use, most commercial use, credit-rating decisions, and solicitations. Market prices are a separate analytical input; anyone refreshing or extending the data should use a provider and license appropriate for their intended public or commercial use.
+Run `npm run db:publish` after a validated source refresh, then
+`npm run db:verify-hosted`. A scoped import credential is stored in macOS Keychain
+and as a secret runtime variable in Sites. Uploads are staged; activation atomically
+updates observations and timestamps. The website recalculates from that database
+without a rebuild. See [the daily workflow](docs/DATA_PIPELINE.md) for recovery.
 
-## Reuse, updates, and collaboration
-
-Please feel free to use this project at your own convenience under the MIT License. I would gently advise against reinventing the filing-parser wheel unless wrestling with PDF tables is how you relax—but forks, experiments, corrections, and better ideas are very welcome.
-
-The website will be updated irregularly, at the author’s convenience. No solemn refresh-calendar oaths here. If you spot a questionable record or want to collaborate on an improvement, please open an issue or pull request. Happy to work together on sensible changes, delightfully odd changes, and especially changes that make the methodology more honest.
+The initial hosted import includes the full adjusted-price history. Daily uploads
+send changed observations against a verified local mirror. Watchlist and alert
+preferences are preserved and are shared across the project. Per-rule alert delivery
+is not implemented; the daily monitor separately evaluates material changes and
+uses the user's existing Gmail authorization for summaries.

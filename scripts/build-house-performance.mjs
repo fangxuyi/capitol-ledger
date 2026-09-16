@@ -12,11 +12,6 @@ const execFileAsync = promisify(execFile);
 const root = new URL("../", import.meta.url).pathname;
 const textCache = join(root, "work", "house-ptrs");
 const priceCache = join(root, "work", "house-prices");
-const outputPath = join(root, "lib", "house-performance.generated.ts");
-const publicDataDirectory = join(root, "public", "data");
-const publicMemberDataDirectory = join(publicDataDirectory, "members");
-const jsonOutputPath = join(publicDataDirectory, "house-performance.json");
-const csvOutputPath = join(publicDataDirectory, "house-performance-episodes.csv");
 const currentYear = new Date().getUTCFullYear();
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const docLimit = limitArg ? Number(limitArg.split("=")[1]) : Infinity;
@@ -24,11 +19,11 @@ const startYear = 2013;
 const endYear = currentYear;
 const refreshPrices = process.argv.includes("--refresh-prices");
 const priceRefreshFailures = [];
+const refreshStartedAt = Date.now();
+let priceCutoff = null;
 
 await mkdir(textCache, { recursive: true });
 await mkdir(priceCache, { recursive: true });
-await mkdir(publicDataDirectory, { recursive: true });
-await mkdir(publicMemberDataDirectory, { recursive: true });
 
 function slug(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -40,12 +35,6 @@ function parseDate(value) {
   return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-function addDays(date, days) {
-  const value = new Date(`${date}T00:00:00Z`);
-  value.setUTCDate(value.getUTCDate() + days);
-  return value.toISOString().slice(0, 10);
-}
-
 async function fetchIndexes() {
   const filings = [];
   for (let year = startYear; year <= endYear; year += 1) {
@@ -54,7 +43,7 @@ async function fetchIndexes() {
     if (!response.ok) throw new Error(`House Clerk index ${year} returned ${response.status}`);
     const archive = unzipSync(new Uint8Array(await response.arrayBuffer()));
     const fileName = Object.keys(archive).find((name) => name.endsWith(".txt"));
-    if (!fileName) continue;
+    if (!fileName) throw new Error(`House Clerk index ${year} has no text index; refusing partial refresh`);
     const rows = strFromU8(archive[fileName]).split(/\r?\n/).slice(1);
     for (const line of rows) {
       const fields = line.split("\t").map((field) => field.trim());
@@ -147,7 +136,7 @@ function extractTransactions(text, filing) {
     const strikeMatch = block.match(/strike price of\s+\$?([\d,.]+)/i);
     const amountMatch = block.match(/\$[\d,]+\s*-\s*\$[\d,]+|Over\s+\$[\d,]+/i);
     return [{
-      id: `${filing.docId}-${ticker}-${transactionDate}-${direction}-${action}`,
+      id: `${filing.docId}-${position}-${ticker}-${transactionDate}-${direction}-${action}`,
       memberId: filing.memberId,
       member: filing.displayName,
       stateDistrict: filing.stateDistrict,
@@ -196,31 +185,16 @@ async function priceSeries(ticker) {
   const adjusted = result.indicators?.adjclose?.[0]?.adjclose ?? result.indicators?.quote?.[0]?.close;
   const rows = result.timestamp.flatMap((timestamp, index) => {
     const close = adjusted?.[index];
-    return Number.isFinite(close) ? [{ date: new Date(timestamp * 1000).toISOString().slice(0, 10), close }] : [];
+    const date = new Date(timestamp * 1000).toISOString().slice(0, 10);
+    const session = result.meta?.currentTradingPeriod?.regular;
+    const sessionDate = session ? new Date(session.start * 1000).toISOString().slice(0,10) : null;
+    if (sessionDate===date && refreshStartedAt<session.end*1000) return [];
+    if (priceCutoff && date>priceCutoff) return [];
+    return Number.isFinite(close) && close>0 ? [{ date, close }] : [];
   });
   if (!rows.length || (cached?.length && rows.at(-1).date < cached.at(-1).date)) return unavailable();
   await writeFile(cachePath, JSON.stringify(rows));
   return rows;
-}
-
-function pointOnOrAfter(series, date) {
-  return series?.find((point) => point.date >= date) ?? null;
-}
-
-function pointOnOrBefore(series, date) {
-  if (!series) return null;
-  for (let index = series.length - 1; index >= 0; index -= 1) if (series[index].date <= date) return series[index];
-  return null;
-}
-
-function round(value, digits = 1) {
-  return Number(value.toFixed(digits));
-}
-
-function csvCell(value) {
-  if (value === null || value === undefined) return "";
-  const text = String(value);
-  return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
 const filings = await fetchIndexes();
@@ -230,7 +204,8 @@ for (const filing of filings) {
   members.get(filing.memberId).filingCount += 1;
 }
 
-const selectedFilings = filings.slice(0, Number.isFinite(docLimit) ? docLimit : filings.length);
+if (Number.isFinite(docLimit)) throw new Error("Partial refreshes cannot replace the database. Remove --limit.");
+const selectedFilings = filings;
 const extractionResults = await mapConcurrent(selectedFilings, 10, async (filing) => {
   const text = await filingText(filing);
   return { readable: text.trim().length >= 200, transactions: extractTransactions(text, filing) };
@@ -240,134 +215,22 @@ const transactionMap = new Map(extracted.map((transaction) => [transaction.id, t
 const transactions = [...transactionMap.values()];
 const tickers = [...new Set(transactions.map((transaction) => transaction.ticker))];
 const prices = new Map();
-await mapConcurrent(["SPY", ...tickers], 5, async (ticker) => prices.set(ticker, await priceSeries(ticker)));
-const spy = prices.get("SPY");
-if (priceRefreshFailures.length) throw new Error(`Price refresh failed for ${priceRefreshFailures.length} cached securities; existing published outputs preserved. First failures: ${priceRefreshFailures.slice(0, 20).join(", ")}`);
+const spy = await priceSeries('SPY');
+if (spy?.length) priceCutoff=spy.at(-1).date;
+prices.set('SPY',spy);
+await mapConcurrent(tickers.filter(t=>t!=='SPY'), 5, async (ticker) => prices.set(ticker, await priceSeries(ticker)));
+const quarantineFailures=process.argv.includes('--quarantine-unavailable-prices');
+await writeFile(join(root,'work','price-refresh-failures.json'),JSON.stringify(priceRefreshFailures));
+if (priceRefreshFailures.length && (!quarantineFailures || priceRefreshFailures.includes('SPY') || priceRefreshFailures.length>Math.min(50,tickers.length*0.02))) throw new Error(`Price refresh failed for ${priceRefreshFailures.length} cached securities; existing published outputs preserved. First failures: ${priceRefreshFailures.slice(0, 20).join(", ")}`);
 if (!spy?.length) throw new Error("SPY price history unavailable; refusing to generate unbenchmarked performance.");
-const today = new Date().toISOString().slice(0, 10);
-
-const groupedTransactions = new Map();
-for (const transaction of transactions.sort((a, b) => a.transactionDate.localeCompare(b.transactionDate))) {
-  const contractKey = transaction.instrument === "Stock" ? "stock" : `${transaction.expirationDate ?? "unknown"}|${transaction.strike ?? "unknown"}`;
-  const key = `${transaction.memberId}|${transaction.ticker}|${transaction.instrument}|${transaction.direction}|${contractKey}`;
-  if (!groupedTransactions.has(key)) groupedTransactions.set(key, []);
-  groupedTransactions.get(key).push(transaction);
-}
-
-const episodes = [];
-for (const group of groupedTransactions.values()) {
-  let open = null;
-  for (const transaction of group) {
-    if (transaction.action === "P") {
-      if (!open) open = { ...transaction, purchaseCount: 0, partialSaleSeen: false, expirationDate: transaction.expirationDate };
-      open.purchaseCount += 1;
-      if (transaction.expirationDate && (!open.expirationDate || transaction.expirationDate > open.expirationDate)) open.expirationDate = transaction.expirationDate;
-      continue;
-    }
-    if (!open) continue;
-    if (transaction.action === "S" && transaction.closeKind === "partial") {
-      open.partialSaleSeen = true;
-      continue;
-    }
-    episodes.push({ ...open, closeDate: transaction.transactionDate, status: "Closed", closeSourceUrl: transaction.sourceUrl });
-    open = null;
-  }
-  if (open) {
-    const expired = open.instrument !== "Stock" && open.expirationDate && open.expirationDate <= today;
-    episodes.push({ ...open, closeDate: expired ? open.expirationDate : today, status: expired ? "Expiry inferred" : open.partialSaleSeen ? "Residual · latest mark" : "Open · latest mark", closeSourceUrl: null });
-  }
-}
-
-const measured = episodes.map((episode) => {
-  const endDate = episode.closeDate;
-  const securitySeries = prices.get(episode.ticker);
-  const entry = pointOnOrAfter(securitySeries, episode.transactionDate);
-  const exit = pointOnOrBefore(securitySeries, endDate);
-  const spyEntry = pointOnOrAfter(spy, episode.transactionDate);
-  const spyExit = pointOnOrBefore(spy, endDate);
-  if (!entry || !exit || !spyEntry || !spyExit || exit.date < entry.date) return { ...episode, status: "No price match", periodDays: null, returnValue: null, benchmarkReturn: null, excessReturn: null, return90d: null, excess90d: null };
-  const stockReturn = (exit.close / entry.close - 1) * 100;
-  const benchmarkReturn = (spyExit.close / spyEntry.close - 1) * 100;
-  const sign = episode.direction === "Short" ? -1 : 1;
-  const target90d = addDays(episode.transactionDate, 90);
-  const exit90d = target90d <= today ? pointOnOrBefore(securitySeries, target90d) : null;
-  const spyExit90d = target90d <= today ? pointOnOrBefore(spy, target90d) : null;
-  const stock90d = exit90d ? (exit90d.close / entry.close - 1) * 100 : null;
-  const spy90d = spyExit90d ? (spyExit90d.close / spyEntry.close - 1) * 100 : null;
-  return {
-    ...episode,
-    closeDate: episode.status.includes("latest mark") ? exit.date : episode.closeDate,
-    periodDays: Math.round((Date.parse(exit.date) - Date.parse(entry.date)) / 86400000),
-    returnValue: round(sign * stockReturn),
-    benchmarkReturn: round(sign * benchmarkReturn),
-    excessReturn: round(sign * (stockReturn - benchmarkReturn)),
-    return90d: stock90d === null ? null : round(sign * stock90d),
-    excess90d: stock90d === null || spy90d === null ? null : round(sign * (stock90d - spy90d)),
-  };
-});
-
-const byMember = new Map();
-for (const pick of measured) {
-  if (!byMember.has(pick.memberId)) byMember.set(pick.memberId, []);
-  byMember.get(pick.memberId).push(pick);
-}
-
-const summaries = [...members.values()].map((member) => {
-  const allPicks = byMember.get(member.id) ?? [];
-  const scored = allPicks.filter((pick) => pick.returnValue !== null);
-  const standardized = scored.filter((pick) => pick.excess90d !== null);
-  const avg = (field) => scored.length ? round(scored.reduce((sum, pick) => sum + pick[field], 0) / scored.length) : null;
-  const sortedBest = [...scored].sort((a, b) => b.excessReturn - a.excessReturn);
-  const featured = [...new Map([...sortedBest.slice(0, 2), ...sortedBest.slice(-1), ...[...allPicks].sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)).slice(0, 1)].map((pick) => [pick.id, pick])).values()].slice(0, 4);
-  return {
-    ...member,
-    selectionCount: allPicks.length,
-    scoredCount: scored.length,
-    closedCount: allPicks.filter((pick) => pick.status === "Closed" || pick.status === "Expiry inferred").length,
-    openCount: allPicks.filter((pick) => pick.status.includes("latest mark")).length,
-    longCount: allPicks.filter((pick) => pick.direction === "Long").length,
-    shortCount: allPicks.filter((pick) => pick.direction === "Short").length,
-    averageReturn: avg("returnValue"),
-    averageExcess: avg("excessReturn"),
-    averageHoldingDays: avg("periodDays") === null ? null : round(avg("periodDays"), 0),
-    average90dExcess: standardized.length ? round(standardized.reduce((sum, pick) => sum + pick.excess90d, 0) / standardized.length) : null,
-    hitRate: scored.length ? round(scored.filter((pick) => pick.returnValue > 0).length / scored.length * 100) : null,
-    featuredPicks: featured.map(({ id, ticker, instrument, direction, transactionDate, closeDate, status, periodDays, returnValue, excessReturn, sourceUrl }) => ({ id, ticker, instrument, direction, transactionDate, closeDate, status, periodDays, returnValue, excessReturn, sourceUrl })),
-  };
-}).sort((a, b) => (b.averageExcess ?? -Infinity) - (a.averageExcess ?? -Infinity));
-
 const meta = {
-  generatedAt: new Date().toISOString(),
-  benchmarkPriceAsOf: spy.at(-1).date,
-  sourceStartYear: startYear,
-  sourceEndYear: endYear,
-  filerCount: members.size,
-  ptrCount: filings.length,
-  textReadablePtrCount: extractionResults.filter((result) => result.readable).length,
-  transactionCount: transactions.length,
-  episodeCount: episodes.length,
-  scoredEpisodeCount: measured.filter((pick) => pick.returnValue !== null).length,
-  residualEpisodeCount: measured.filter((pick) => pick.status.includes("latest mark")).length,
-  averageHoldingDays: round(measured.filter((pick) => pick.periodDays !== null).reduce((sum, pick) => sum + pick.periodDays, 0) / measured.filter((pick) => pick.periodDays !== null).length, 0),
-  methodology: "Equal-weighted estimated holding-period return from first disclosed purchase to a reported close; partial-sale residuals and other open episodes use the latest available price. Options use the underlying security as a directional proxy. The 90-day excess return is retained as a secondary standardized comparison.",
+  generatedAt: new Date().toISOString(), sourceStartYear:startYear, sourceEndYear:endYear,
+  textReadablePtrCount:extractionResults.filter((result) => result.readable).length,
+  methodology:"Equal-weighted reconstructed holding episodes from disclosed purchases and closes. Partial-sale residuals use the latest stored adjusted close. Options use underlying directional returns. Benchmark prices use the same security entry and exit dates."
 };
-
-const source = `// Generated from official House Clerk PTR indexes and PDFs by scripts/build-house-performance.mjs.\nexport const housePerformanceMeta = ${JSON.stringify(meta, null, 2)} as const;\n\nexport const houseMembersPerformance = ${JSON.stringify(summaries, null, 2)} as const;\n`;
-await writeFile(outputPath, source);
-const trackedDetails = Object.fromEntries([...members.keys()].map((memberId) => [memberId, {
-  transactions: transactions.filter((transaction) => transaction.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
-  episodes: measured.filter((episode) => episode.memberId === memberId).sort((a, b) => b.transactionDate.localeCompare(a.transactionDate)),
-}]));
-await Promise.all(Object.entries(trackedDetails).map(([memberId, details]) => writeFile(join(publicMemberDataDirectory, `${memberId}.json`), `${JSON.stringify(details, null, 2)}\n`)));
-await writeFile(jsonOutputPath, `${JSON.stringify({ meta, members: summaries, episodes: measured }, null, 2)}\n`);
-
-const csvFields = [
-  "member_id", "member", "state_district", "ticker", "instrument", "direction", "opened_at", "closed_or_marked_at", "status", "holding_days",
-  "holding_return_pct", "spy_return_pct", "excess_return_pct", "return_90d_pct", "excess_90d_pct", "filing_id", "source_url",
-];
-const csvRows = measured.map((pick) => [
-  pick.memberId, pick.member, pick.stateDistrict, pick.ticker, pick.instrument, pick.direction, pick.transactionDate, pick.closeDate, pick.status, pick.periodDays,
-  pick.returnValue, pick.benchmarkReturn, pick.excessReturn, pick.return90d, pick.excess90d, pick.filingId, pick.sourceUrl,
-].map(csvCell).join(","));
-await writeFile(csvOutputPath, `${csvFields.join(",")}\n${csvRows.join("\n")}\n`);
-console.log(JSON.stringify(meta, null, 2));
+const inputPath = join(root,'work','ingest.json');
+const priceExclusions=priceRefreshFailures.map(ticker=>({ticker,reason:'Provider returned no usable history or a history shorter than the last verified cache; excluded from scoring pending recovery.',checked_at:meta.generatedAt,last_good_price_date:prices.get(ticker)?.at(-1)?.date??null}));
+await writeFile(inputPath,JSON.stringify({meta,members:[...members.values()],transactions,filings,priceExclusions}));
+if(priceExclusions.length)console.log(JSON.stringify({quarantinedPrices:priceExclusions}));
+const {stdout} = await execFileAsync(process.execPath,[join(root,'scripts','import-database.mjs'),`--input=${inputPath}`],{maxBuffer:8*1024*1024});
+console.log(stdout);

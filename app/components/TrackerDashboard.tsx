@@ -1,61 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { houseMembersPerformance, housePerformanceMeta } from "../../lib/house-performance.generated";
-import {
-  closedPickPerformance,
-  filingCadence,
-  member,
-  openPickPerformance,
-  officialSources,
-  positions,
-  reportedIncomeHistory,
-  suggestedMembers,
-  trackedMembers as initialTrackedMembers,
-  trades,
-  type TrackedMember,
-  type Trade,
-} from "../../lib/tracker-data";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { DashboardData, MemberDetails, TrackedMember } from "../../lib/analytics-types";
+const DataContext = createContext<DashboardData | null>(null);
+function useData() { const data = useContext(DataContext); if (!data) throw new Error("Missing dashboard data"); return data; }
+const officialSources = { search: "https://disclosures-clerk.house.gov/FinancialDisclosure/ViewSearch" };
 
 type Tab = "House Summary" | "Overview" | "Positions" | "Performance" | "Trades" | "Alerts" | "Methodology";
 type MemberTab = Exclude<Tab, "House Summary">;
 
 const memberTabs: MemberTab[] = ["Overview", "Positions", "Performance", "Trades", "Alerts", "Methodology"];
-
-type MemberTransaction = { id: string; memberId: string; ticker: string; assetName: string; instrument: string; direction: string; owner: string; action: string; closeKind: string | null; expirationDate: string | null; strike: string | null; amount: string; transactionDate: string; filingDate: string; filingId: string; sourceUrl: string };
-type MemberEpisode = MemberTransaction & { closeDate: string; status: string; periodDays: number | null; returnValue: number | null; benchmarkReturn: number | null; excessReturn: number | null };
-type MemberDetails = { transactions: MemberTransaction[]; episodes: MemberEpisode[] };
-
-function severityLabel(severity: Trade["severity"]) {
-  return severity === "urgent" ? "Major" : severity === "high" ? "Material" : "Update";
-}
-
-function TradeRow({ trade, compact = false }: { trade: Trade; compact?: boolean }) {
-  const isBuy = trade.action === "Purchase";
-  return (
-    <div className={`trade-row ${compact ? "trade-row-compact" : ""}`}>
-      <div className={`action-mark ${isBuy ? "buy" : "sell"}`}>{isBuy ? "B" : "S"}</div>
-      <div className="trade-asset">
-        <div className="trade-title-line">
-          <strong>{trade.ticker}</strong>
-          <span>{trade.asset}</span>
-          <span className="instrument-pill">{trade.instrument}</span>
-        </div>
-        <p>{trade.detail}</p>
-        <div className="trade-meta">
-          <span>{trade.owner}</span>
-          <span>Traded {trade.transactionDate}</span>
-          <span>Filed {trade.filedDate}</span>
-          <a href={trade.sourceUrl} target="_blank" rel="noreferrer">Filing {trade.filingId} ↗</a>
-        </div>
-      </div>
-      <div className="trade-amount">
-        <strong>{trade.amount}</strong>
-        <span className={`severity ${trade.severity}`}>{severityLabel(trade.severity)}</span>
-      </div>
-    </div>
-  );
-}
 
 function MetricCard({ eyebrow, value, note, tone = "default" }: { eyebrow: string; value: string; note: string; tone?: "default" | "green" | "amber" }) {
   return (
@@ -67,17 +21,30 @@ function MetricCard({ eyebrow, value, note, tone = "default" }: { eyebrow: strin
   );
 }
 
-function TrackedMemberDetail({ profile, section }: { profile: TrackedMember; section: Exclude<MemberTab, "Alerts" | "Methodology"> }) {
+function TrackedMemberDetail({ profile, section, query = "" }: { profile: TrackedMember; section: Exclude<MemberTab, "Alerts" | "Methodology">; query?: string }) {
+  const { members: houseMembersPerformance } = useData();
   const summary = houseMembersPerformance.find((row) => row.id === profile.id);
   const [loadedDetails, setLoadedDetails] = useState<{ memberId: string; data: MemberDetails } | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const details = loadedDetails?.memberId === profile.id ? loadedDetails.data : null;
   const signed = (value: number | null) => value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
 
   useEffect(() => {
     let current = true;
-    fetch(`/data/members/${profile.id}.json`).then((response) => response.ok ? response.json() : { transactions: [], episodes: [] }).then((payload) => { if (current) setLoadedDetails({ memberId: profile.id, data: payload }); }).catch(() => { if (current) setLoadedDetails({ memberId: profile.id, data: { transactions: [], episodes: [] } }); });
-    return () => { current = false; };
+    const load = async () => {
+      try {
+        const response = await fetch(`/api/members/${profile.id}`, { cache: "no-store" });
+        if (!response.ok) throw new Error("Member data is unavailable. Please retry.");
+        const payload = await response.json() as MemberDetails;
+        if (current) { setLoadedDetails({ memberId: profile.id, data: payload }); setLoadError(null); }
+      } catch (error) { if (current) setLoadError(error instanceof Error ? error.message : "Load failed"); }
+    };
+    void load();
+    const timer = setInterval(() => { if (!document.hidden) void load(); }, 60_000);
+    return () => { current = false; clearInterval(timer); };
   }, [profile.id]);
+
+  if (loadError) return <div role="alert" className="inline-note">{loadError}</div>;
 
   if (!summary) {
     return (
@@ -92,10 +59,10 @@ function TrackedMemberDetail({ profile, section }: { profile: TrackedMember; sec
     );
   }
 
-  if (!details) return <div className="tab-content"><section className="panel member-detail-loading"><span className="kicker">Loading raw-source detail</span><h2>Preparing {profile.name}’s record…</h2><p>Transactions, reconstructed positions, and holding episodes are loading from the saved member dataset.</p></section></div>;
+  if (!details) return <div className="tab-content"><section className="panel member-detail-loading"><span className="kicker">Loading raw-source detail</span><h2>Preparing {profile.name}’s record…</h2><p>Transactions, reconstructed positions, and holding episodes are loading from the database.</p></section></div>;
 
   const episodes = details.episodes;
-  const transactions = details.transactions;
+  const transactions = details.transactions.filter((row) => `${row.ticker} ${row.assetName} ${row.filingId}`.toLowerCase().includes(query.toLowerCase()));
   const openEpisodes = episodes.filter((episode) => episode.status.includes("latest mark"));
   const actionLabel = (action: string, closeKind: string | null) => action === "P" ? "Purchase" : action === "S" ? closeKind === "partial" ? "Partial sale" : "Sale" : "Exchange";
 
@@ -134,12 +101,13 @@ function TrackedMemberDetail({ profile, section }: { profile: TrackedMember; sec
 }
 
 function HouseSummary() {
+  const { members: houseMembersPerformance, meta: housePerformanceMeta } = useData();
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<"ranked" | "all">("ranked");
   const [sort, setSort] = useState<"excess" | "return" | "hit" | "holding" | "picks">("excess");
   const eligibleCount = houseMembersPerformance.filter((row) => row.scoredCount >= 12).length;
   const shortCount = houseMembersPerformance.reduce((sum, row) => sum + row.shortCount, 0);
-  const readableShare = housePerformanceMeta.textReadablePtrCount / housePerformanceMeta.ptrCount * 100;
+  const readableShare = housePerformanceMeta.ptrCount ? housePerformanceMeta.textReadablePtrCount / housePerformanceMeta.ptrCount * 100 : 0;
   const topEligible = houseMembersPerformance.find((row) => row.scoredCount >= 12);
   const rows = useMemo(() => {
     const score = (row: (typeof houseMembersPerformance)[number]) => {
@@ -153,21 +121,21 @@ function HouseSummary() {
       .filter((row) => scope === "all" || row.scoredCount >= 12)
       .filter((row) => `${row.name} ${row.stateDistrict}`.toLowerCase().includes(query.toLowerCase()))
       .toSorted((a, b) => score(b) - score(a));
-  }, [query, scope, sort]);
+  }, [query, scope, sort, houseMembersPerformance]);
   const signed = (value: number | null) => value === null ? "—" : `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
 
   return (
     <div className="tab-content house-summary">
       <section className="house-summary-hero">
         <div>
-          <span className="kicker">All House Clerk PTR filers · 2013–2026</span>
+          <span className="kicker">All House Clerk PTR filers · {housePerformanceMeta.sourceStartYear}–{housePerformanceMeta.sourceEndYear}</span>
           <h2>Who selected stocks well over the holding period?</h2>
           <p>Each episode runs from the first disclosed purchase to a reported close. Partial-sale residuals and positions without a reliable close use the latest available price and are labeled approximate. Stock and call purchases are long; purchased puts are short. Options use the underlying stock return as a directional proxy.</p>
         </div>
         <div className="house-summary-actions">
           <a href={officialSources.search} target="_blank" rel="noreferrer">Raw Clerk database ↗</a>
-          <a href="/data/house-performance.json" download>Download JSON</a>
-          <a href="/data/house-performance-episodes.csv" download>Download CSV</a>
+          <a href="/api/export?format=json" download>Download JSON</a>
+          <a href="/api/export?format=csv" download>Download CSV</a>
         </div>
       </section>
 
@@ -225,309 +193,49 @@ function HouseSummary() {
         {!rows.length && <div className="empty-state">No House filer matches that search.</div>}
       </section>
 
-      <div className="inline-note"><strong>Saved dataset:</strong> the downloadable JSON preserves the member summaries and episode-level records; the CSV contains one row per episode. Both are versioned with this site so the same snapshot can be referenced and reused later. <strong>Approximation:</strong> this is not exact portfolio performance. Missing quantities and lot matching mean each reconstructed episode is equal-weighted.</div>
-    </div>
-  );
-}
-
-function Overview() {
-  const maxCadence = Math.max(...filingCadence.map((item) => item.value));
-  return (
-    <div className="tab-content">
-      <section className="metric-grid" aria-label="Key disclosure metrics">
-        <MetricCard eyebrow="2026 reported activity" value="$23.1M–$95.4M" note="Gross disclosed transaction bands; not revenue or profit." tone="green" />
-        <MetricCard eyebrow="2025 disclosed capital gains" value="≥ $7.0M" note="Gross floor from annual income bands; not net portfolio P&L." />
-        <MetricCard eyebrow="Official PTRs indexed" value="66" note="House Clerk filings since 2013, including historical districts." />
-        <MetricCard eyebrow="Latest disclosure lag" value="24 days" note="Last transaction to filing date in the Aug 21 report." tone="amber" />
-      </section>
-
-      <section className="overview-grid">
-        <article className="panel activity-panel">
-          <div className="panel-head">
-            <div>
-              <span className="kicker">Latest material changes</span>
-              <h2>Household activity</h2>
-            </div>
-            <span className="freshness"><i /> Official through Aug 21, 2026</span>
-          </div>
-          <div className="trade-list">
-            {trades.slice(0, 5).map((trade) => <TradeRow key={trade.id} trade={trade} compact />)}
-          </div>
-        </article>
-
-        <aside className="panel source-panel">
-          <span className="kicker">Source health</span>
-          <h2>Raw Clerk pipeline</h2>
-          <div className="pipeline-status">
-            <div><span className="pipeline-icon">1</span><p><strong>Yearly index</strong><small>TSV + XML · checked daily</small></p><b>Live</b></div>
-            <div><span className="pipeline-icon">2</span><p><strong>Official PDFs</strong><small>Hash + filing metadata retained</small></p><b>Live</b></div>
-            <div><span className="pipeline-icon muted">3</span><p><strong>Transaction parse</strong><small>Embedded text, OCR fallback</small></p><b className="review">Reviewed</b></div>
-          </div>
-          <a className="source-link" href={officialSources.index} target="_blank" rel="noreferrer">
-            Open 2026 bulk index <span>↗</span>
-          </a>
-          <p className="source-footnote">Every displayed trade links to the House Clerk PDF it came from.</p>
-        </aside>
-      </section>
-
-      <section className="lower-grid">
-        <article className="panel cadence-panel">
-          <div className="panel-head">
-            <div><span className="kicker">Historical record</span><h2>Periodic transaction filings</h2></div>
-            <span className="chart-total">66 total</span>
-          </div>
-          <div className="bar-chart" aria-label="Annual PTR filings from 2013 to 2026">
-            {filingCadence.map((item) => (
-              <div className="bar-column" key={item.year} title={`${item.year}: ${item.value} filings`}>
-                <span className="bar-value">{item.value}</span>
-                <div className="bar" style={{ height: `${24 + (item.value / maxCadence) * 116}px` }} />
-                <small>{item.year.slice(2)}</small>
-              </div>
-            ))}
-          </div>
-          <p className="chart-note">Counts come directly from the Clerk’s annual bulk indexes. Filing count is not the same as trade count.</p>
-        </article>
-
-        <article className="panel range-panel">
-          <div className="panel-head">
-            <div><span className="kicker">Position reconstruction</span><h2>Largest confirmed ranges</h2></div>
-            <span className="asof">Annual snapshot · 12/31/25</span>
-          </div>
-          <div className="range-list">
-            {positions.slice(0, 6).map((position) => (
-              <div className="range-row" key={position.ticker}>
-                <div><strong>{position.ticker}</strong><span>{position.type}</span></div>
-                <div className="range-track"><span style={{ width: `${Math.max(7, (position.high / 30) * 100)}%` }} /></div>
-                <b>{position.annualBand}</b>
-              </div>
-            ))}
-          </div>
-          <p className="chart-note">Bars use the upper end of each disclosed band. Later PTR flows are shown in the Positions view.</p>
-        </article>
-      </section>
-
-      <section className="truth-banner">
-        <div className="truth-icon">≈</div>
-        <div><strong>Why there is no fake “exact profit” number</strong><p>The official filings omit exact trade values, execution prices, cost basis, and often share counts. Capitol Ledger reports exact facts where disclosed, preserves low/high bands everywhere else, and keeps market-price estimates separate from the official record.</p></div>
-        <a href="#methodology">Read the method</a>
-      </section>
-    </div>
-  );
-}
-
-function Positions() {
-  return (
-    <div className="tab-content">
-      <section className="section-intro">
-        <div><span className="kicker">Annual anchor + later flows</span><h2>Latest reconstructable positions</h2><p>These are household disclosure ranges, not a brokerage statement. “New in 2026” comes from later PTR purchases.</p></div>
-        <div className="legend"><span><i className="legend-high" /> Confirmed</span><span><i className="legend-mid" /> Inferred balance</span></div>
-      </section>
-      <section className="panel table-panel">
-        <div className="position-table">
-          <div className="position-head"><span>Asset</span><span>Owner</span><span>Last confirmed range</span><span>Later disclosed change</span><span>Confidence</span></div>
-          {positions.map((position) => (
-            <div className="position-row" key={position.ticker}>
-              <div className="asset-cell"><span className="ticker-chip">{position.ticker}</span><p><strong>{position.name}</strong><small>{position.type}</small></p></div>
-              <span>{position.owner}</span>
-              <strong>{position.annualBand}</strong>
-              <span className={`change ${position.direction}`}>{position.lastChange}</span>
-              <span className={`confidence confidence-${position.confidence.toLowerCase()}`} title={position.note}>{position.confidence}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-      <div className="inline-note"><strong>Position rule:</strong> an asset missing from an annual filing is not assumed to be zero. It may be below the reporting threshold, exempt, held in an excepted trust, or omitted.</div>
-    </div>
-  );
-}
-
-function Performance() {
-  const maxAnnual = Math.max(...reportedIncomeHistory.map((item) => item.gainTaggedFloor));
-  const signed = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
-  const money = (value: number) => `${value < 0 ? "−" : "+"}$${Math.abs(value).toFixed(3)}M`;
-  return (
-    <div className="tab-content">
-      <section className="performance-metrics" aria-label="Pick performance summary">
-        <MetricCard eyebrow="Closed, fully linkable cycles" value="15" note="Option purchases matched to a disclosed exercise, sale, expiry, or official loss." />
-        <MetricCard eyebrow="Midpoint-positive rate" value="60.0%" note="9 of 15 premium-band midpoint scenarios finished positive; definite-win floor is 40.0%." tone="green" />
-        <MetricCard eyebrow="Underlying beat SPY" value="53.3%" note="8 of 15 underlying securities outperformed SPY over the same holding window." />
-        <MetricCard eyebrow="Attributable P&L range" value="−$0.4M to +$7.1M" note="Range across all 15 cycles; premium-band midpoint scenario is about +$3.4M." tone="amber" />
-      </section>
-
-      <section className="performance-callout">
-        <span>MODELED · NOT AUDITED</span>
-        <div><strong>This is the narrowest historical sample the raw filings can support.</strong><p>It includes 15 option purchases with enough terms and a later disclosed close. Four losses come directly from reported gain/loss figures; other rows are filing-band models. Open positions and ambiguous lifecycles are excluded, so this is not a complete portfolio return.</p></div>
-      </section>
-
-      <section className="panel pick-panel">
-        <div className="panel-head"><div><span className="kicker">Purchase → disclosed close</span><h2>Closed option cycles</h2></div><span className="asof">Official losses + price model · USD</span></div>
-        <div className="pick-scroll">
-          <div className="pick-table closed-picks">
-            <div className="pick-head"><span>Security</span><span>Lifecycle</span><span>Underlying</span><span>SPY</span><span>Excess</span><span>Option ROI / range</span><span>P&amp;L / range</span><span>Outcome</span></div>
-            {closedPickPerformance.map((pick) => (
-              <div className="pick-row" key={pick.id} title={pick.note}>
-                <div className="pick-security"><span className="ticker-chip">{pick.ticker}</span><p><strong>{pick.instrument}</strong><small><a href={pick.purchaseSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[0]} ↗</a> → <a href={pick.closeSourceUrl} target="_blank" rel="noreferrer">{pick.filingIds.split(" → ")[1]} ↗</a></small></p></div>
-                <div className="pick-life"><strong>{pick.opened}</strong><span>to {pick.closed}</span><small>{pick.days} days</small></div>
-                <strong className={pick.underlyingReturn >= 0 ? "return-positive" : "return-negative"}>{signed(pick.underlyingReturn)}</strong>
-                <span>{signed(pick.benchmarkReturn)}</span>
-                <strong className={pick.excessReturn >= 0 ? "return-positive" : "return-negative"}>{signed(pick.excessReturn)}</strong>
-                <div className="roi-range"><strong className={pick.optionReturnMid >= 0 ? "return-positive" : "return-negative"}>{signed(pick.optionReturnMid)} mid</strong><span>{signed(pick.optionReturnLow)} to {signed(pick.optionReturnHigh)}</span></div>
-                <div className="roi-range"><strong>{money(pick.pnlMid)} mid</strong><span>{money(pick.pnlLow)} to {money(pick.pnlHigh)}</span></div>
-                <span className={`result-badge ${pick.result === "Definite win" ? "win" : pick.result === "Official loss" ? "loss" : "uncertain"}`}>{pick.result}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <p className="chart-note">Where the filing reports gain or loss, that figure is used directly. Otherwise, exercise value = max(split-adjusted actual close − adjusted strike, 0) × shares received; modeled P&amp;L subtracts the disclosed premium band. Total-return comparisons use dividend-adjusted closes. “Definite win” means even the low estimate is positive.</p>
-      </section>
-
-      <section className="panel pick-panel open-performance">
-        <div className="panel-head"><div><span className="kicker">Right-censored</span><h2>Open picks through Sep 11, 2026</h2></div><span className="asof">Excluded from closed success rate</span></div>
-        <div className="pick-scroll">
-          <div className="pick-table open-picks">
-            <div className="pick-head"><span>Security</span><span>Opened</span><span>Disclosed quantity</span><span>Underlying proxy</span><span>SPY</span><span>Excess</span><span>Status</span></div>
-            {openPickPerformance.map((pick) => (
-              <div className="pick-row" key={`${pick.ticker}-${pick.instrument}`} title={pick.note}>
-                <div className="pick-security"><span className="ticker-chip">{pick.ticker}</span><p><strong>{pick.instrument}</strong><small>{pick.note}</small></p></div>
-                <span>{pick.opened}</span>
-                <strong>{pick.quantity}</strong>
-                <strong className={pick.returnValue >= 0 ? "return-positive" : "return-negative"}>{signed(pick.returnValue)}</strong>
-                <span>{signed(pick.benchmark)}</span>
-                <strong className={pick.excess >= 0 ? "return-positive" : "return-negative"}>{signed(pick.excess)}</strong>
-                <span className="result-badge open">{pick.status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="method-strip">
-        <div><span>1</span><p><strong>Official terms</strong><small>Contract count, strike, expiry, transaction date, premium band, and exercise come from Clerk PDFs.</small></p></div>
-        <div><span>2</span><p><strong>Separate price proxy</strong><small>Actual closes value exercises; dividend-adjusted closes measure total return for the underlying and SPY. They are not official filing data.</small></p></div>
-        <div><span>3</span><p><strong>No invented option marks</strong><small>Actual option return is omitted unless a licensed historical quote source is added.</small></p></div>
-      </section>
-
-      <section className="performance-grid secondary-performance">
-        <article className="panel income-history">
-          <div className="panel-head"><div><span className="kicker">Raw-source proxy</span><h2>Capital-gain-tagged income floor</h2></div><span className="asof">Annual reports · USD millions</span></div>
-          <div className="income-bars">
-            {reportedIncomeHistory.map((item) => (
-              <div className="income-year" key={item.year}>
-                <div className="income-value">{item.gainTaggedFloor ? `≥$${item.gainTaggedFloor.toFixed(1)}M` : "$0 reported"}</div>
-                <div className="income-bar-wrap"><span className="income-bar" style={{ height: `${item.gainTaggedFloor ? 26 + (item.gainTaggedFloor / maxAnnual) * 108 : 3}px` }} /></div>
-                <strong>{item.year}</strong>
-                <small>{item.lossTaggedFloor ? `loss-tagged ≥$${item.lossTaggedFloor < .1 ? "15K" : `${item.lossTaggedFloor.toFixed(1)}M`}` : "no loss tag"}</small>
-              </div>
-            ))}
-          </div>
-          <p className="chart-note">This chart sums the lower bounds of annual income bands on rows tagged “Capital Gains.” When a row also lists dividends, the filing does not allocate the band between them. Loss-tagged lines are shown separately and are not netted.</p>
-        </article>
-
-        <aside className="panel pnl-readiness">
-          <div className="panel-head"><div><span className="kicker">Evidence boundaries</span><h2>What the score does not claim</h2></div><span className="readiness-pill">Estimated</span></div>
-          <div className="readiness-list">
-            <div><i className="ready" /><p><strong>Official trade chronology</strong><small>Purchase and exercise dates are directly disclosed</small></p><b>Fact</b></div>
-            <div><i className="ready" /><p><strong>Exact exercise quantities</strong><small>Available for these seven selected cycles</small></p><b>Fact</b></div>
-            <div><i className="partial" /><p><strong>Premium paid</strong><small>Only a broad dollar band is disclosed</small></p><b>Range</b></div>
-            <div><i className="partial" /><p><strong>Daily price at exercise</strong><small>Close is a proxy, not the intraday execution mark</small></p><b>Proxy</b></div>
-            <div><i className="missing" /><p><strong>Actual historical option marks</strong><small>Reliable consolidated history requires licensed market data</small></p><b>Omitted</b></div>
-          </div>
-          <div className="pnl-formula"><span>Closed-cycle estimate</span><code>exercise intrinsic value − disclosed premium band</code></div>
-        </aside>
-      </section>
-
-      <div className="inline-note"><strong>Two different measures:</strong> the pick tables estimate security-level outcomes for linkable cycles. The income chart is an annual filing floor. Neither is a complete household time-weighted return, and the two should not be added together.</div>
-    </div>
-  );
-}
-
-function Trades() {
-  const [action, setAction] = useState("All activity");
-  const [query, setQuery] = useState("");
-  const filtered = useMemo(() => trades.filter((trade) => {
-    const actionMatch = action === "All activity" || (action === "Purchases" ? trade.action === "Purchase" : trade.action !== "Purchase");
-    const queryMatch = `${trade.ticker} ${trade.asset} ${trade.detail}`.toLowerCase().includes(query.toLowerCase());
-    return actionMatch && queryMatch;
-  }), [action, query]);
-  return (
-    <div className="tab-content">
-      <section className="section-intro trades-intro">
-        <div><span className="kicker">Official transaction ledger</span><h2>Disclosed trades and transfers</h2><p>Dates reflect when the transaction occurred—not when the public learned about it.</p></div>
-        <div className="filters">
-          <label><span>Filter securities</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ticker or company" /></label>
-          <label><span>Activity type</span><select value={action} onChange={(event) => setAction(event.target.value)}><option>All activity</option><option>Purchases</option><option>Sales & transfers</option></select></label>
-        </div>
-      </section>
-      <section className="panel trade-ledger">
-        <div className="ledger-head"><span>{filtered.length} disclosure rows</span><span>Latest first · all amounts are reported ranges</span></div>
-        {filtered.map((trade) => <TradeRow key={trade.id} trade={trade} />)}
-        {!filtered.length && <div className="empty-state">No disclosure rows match those filters.</div>}
-      </section>
+      <div className="inline-note"><strong>Saved dataset:</strong> the JSON and CSV exports query the same database calculations as this page. Each episode includes the price inputs used to calculate its return. <strong>Approximation:</strong> this is not exact portfolio performance. Missing quantities and lot matching mean each reconstructed episode is equal-weighted.</div>
     </div>
   );
 }
 
 const defaultRules = [
-  { id: "new-filing", name: "New official filing", detail: "Any new DocID or amended document hash", on: true },
-  { id: "one-million", name: "Major transaction", detail: "Lower end of reported band is at least $1 million", on: true },
-  { id: "new-position", name: "New or closed security", detail: "First disclosed issuer or a full sale", on: true },
-  { id: "options", name: "Options activity", detail: "New call/put purchase, sale, exercise, or expiry", on: true },
-  { id: "late", name: "Filing lag", detail: "Transaction appears more than 45 days after trade", on: false },
+  { id: "new-filing", name: "New official filing" },
+  { id: "one-million", name: "Major transaction" },
+  { id: "new-position", name: "New or closed security" },
+  { id: "options", name: "Options activity" },
+  { id: "late", name: "Filing lag" },
 ];
-
 function Alerts({ profile }: { profile: TrackedMember }) {
-  const [rules, setRules] = useState(defaultRules);
-  const [threshold, setThreshold] = useState("$1 million");
-  const summary = houseMembersPerformance.find((row) => row.id === profile.id);
-  const toggleRule = async (id: string) => {
-    setRules((current) => current.map((rule) => rule.id === id ? { ...rule, on: !rule.on } : rule));
-    const rule = rules.find((item) => item.id === id);
+  const [rules,setRules] = useState<Record<string,{enabled:boolean;thresholdCents:number|null}>>({});
+  const [ready,setReady] = useState(false);
+  const [busy,setBusy] = useState(false);
+  const [error,setError] = useState("");
+  useEffect(() => {
+    let current = true;
+    fetch(`/api/alert-rules?memberId=${profile.id}`,{cache:"no-store"}).then(async (response) => {
+      if (!response.ok) throw new Error("Saved rules could not be loaded.");
+      const payload = await response.json() as {rules:{ruleType:string;enabled:boolean;thresholdCents:number|null}[]};
+      if (current) { setRules(Object.fromEntries(payload.rules.map((rule: {ruleType:string;enabled:boolean;thresholdCents:number|null}) => [rule.ruleType,rule]))); setReady(true); }
+    }).catch((error) => { if (current) setError(error.message); });
+    return () => { current = false; };
+  },[profile.id]);
+  async function save(id: string, enabled: boolean, thresholdCents: number | null = rules[id]?.thresholdCents ?? null) {
+    setBusy(true); setError("");
     try {
-      await fetch("/api/alert-rules", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ memberId: profile.id, ruleType: id, enabled: !rule?.on }) });
-    } catch { /* UI remains useful if local persistence is unavailable. */ }
-  };
-  return (
-    <div className="tab-content">
-      <section className="alert-grid">
-        <article className="panel rule-panel">
-          <div className="panel-head"><div><span className="kicker">Monitoring rules</span><h2>What should trigger an alert?</h2></div><span className="freshness"><i /> In-app alerts on</span></div>
-          <div className="rule-list">
-            {rules.map((rule) => (
-              <button className="rule-row" key={rule.id} onClick={() => toggleRule(rule.id)} aria-pressed={rule.on}>
-                <span><strong>{rule.name}</strong><small>{rule.detail}</small></span>
-                <i className={`toggle ${rule.on ? "on" : ""}`}><b /></i>
-              </button>
-            ))}
-          </div>
-          <div className="threshold-control">
-            <label htmlFor="threshold">Materiality floor</label>
-            <select id="threshold" value={threshold} onChange={(event) => setThreshold(event.target.value)}>
-              <option>$250 thousand</option><option>$500 thousand</option><option>$1 million</option><option>$5 million</option>
-            </select>
-          </div>
-        </article>
-
-        <article className="panel alert-feed">
-          <div className="panel-head"><div><span className="kicker">Tracked record</span><h2>{profile.id === member.id ? "4 major changes" : `${profile.name} monitoring`}</h2></div><button className="quiet-button">Mark read</button></div>
-          {profile.id === member.id ? trades.filter((trade) => trade.severity === "urgent").slice(0, 4).map((trade) => (
-            <a className="alert-row" href={trade.sourceUrl} target="_blank" rel="noreferrer" key={trade.id}>
-              <span className={`alert-symbol ${trade.action === "Purchase" ? "buy" : "sell"}`}>{trade.action === "Purchase" ? "↑" : "↓"}</span>
-              <div><strong>{trade.ticker} · {trade.action}</strong><p>{trade.amount} reported for {trade.transactionDate}</p><small>Disclosed {trade.filedDate} · {trade.owner}</small></div>
-              <span>↗</span>
-            </a>
-          )) : summary?.featuredPicks.map((pick) => (
-            <a className="alert-row" href={pick.sourceUrl} target="_blank" rel="noreferrer" key={pick.id}>
-              <span className={`alert-symbol ${pick.direction === "Long" ? "buy" : "sell"}`}>{pick.direction === "Long" ? "↑" : "↓"}</span>
-              <div><strong>{pick.ticker} · {pick.direction} {pick.instrument}</strong><p>{pick.status} · {pick.periodDays ?? "—"} day episode</p><small>Official PTR opened {pick.transactionDate}</small></div>
-              <span>↗</span>
-            </a>
-          ))}
-          {profile.id !== member.id && !summary && <div className="empty-state">Senate eFD monitoring will appear here when that source adapter is connected.</div>}
-        </article>
-      </section>
-      <div className="inline-note"><strong>Alert language matters:</strong> a filing alert is evidence of delayed public disclosure, not evidence of a live trade, wrongdoing, or a recommendation to follow it.</div>
-    </div>
-  );
+      const response = await fetch("/api/alert-rules",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({memberId:profile.id,ruleType:id,enabled,thresholdCents})});
+      if (!response.ok) throw new Error("Rule was not saved. Please retry.");
+      setRules((current) => ({...current,[id]:{enabled,thresholdCents}}));
+    } catch (error) { setError(error instanceof Error ? error.message : "Save failed"); }
+    finally { setBusy(false); }
+  }
+  return <div className="tab-content"><section className="panel rule-panel">
+    <div className="panel-head"><div><span className="kicker">Saved monitoring preferences</span><h2>{profile.name} alert rules</h2></div></div>
+    {error && <p role="alert">{error}</p>}
+    {!ready && !error && <p>Loading saved rules…</p>}
+    <div className="rule-list">{defaultRules.map((rule) => <button className="rule-row" disabled={!ready || busy} key={rule.id} onClick={() => save(rule.id,!rules[rule.id]?.enabled)} aria-pressed={rules[rule.id]?.enabled ?? false}><span><strong>{rule.name}</strong></span><i className={`toggle ${rules[rule.id]?.enabled ? "on" : ""}`}><b /></i></button>)}</div>
+    <label className="threshold-control">Materiality floor <select disabled={!ready || busy} value={rules["one-million"]?.thresholdCents ?? 100000000} onChange={(event) => save("one-million",rules["one-million"]?.enabled ?? false,Number(event.target.value))}><option value={25000000}>$250 thousand</option><option value={50000000}>$500 thousand</option><option value={100000000}>$1 million</option><option value={500000000}>$5 million</option></select></label>
+    <p className="chart-note">Preferences are stored in the database. Automated alert delivery is not configured.</p>
+  </section></div>;
 }
 
 function Methodology() {
@@ -539,12 +247,12 @@ function Methodology() {
       </section>
       <section className="method-grid">
         {[
-          ["01", "Discover", "Poll the Clerk’s offered yearly ZIP index using conditional requests. New DocIDs and changed hashes become immutable filing events."],
-          ["02", "Extract", "Download the official PDF, retain its source URL and hash, read embedded text, and use OCR only when necessary."],
+          ["01", "Discover", "Check the Clerk’s yearly ZIP index and store filing IDs and source URLs. The full refresh command imports parsed transactions."],
+          ["02", "Extract", "Read embedded text from official PDFs. Image-only filings remain unparsed; OCR is not yet connected."],
           ["03", "Normalize", "Keep the original wording while mapping owner, asset, action, dates, amount range, ticker, options terms, and amendments."],
-          ["04", "Reconstruct", "Anchor positions to annual year-end value bands, then apply later PTR flows without turning missing data into zero."],
-          ["05", "Estimate", "Model low, midpoint-scenario, and high outcomes only when enough terms exist. Explicit exercises can support an intrinsic-value model; actual option returns require licensed quote history."],
-          ["06", "Alert", "Trigger on interval-aware thresholds, new/closed issuers, amendments, options activity, position-band changes, and filing lag."],
+          ["04", "Reconstruct", "Group purchases by member, owner, security, and option terms. Full sales close episodes; partial sales retain residuals."],
+          ["05", "Estimate", "Calculate directional returns from stored adjusted daily closes and compare with SPY over the same price dates. Options use the underlying security as a proxy."],
+          ["06", "Alert", "Save per-member monitoring preferences. Automated alert evaluation and delivery are not yet configured."],
         ].map(([number, title, copy]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
       </section>
       <section className="panel caveat-panel">
@@ -555,8 +263,8 @@ function Methodology() {
         </div>
         <div className="source-buttons">
           <a href={officialSources.search} target="_blank" rel="noreferrer">Clerk disclosure database ↗</a>
-          <a href={officialSources.annual} target="_blank" rel="noreferrer">Pelosi 2025 annual filing ↗</a>
-          <a href={officialSources.guidance} target="_blank" rel="noreferrer">Official instruction guide ↗</a>
+
+
           <a href="https://datashop.cboe.com/option-eod-summary" target="_blank" rel="noreferrer">Licensed historical option data ↗</a>
         </div>
       </section>
@@ -564,27 +272,29 @@ function Methodology() {
   );
 }
 
-export default function TrackerDashboard({ viewer }: { viewer: { displayName: string; email: string } }) {
+function Dashboard({ viewer, refresh }: { viewer: { displayName: string; email: string }; refresh: () => Promise<void> }) {
+  const { members: houseMembersPerformance, meta, tracked } = useData();
+  const [saveError, setSaveError] = useState("");
+  const [savingMember,setSavingMember] = useState(false);
+
   const [activeTab, setActiveTab] = useState<Tab>("House Summary");
   const [showAdd, setShowAdd] = useState(false);
-  const [tracked, setTracked] = useState(initialTrackedMembers);
-  const [selectedMemberId, setSelectedMemberId] = useState(member.id);
+  const [selectedMemberId, setSelectedMemberId] = useState(tracked[0]?.id ?? "");
   const [globalQuery, setGlobalQuery] = useState("");
   const [syncState, setSyncState] = useState<"idle" | "syncing" | "done" | "error">("idle");
   const selectedMember = tracked.find((item) => item.id === selectedMemberId) ?? tracked[0];
-  const isPelosi = selectedMember.id === member.id;
+  const suggestedMembers = houseMembersPerformance.filter((row) => !tracked.some((item) => item.id === row.id) && `${row.name} ${row.stateDistrict}`.toLowerCase().includes(globalQuery.toLowerCase()));
   const selectedSummary = houseMembersPerformance.find((row) => row.id === selectedMember.id);
   const viewerInitials = viewer.displayName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "ME";
 
   const addMember = async (candidate: (typeof suggestedMembers)[number]) => {
-    const slug = `${candidate.firstName}-${candidate.lastName}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    if (!tracked.some((item) => item.id === slug)) {
-      setTracked((current) => [...current, { id: slug, firstName: candidate.firstName, lastName: candidate.lastName, initials: `${candidate.firstName[0]}${candidate.lastName[0]}`, name: candidate.displayName, district: `${candidate.district} · House history`, chamber: "U.S. House", party: candidate.party, sourceStatus: "House data ready" }]);
-      try {
-        await fetch("/api/watchlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...candidate, id: slug }) });
-      } catch { /* The member remains visible for this session. */ }
-    }
-    setShowAdd(false);
+    setSaveError(""); setSavingMember(true);
+    try {
+      const response = await fetch("/api/watchlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({id:candidate.id}) });
+      if (!response.ok) throw new Error("Member was not saved. Please retry.");
+      await refresh(); setShowAdd(false);
+    } catch (error) { setSaveError(error instanceof Error ? error.message : "Save failed"); }
+    finally { setSavingMember(false); }
   };
 
   const runSync = async () => {
@@ -594,8 +304,9 @@ export default function TrackerDashboard({ viewer }: { viewer: { displayName: st
     }
     setSyncState("syncing");
     try {
-      const response = await fetch("/api/sync", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ firstName: selectedMember.firstName, lastName: selectedMember.lastName, memberId: selectedMember.id, years: [2025, 2026] }) });
+      const response = await fetch("/api/sync", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ firstName: selectedMember.firstName, lastName: selectedMember.lastName, memberId: selectedMember.id, years: [new Date().getUTCFullYear() - 1, new Date().getUTCFullYear()] }) });
       if (!response.ok) throw new Error("Sync failed");
+      await refresh();
       setSyncState("done");
     } catch { setSyncState("error"); }
   };
@@ -610,7 +321,7 @@ export default function TrackerDashboard({ viewer }: { viewer: { displayName: st
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Capitol Ledger home"><span className="brand-mark">✦</span><span><strong>CAPITOL</strong><b>LEDGER</b></span></a>
         <form className="global-search" onSubmit={jumpFromSearch}><span>⌕</span><input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} placeholder="Search a member, ticker, or filing…" aria-label="Search tracker" /><kbd>↵</kbd></form>
-        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing" || selectedMember.chamber === "U.S. Senate"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{selectedMember.chamber === "U.S. Senate" ? "Senate source pending" : syncState === "syncing" ? "Checking…" : syncState === "done" ? "Up to date" : syncState === "error" ? "Try again" : "Check filings"}</button><a className="avatar" href="/signout-with-chatgpt?return_to=%2F" aria-label={`Signed in as ${viewer.email}. Sign out.`} title={`Signed in as ${viewer.displayName} · Sign out`}>{viewerInitials}</a></div>
+        <div className="top-actions"><span className="raw-badge"><i /> RAW SOURCE</span><button className="refresh-button" onClick={runSync} disabled={syncState === "syncing" || selectedMember.chamber === "U.S. Senate"}><span className={syncState === "syncing" ? "spin" : ""}>↻</span>{selectedMember.chamber === "U.S. Senate" ? "Senate source pending" : syncState === "syncing" ? "Checking…" : syncState === "done" ? "Index checked" : syncState === "error" ? "Try again" : "Check filings"}</button><a className="avatar" href="/signout-with-chatgpt?return_to=%2F" aria-label={`Signed in as ${viewer.email}. Sign out.`} title={`Signed in as ${viewer.displayName} · Sign out`}>{viewerInitials}</a></div>
       </header>
 
       <div className="workspace" id="top">
@@ -626,20 +337,25 @@ export default function TrackerDashboard({ viewer }: { viewer: { displayName: st
         </aside>
 
         <section className="main-content">
+          <div className="inline-note"><strong>Database connected</strong> · Prices through {meta.benchmarkPriceAsOf ?? "unavailable"} · Data imported {`${meta.importedAt.slice(0, 16).replace("T", " ")} UTC`} · Calculations refresh every minute.
+          {!!meta.priceUnavailableSymbols.length && <p role="status" title={meta.priceUnavailableSymbols.join(", ")}>{meta.priceUnavailableSymbols.length} securities have unavailable price histories and are excluded from performance rankings. Their disclosures remain available.</p>}
+          {syncState === "done" && <p>Official filing index saved. Newly discovered documents require a full data refresh before their transactions are included.</p>}
+          {syncState === "error" && <p role="alert">The filing check failed. Please retry.</p>}
+          {saveError && <p role="alert">{saveError}</p>}</div>
           {activeTab !== "House Summary" && <header className="member-hero">
             <div className="member-identity"><span className="large-initials">{selectedMember.initials}</span><div><div className="member-tag"><span>{selectedMember.chamber}</span><i />{selectedMember.party}</div><h1>{selectedMember.name}</h1><p>{selectedMember.district} · {selectedMember.sourceStatus}</p></div></div>
-            <div className="member-asof"><span>{isPelosi ? "Latest annual anchor" : "Historical performance"}</span><strong>{isPelosi ? member.annualAsOf : selectedSummary ? `${selectedSummary.scoredCount} scored episodes` : "Awaiting Senate adapter"}</strong><small>{isPelosi ? `Filed ${member.annualFiled}` : selectedSummary ? `${selectedSummary.filingCount} official PTRs` : "Raw source kept separate"}</small></div>
+            <div className="member-asof"><span>Calculated holding performance</span><strong>{selectedSummary ? `${selectedSummary.scoredCount} scored episodes` : "Source match pending"}</strong><small>{selectedSummary ? `${selectedSummary.filingCount} official PTRs` : "No matched House record"}</small></div>
           </header>}
 
           {activeTab !== "House Summary" && <nav className="tabs" aria-label={`${selectedMember.name} tracker sections`}>
-            {memberTabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}{tab === "Alerts" && isPelosi && <span>4</span>}</button>)}
+            {memberTabs.map((tab) => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}</button>)}
           </nav>}
 
           {activeTab === "House Summary" && <HouseSummary />}
-          {activeTab === "Overview" && (isPelosi ? <Overview /> : <TrackedMemberDetail profile={selectedMember} section="Overview" />)}
-          {activeTab === "Positions" && (isPelosi ? <Positions /> : <TrackedMemberDetail profile={selectedMember} section="Positions" />)}
-          {activeTab === "Performance" && (isPelosi ? <Performance /> : <TrackedMemberDetail profile={selectedMember} section="Performance" />)}
-          {activeTab === "Trades" && (isPelosi ? <Trades /> : <TrackedMemberDetail profile={selectedMember} section="Trades" />)}
+          {activeTab === "Overview" && <TrackedMemberDetail key={selectedMember.id} profile={selectedMember} section="Overview" query={globalQuery} />}
+          {activeTab === "Positions" && <TrackedMemberDetail key={selectedMember.id} profile={selectedMember} section="Positions" query={globalQuery} />}
+          {activeTab === "Performance" && <TrackedMemberDetail key={selectedMember.id} profile={selectedMember} section="Performance" query={globalQuery} />}
+          {activeTab === "Trades" && <TrackedMemberDetail key={selectedMember.id} profile={selectedMember} section="Trades" query={globalQuery} />}
           {activeTab === "Alerts" && <Alerts key={selectedMember.id} profile={selectedMember} />}
           {activeTab === "Methodology" && <Methodology />}
 
@@ -650,7 +366,22 @@ export default function TrackerDashboard({ viewer }: { viewer: { displayName: st
         </section>
       </div>
 
-      {showAdd && <div className="modal-backdrop" role="presentation" onMouseDown={() => setShowAdd(false)}><section className="member-modal" role="dialog" aria-modal="true" aria-labelledby="add-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setShowAdd(false)} aria-label="Close">×</button><span className="kicker">Extend the tracker</span><h2 id="add-title">Add a House member</h2><p>The tracker will look for exact-name matches in the Clerk’s official yearly index. Identity is confirmed with district history before analytics are created.</p><div className="candidate-list">{suggestedMembers.map((candidate) => <button onClick={() => addMember(candidate)} key={candidate.displayName}><span>{candidate.firstName[0]}{candidate.lastName[0]}</span><p><strong>{candidate.displayName}</strong><small>{candidate.district}</small></p><b>＋</b></button>)}</div><div className="modal-note">Senators require a separate Senate eFD source and are not included in this House-first version.</div></section></div>}
+      {showAdd && <div className="modal-backdrop" role="presentation" onMouseDown={() => setShowAdd(false)}><section className="member-modal" role="dialog" aria-modal="true" aria-labelledby="add-title" onMouseDown={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setShowAdd(false)} aria-label="Close">×</button><span className="kicker">Extend the tracker</span><h2 id="add-title">Add a House member</h2><p>The tracker will look for exact-name matches in the Clerk’s official yearly index. Identity is confirmed with district history before analytics are created.</p><label>Find a member <input value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} placeholder="Name or district" /></label>{saveError && <p role="alert">{saveError}</p>}<div className="candidate-list">{suggestedMembers.map((candidate) => <button disabled={savingMember} onClick={() => addMember(candidate)} key={candidate.id}><span>{candidate.name.split(" ").map((part) => part[0]).slice(0,2).join("")}</span><p><strong>{candidate.name}</strong><small>{candidate.stateDistrict}</small></p><b>＋</b></button>)}</div><div className="modal-note">Senators require a separate Senate eFD source and are not included in this House-first version.</div></section></div>}
     </main>
   );
+}
+
+export default function TrackerDashboard({ viewer, initialData }: { viewer: { displayName: string; email: string }; initialData: DashboardData }) {
+  const [data,setData] = useState(initialData);
+  const [error,setError] = useState("");
+  async function refresh() {
+    const response = await fetch("/api/dashboard",{cache:"no-store"});
+    if (!response.ok) throw new Error("Database refresh failed. Displaying the last successful result.");
+    setData(await response.json() as DashboardData); setError("");
+  }
+  useEffect(() => {
+    const timer = setInterval(() => { if (!document.hidden) void refresh().catch((error) => setError(error.message)); },60_000);
+    return () => clearInterval(timer);
+  },[]);
+  return <DataContext.Provider value={data}>{error && <div className="inline-note" role="alert">{error}</div>}<Dashboard viewer={viewer} refresh={refresh} /></DataContext.Provider>;
 }
