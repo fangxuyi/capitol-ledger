@@ -7,6 +7,25 @@ A normal daily update imports database records; it does not rebuild or redeploy.
 
 ## Daily sequence
 
+Run `npm run daily:update` for the complete guarded sequence below. The command
+refuses overlapping runs or an active local project preview, saves a stage journal
+under `work/daily-runs/YYYY-MM-DD/workflow.json`, and stops at the first failed stage.
+After investigating a failure, use `npm run daily:update -- --resume` to continue
+without repeating successful stages or overwriting the before snapshot. A stale
+`work/daily-update.lock` must be checked against its recorded process before removal.
+Do not create a new refresh while an unfinished import needs recovery.
+
+The command verifies complete tracked transaction and episode payloads, all member
+coverage and return summaries, and unchanged watchlist/alert settings. It compares
+source indexes and original hashes against the last successful run, creates
+`comparison.json` and `summary.txt`, and advances successful state only after live
+verification. Pricing coverage changes are not mislabeled as disclosed position
+closures; unknown excess return is not converted to zero.
+
+The supervising automation reviews the comparison and handles authorized email
+delivery separately. Email or GitHub failures do not undo a verified database
+import and must never cause that snapshot's successful email to be sent again.
+
 Use Node/npm/Git/pdftotext from `/Users/openclaw/.local/share/capitol-tools/bin`.
 Stop the local preview before a bulk import. Keep all run evidence under ignored
 `work/daily-runs/YYYY-MM-DD/` and do not edit `sources/`.

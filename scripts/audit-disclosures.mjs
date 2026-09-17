@@ -15,6 +15,12 @@ const ids=new Set(live.trackedMembers.filter(r=>r.active).map(r=>r.id));
 await fs.writeFile(`${run}/preferences-before.json`,JSON.stringify({tracked:live.trackedMembers,rules:live.alertRules}));
 const baseline=JSON.parse(await fs.readFile(`${root}/work/pelosi-disclosure-monitor-state.json`));
 const prior=new Map(baseline.records.map(r=>[r.sourceUrl,r]));
+const successful=JSON.parse(await fs.readFile(`${root}/work/capitol-ledger-daily-state.json`));
+if(successful.originalsAuditPath){
+ for(const record of JSON.parse(await fs.readFile(successful.originalsAuditPath))) {
+  if(record.sha256&&!record.error)prior.set(record.sourceUrl,record);
+ }
+}
 const rows=[];
 for(let year=2013;year<=new Date().getUTCFullYear();year++){
  const {stdout}=await exec('/usr/bin/curl',['-fsSL','--max-time','45',`https://disclosures-clerk.house.gov/public_disc/financial-pdfs/${year}FD.zip`],{encoding:'buffer',maxBuffer:20000000});
@@ -34,7 +40,7 @@ await fs.mkdir(`${run}/pdfs`,{recursive:true});await fs.mkdir(`${run}/texts`,{re
 const results=[];let cursor=0;
 async function worker(){while(cursor<candidates.length){const r=candidates[cursor++];const path=`${run}/pdfs/${r.year}-${r.filingId}.pdf`;try{
  await exec('/usr/bin/curl',['-fsSL','--max-time','40',r.sourceUrl,'-o',path]);const pdf=await fs.readFile(path);if(pdf.subarray(0,5).toString()!=='%PDF-')throw Error('Not a PDF');
- const sha256=createHash('sha256').update(pdf).digest('hex');const previous=prior.get(r.sourceUrl);const out={...r,sha256,pelosiHashChanged:previous?previous.sha256!==sha256:false};
+ const sha256=createHash('sha256').update(pdf).digest('hex');const previous=prior.get(r.sourceUrl);const out={...r,sha256,pdfHashChanged:previous?previous.sha256!==sha256:false,pelosiHashChanged:r.memberId==='nancy-pelosi'&&previous?previous.sha256!==sha256:false};
  if(r.filingType==='P') {const {stdout:text}=await exec('/Users/openclaw/.local/share/capitol-tools/bin/pdftotext',['-layout',path,'-'],{maxBuffer:10000000});await fs.writeFile(`${run}/texts/${r.year}-${r.filingId}.txt`,text);let cached=null;try{cached=await fs.readFile(`${root}/work/house-ptrs/${r.year}-${r.filingId}.txt`,'utf8')}catch{};out.cachedTextChanged=cached!==null&&text!==cached;out.readable=text.trim().length>=200;
  if(out.cachedTextChanged&&out.readable){await fs.writeFile(`${run}/texts/${r.year}-${r.filingId}.previous.txt`,cached);await fs.writeFile(`${root}/work/house-ptrs/${r.year}-${r.filingId}.txt`,text);}
  if(out.cachedTextChanged&&!out.readable)throw Error('Previously readable filing became unreadable');}
