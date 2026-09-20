@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {compareIndexes} from './house-index.mjs';
 import { spawn, execFileSync } from 'node:child_process';
 import { createWriteStream } from 'node:fs';
 import { runStages } from './daily-workflow.mjs';
@@ -31,8 +32,7 @@ try {
       const before=await read(`${dir}/api-before.json`),after=await read(`${dir}/api-after.json`);
       const prior=await read('work/capitol-ledger-daily-state.json');
       const indexes=await read(`${dir}/indexes.json`),previous=await read(prior.indexesPath);
-      const keys=new Map(previous.map(r=>[r.sourceUrl,r]));
-      const source={added:indexes.filter(r=>!keys.has(r.sourceUrl)),changed:indexes.filter(r=>keys.has(r.sourceUrl)&&r.indexRow!==keys.get(r.sourceUrl).indexRow)};
+      const source=compareIndexes(previous,indexes);
       const comparison=compareSnapshots(before,after,source,await read(`${dir}/originals-audit.json`));
       await atomic(`${dir}/index-comparison.json`,source);await atomic(`${dir}/comparison.json`,comparison);
       const published=await read('work/hosted-database-state.json');

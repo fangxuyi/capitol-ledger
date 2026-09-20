@@ -106,3 +106,15 @@ Owners and option terms separate episodes; partial exits retain residuals. Purch
 puts use a negative underlying-return proxy. Security and SPY marks share the same
 dates. Missing prices remain unknown. Image-only PDFs, non-ticker assets, exact cost
 basis, quantities and option premiums remain outside supported extraction.
+
+## Historical index formats
+
+Both audit and refresh use `scripts/house-index.mjs` to read named columns. Older
+archives include extra `Filing Year` and `DisclosureType` columns; `PTR` in the
+latter identifies a transaction report even when `FilingType` describes filer
+status. Document IDs must be numeric, and nonblank filing dates must match the
+source date format. Missing required columns or invalid IDs stop the run.
+Comparisons use source identity, member and filing date rather than raw row text,
+so column order, capitalization and archive category formatting do not create
+amendment alerts. Newly discovered historical reports must be described as
+historical coverage corrections, with their original filing dates.

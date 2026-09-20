@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {parseHouseIndex} from './house-index.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {createHash} from 'node:crypto';
@@ -25,12 +26,7 @@ const rows=[];
 for(let year=2013;year<=new Date().getUTCFullYear();year++){
  const {stdout}=await exec('/usr/bin/curl',['-fsSL','--max-time','45',`https://disclosures-clerk.house.gov/public_disc/financial-pdfs/${year}FD.zip`],{encoding:'buffer',maxBuffer:20000000});
  const zip=unzipSync(stdout),name=Object.keys(zip).find(n=>n.endsWith('.txt'));if(!name)throw Error(`Missing index ${year}`);
- for(const line of strFromU8(zip[name]).split(/\r?\n/).slice(1)){
-  const f=line.split('\t').map(x=>x.trim());if(f.length<9)continue;
-  const memberId=`${f[2].split(/\s+/)[0]}-${f[1]}`.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-  const sourceUrl=`https://disclosures-clerk.house.gov/public_disc/${f[4]==='P'?'ptr-pdfs':'financial-pdfs'}/${year}/${f[8]}.pdf`;
-  rows.push({year,memberId,filingId:f[8],filingType:f[4],filingDate:f[7],sourceUrl,indexRow:line});
- }
+ rows.push(...parseHouseIndex(strFromU8(zip[name]),year));
 }
 await fs.writeFile(`${run}/indexes.json`,JSON.stringify(rows));
 // Check all current-year PTR originals, all existing Pelosi hash baselines,

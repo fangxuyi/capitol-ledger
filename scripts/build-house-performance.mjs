@@ -1,6 +1,7 @@
 // Raw-source refresh for Capitol Ledger: official House indexes/PTRs -> normalized
 // transactions -> approximate holding episodes -> reusable site and data outputs.
 // Cached filing text and market prices live under work/ and are intentionally ignored.
+import { parseHouseIndex } from "./house-index.mjs";
 import { execFile } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -25,10 +26,6 @@ let priceCutoff = null;
 await mkdir(textCache, { recursive: true });
 await mkdir(priceCache, { recursive: true });
 
-function slug(value) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
 function parseDate(value) {
   const [month, day, year] = value.split("/").map(Number);
   const fullYear = year < 100 ? 2000 + year : year;
@@ -44,26 +41,7 @@ async function fetchIndexes() {
     const archive = unzipSync(new Uint8Array(await response.arrayBuffer()));
     const fileName = Object.keys(archive).find((name) => name.endsWith(".txt"));
     if (!fileName) throw new Error(`House Clerk index ${year} has no text index; refusing partial refresh`);
-    const rows = strFromU8(archive[fileName]).split(/\r?\n/).slice(1);
-    for (const line of rows) {
-      const fields = line.split("\t").map((field) => field.trim());
-      if (fields.length < 9 || fields[4] !== "P") continue;
-      const [, lastName, firstName, suffix, , stateDistrict, , filingDate, docId] = fields;
-      const cleanSuffix = /^(Jr\.?|Sr\.?|II|III|IV)$/i.test(suffix) ? suffix : "";
-      const displayName = [firstName, lastName, cleanSuffix].filter(Boolean).join(" ").replace(/\s+/g, " ");
-      const firstKey = firstName.split(/\s+/)[0];
-      filings.push({
-        year,
-        docId,
-        filingDate,
-        firstName,
-        lastName,
-        displayName,
-        stateDistrict,
-        memberId: slug(`${firstKey}-${lastName}`),
-        sourceUrl: `https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/${year}/${docId}.pdf`,
-      });
-    }
+    filings.push(...parseHouseIndex(strFromU8(archive[fileName]), year).filter(row => row.filingType === "P"));
   }
   return filings;
 }
