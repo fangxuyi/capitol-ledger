@@ -118,3 +118,8 @@ Comparisons use source identity, member and filing date rather than raw row text
 so column order, capitalization and archive category formatting do not create
 amendment alerts. Newly discovered historical reports must be described as
 historical coverage corrections, with their original filing dates.
+
+The report also retains identities from all earlier verified daily index snapshots.
+If an upstream archive temporarily omits a historical record, its reappearance alone
+is not a new disclosure. A changed filing date/member or audited PDF still surfaces
+for review. Failed or unfinished daily runs cannot establish this historical baseline.

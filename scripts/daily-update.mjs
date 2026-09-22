@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import {compareIndexes} from './house-index.mjs';
+import {compareIndexes,mergeIndexHistory} from './house-index.mjs';
 import { spawn, execFileSync } from 'node:child_process';
 import { createWriteStream } from 'node:fs';
 import { runStages } from './daily-workflow.mjs';
@@ -31,7 +31,18 @@ try {
       const read=async p=>JSON.parse(await fs.readFile(p,'utf8'));
       const before=await read(`${dir}/api-before.json`),after=await read(`${dir}/api-after.json`);
       const prior=await read('work/capitol-ledger-daily-state.json');
-      const indexes=await read(`${dir}/indexes.json`),previous=await read(prior.indexesPath);
+      const indexes=await read(`${dir}/indexes.json`);
+      const history=[];
+      for(const entry of (await fs.readdir('work/daily-runs')).sort()) {
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(entry)||entry>=day)continue;
+        const past=`work/daily-runs/${entry}`;
+        try {
+          const saved=await read(`${past}/workflow.json`);
+          if(saved.status==='verified')history.push(await read(`${past}/indexes.json`));
+        } catch(error) { if(error.code!=='ENOENT')throw error; }
+      }
+      if(prior.indexesPath!==`${dir}/indexes.json`)history.push(await read(prior.indexesPath));
+      const previous=mergeIndexHistory(history);
       const source=compareIndexes(previous,indexes);
       const comparison=compareSnapshots(before,after,source,await read(`${dir}/originals-audit.json`));
       await atomic(`${dir}/index-comparison.json`,source);await atomic(`${dir}/comparison.json`,comparison);

@@ -33,3 +33,10 @@ export function compareIndexes(previous, current) {
       return old && (r.memberId !== old.memberId || r.filingDate !== old.filingDate);
     })};
 }
+
+// Preserve previously verified identities when the upstream archive omits them temporarily.
+export function mergeIndexHistory(snapshots) {
+  const known = new Map();
+  for (const rows of snapshots) for (const row of rows) known.set(row.sourceUrl, row);
+  return [...known.values()];
+}

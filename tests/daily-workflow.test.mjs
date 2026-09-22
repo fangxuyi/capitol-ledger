@@ -42,3 +42,13 @@ test('blank official filing dates stay unknown and archive category changes are 
  const rows=parseHouseIndex(text,2026);assert.equal(rows[0].filingDate,'');
  const changed=structuredClone(rows);changed[0].filingType='O';assert.deepEqual(compareIndexes(rows,changed),{added:[],changed:[]});
 });
+
+import {mergeIndexHistory} from '../scripts/house-index.mjs';
+test('reappearing archive records are not new disclosures; actual date changes still surface',()=>{
+ const row={sourceUrl:'https://example.test/123.pdf',memberId:'m',filingDate:'5/15/2014',filingType:'P'};
+ const history=mergeIndexHistory([[row],[]]);
+ assert.deepEqual(compareIndexes(history,[row]),{added:[],changed:[]});
+ const amendment={...row,filingDate:'6/15/2014'};
+ assert.equal(compareIndexes(history,[amendment]).changed.length,1);
+ assert.equal(mergeIndexHistory([[row],[amendment]])[0].filingDate,'6/15/2014');
+});
